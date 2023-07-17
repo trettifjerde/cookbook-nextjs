@@ -293,10 +293,6 @@ textarea.form-control.larger {
     min-height: 200px;
 }
 
-.detail-header-text .dropdown-menu {
-    right: 0;
-}
-
 .detail-block,
 .detail-title {
     margin-block: 1.5rem;
@@ -341,6 +337,12 @@ h5 {
     
     .detail-header-text .col-8 {
         width: 100%;
+    }    
+}
+
+@media (min-width: 1200px) {
+    .detail-header-text .dropdown-menu {
+        right: 0;
     }
 }
 
