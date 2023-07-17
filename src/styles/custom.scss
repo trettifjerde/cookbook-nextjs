@@ -322,16 +322,25 @@ h5 {
 }
 
 @media (max-width: 576px) {
-    .detail-header-text .row {
-        display: block;
-    }
+    .detail-header-text { 
+        .row {
+            display: block;
+        }
 
-    .detail-header-text .col-auto {
-        margin-top: 1.5rem;
-    }
+        .col-auto {
+            margin-top: 1.5rem;
+        }
 
-    .detail-header-text .dropdown-menu {
-        right: unset;
+        .dropdown-menu {
+            right: unset;
+        }
+    }
+}
+
+@media (max-width: 1199px) {
+    
+    .detail-header-text .col-8 {
+        width: 100%;
     }
 }
 

@@ -63,8 +63,8 @@ export default function RecipeDetails({recipe}: {recipe: Recipe}) {
                         <img src={recipe.imagePath} className="img-fluid" />
                     </div>
                     <div className="detail-header-text">
-                        <div className="row flex-wrap g-2 justify-content-between mb-3">
-                            <h1 className='col-auto'>{ recipe.name }</h1>
+                        <div className="row flex-wrap g-2 justify-content-between mb-3 align-items-center">
+                            <h1 className={authenticated ? 'col-8' : 'col-auto'}>{ recipe.name }</h1>
                             <div className="col-auto">
                                 {authenticated && <div className="dropdown">
                                     <button ref={ddBtnRef} className="btn btn-outline-light dropdown-toggle" onClick={toggleDropdown}>
