@@ -1,0 +1,28 @@
+@keyframes slideDown {
+    0% {
+        opacity: 0;
+        transform: translateY(-50%);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0%);
+    }
+}
+
+@keyframes shrinkIn {
+    0% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0.7);
+    }
+}
+.list-item-enter {
+    animation: slideDown .3s ease-in-out;
+}
+
+.list-item-exit {
+    animation: shrinkIn .3s ease-in-out;
+}
