@@ -13,7 +13,6 @@ import useAuthenticator from '@/helpers/useAuthenticator';
 import { fetchData } from '@/helpers/utils';
 
 export default function RecipeDetails({recipe}: {recipe: Recipe}) {
-
     const {user, authenticated} = useAuthenticator();
     const dispatch = useStoreDispatch();
     const router = useRouter();

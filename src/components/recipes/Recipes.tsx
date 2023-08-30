@@ -1,14 +1,14 @@
 'use client';
-import { RecipePreview } from "@/helpers/types";
+import { ChangeEventHandler, ReactNode, useCallback, useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { ChangeEventHandler, ReactNode, useCallback, useEffect, useState } from "react";
-import RecipeList from "./RecipeList";
+import { RecipePreview } from "@/helpers/types";
 import { useStoreDispatch, useStoreSelector } from "@/store/store";
 import { generalActions } from "@/store/generalState";
 import { recipesActions } from "@/store/recipesState";
-import Spinner from "../Spinner";
 import { fetchRecipes } from "@/helpers/dataClient";
-import { usePathname, useRouter } from "next/navigation";
+import RecipeList from "./RecipeList";
+import Spinner from "../Spinner";
 
 function getLoadBtnText(hasMore: boolean) {
     return hasMore ? 'Load more recipes' : 'No more recipes to load';
@@ -24,11 +24,22 @@ export default function Recipes({recipes: initRecipes, children}: {recipes: Reci
     const [filterString, setFilterString] = useState('');
     const [isFetching, setIsFetching] = useState(false);
     const [spinnerVisible, setSpinnerVisible] = useState(false);
+    const filterRef = useRef<HTMLInputElement>(null);
+    const [isTypingTimer, setIsTypingTimer] = useState<any>(null);
 
-    const handleFilterChange: ChangeEventHandler<HTMLInputElement> = useCallback((e) => {
-        setFilterString(e.target.value.toLocaleLowerCase());
-    }, []);
-    const clearFilter = useCallback(() => setFilterString(''), []);
+    const handleFilterChange = () => {
+        if (isTypingTimer) {
+            clearTimeout(isTypingTimer);
+            setIsTypingTimer(null);
+        }
+        setIsTypingTimer(setTimeout(() => setFilterString(filterRef.current?.value || ''), 200));
+    }
+
+    const clearFilter = useCallback(() => {
+        setFilterString('');
+        if (filterRef.current)
+            filterRef.current.value = '';
+    }, [filterRef, setFilterString]);
 
     const toggleMobileRecipes = useCallback(() => setMobileVisible(prev => (!prev)), [setMobileVisible]);
 
@@ -80,7 +91,7 @@ export default function Recipes({recipes: initRecipes, children}: {recipes: Reci
                 <Link href="/recipes/new" className="btn btn-success">New Recipe</Link>
             </div>
             <div className="col input-cont">
-                <input type="text" className="form-control" value={filterString} onChange={handleFilterChange} placeholder="Type for a recipe..." />
+                <input type="text" className="form-control" ref={filterRef} onChange={handleFilterChange} placeholder="Type for a recipe..." />
                 <button type="button" className="btn btn-danger" onClick={clearFilter}>X</button>
             </div>
         </div>
