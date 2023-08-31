@@ -11,6 +11,8 @@ import ConfirmationModal from '../ConfirmationModal';
 import { recipesActions } from '@/store/recipesState';
 import useAuthenticator from '@/helpers/useAuthenticator';
 import { fetchData } from '@/helpers/utils';
+import {motion} from 'framer-motion';
+import RecipePageWrapper from './RecipePageWrapper';
 
 export default function RecipeDetails({recipe}: {recipe: Recipe}) {
     const {authenticated} = useAuthenticator();
@@ -56,55 +58,56 @@ export default function RecipeDetails({recipe}: {recipe: Recipe}) {
         if (top.current) top.current.scrollIntoView();
     }, [recipe]);
 
-    return (<div className="fadeIn r" ref={top}>
-                <div className="detail-header">
-                    <div className="detail-header-img">
-                        <img src={recipe.imagePath} className="img-fluid" />
-                    </div>
-                    <div className="detail-header-text">
-                        <div className="row flex-wrap g-2 justify-content-between mb-3 align-items-center">
-                            <h1 className={authenticated ? 'col-8' : 'col-auto'}>{ recipe.name }</h1>
-                            <div className="col-auto">
-                                {authenticated && <div className="dropdown">
-                                    <button ref={ddBtnRef} className="btn btn-outline-light dropdown-toggle" onClick={toggleDropdown}>
-                                        Manage
-                                    </button>
-                                    <Dropdown btn={ddBtnRef} isVisible={isDropdownVisible} onBgClick={toggleDropdown}>
-                                        <div className='dropdown-item' onClick={toShoppingList}>To Shopping List</div>
-                                        <Link className='dropdown-item' href={`/recipes/${recipe.id}/edit`}>Edit Recipe</Link>
-                                        <div className='dropdown-item' onClick={askDeleteRecipeConfirm.bind(null, recipe)}>Delete Recipe</div>
-                                    </Dropdown>
-                                </div>}
-                            </div>
-                        </div>
-                        <div className="detail-desc">
-                            <div>{recipe.description}</div>
+    return (<RecipePageWrapper>
+        <div className="r" ref={top}>
+            <div className="detail-header">
+                <div className="detail-header-img">
+                    <img src={recipe.imagePath} className="img-fluid" />
+                </div>
+                <div className="detail-header-text">
+                    <div className="row flex-wrap g-2 justify-content-between mb-3 align-items-center">
+                        <h1 className={authenticated ? 'col-8' : 'col-auto'}>{ recipe.name }</h1>
+                        <div className="col-auto">
+                            {authenticated && <div className="dropdown">
+                                <button ref={ddBtnRef} className="btn btn-outline-light dropdown-toggle" onClick={toggleDropdown}>
+                                    Manage
+                                </button>
+                                <Dropdown btn={ddBtnRef} isVisible={isDropdownVisible} onBgClick={toggleDropdown}>
+                                    <div className='dropdown-item' onClick={toShoppingList}>To Shopping List</div>
+                                    <Link className='dropdown-item' href={`/recipes/${recipe.id}/edit`}>Edit Recipe</Link>
+                                    <div className='dropdown-item' onClick={askDeleteRecipeConfirm.bind(null, recipe)}>Delete Recipe</div>
+                                </Dropdown>
+                            </div>}
                         </div>
                     </div>
+                    <div className="detail-desc">
+                        <div>{recipe.description}</div>
+                    </div>
                 </div>
-                <div className="detail-block">
-                    <h5>Ingredients</h5>
-                    <ul className="list-group">
-                        {recipe.ingredients.map((ing, i) => 
-                            <li key={i} className="list-group-item">
-                                <div className='row justify-content-between'>
-                                    <span className='col-auto'>{ing.name}</span>
-                                    <span className='col-auto'>{ing.amount} {ing.unit}</span>
-                                </div>
-                            </li>)}
-                    </ul>
-                </div>
-                <div className="detail-block">
-                    <h5>Steps</h5>
-                    <ol className="list-group list-group-flush list-group-numbered">
-                        { recipe.steps.map((step, i) => <li key={i} className="list-group-item">{step}</li>)}
-                    </ol>
-                </div>
-                {authenticated && <ConfirmationModal 
-                    question="Delete recipe" 
-                    info={modalInfo} 
-                    onConfirm={onDeleteRecipe} 
-                    onClose={closeDeleteRecipeConfirm}/>}
             </div>
-    )
+            <div className="detail-block">
+                <h5>Ingredients</h5>
+                <ul className="list-group">
+                    {recipe.ingredients.map((ing, i) => 
+                        <li key={i} className="list-group-item">
+                            <div className='row justify-content-between'>
+                                <span className='col-auto'>{ing.name}</span>
+                                <span className='col-auto'>{ing.amount} {ing.unit}</span>
+                            </div>
+                        </li>)}
+                </ul>
+            </div>
+            <div className="detail-block">
+                <h5>Steps</h5>
+                <ol className="list-group list-group-flush list-group-numbered">
+                    { recipe.steps.map((step, i) => <li key={i} className="list-group-item">{step}</li>)}
+                </ol>
+            </div>
+            {authenticated && <ConfirmationModal 
+                question="Delete recipe" 
+                info={modalInfo} 
+                onConfirm={onDeleteRecipe} 
+                onClose={closeDeleteRecipeConfirm}/>}
+        </div>
+    </RecipePageWrapper>)
 };

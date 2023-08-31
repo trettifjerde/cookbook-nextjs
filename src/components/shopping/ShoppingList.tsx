@@ -1,5 +1,5 @@
 'use client';
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { generalActions } from "../../store/generalState";
 import { shoppingListActions } from '../../store/shoppingListState';
@@ -13,9 +13,10 @@ import Spinner from "../Spinner";
 import { updateShoppingList } from "@/helpers/dataClient";
 
 export default function ShoppingList() {
-    const {items, isInitialized} = useStoreSelector(state => state.shoppingList);
-    const user = useStoreSelector(state => state.general.user);
     const dispatch = useStoreDispatch();
+    const shoppingList = useStoreSelector(state => state.shoppingList);
+    const user = useStoreSelector(state => state.general.user);
+    const [info, setInfo] = useState<{items: Ingredient[], isInitialized: boolean }>({items: [], isInitialized: false});
 
     const [itemToDeleteInfo, setItemToDeleteInfo] = useState({
         visible: false, 
@@ -54,10 +55,12 @@ export default function ShoppingList() {
 
     }, [user, itemToDeleteInfo, dispatch, closeModal]);
 
-    return <div className="r"> 
-        {items.length > 0 && <div className="list-group">
+    useEffect(() => setInfo({items: shoppingList.items, isInitialized: shoppingList.isInitialized}), [shoppingList]);
+
+    return <div> 
+        {info.items.length > 0 && <div className="list-group">
                 {
-                    items.map(item => (
+                    info.items.map(item => (
                         <ShoppingListItem 
                             key={item.id} 
                             item={item}
@@ -68,9 +71,9 @@ export default function ShoppingList() {
             </div> 
         }
 
-        { isInitialized && items.length === 0 && <div className="text-center">No items in the list</div>}
+        { info.isInitialized && info.items.length === 0 && <div className="text-center">No items in the list</div>}
 
-        {!isInitialized && <Spinner root />}
+        {!info.isInitialized && <Spinner root/>}
 
         <ConfirmationModal question="Delete item" info={itemToDeleteInfo} onClose={closeModal} onConfirm={deleteItem}  />
     </div>

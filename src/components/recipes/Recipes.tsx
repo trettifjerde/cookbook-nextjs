@@ -1,5 +1,5 @@
 'use client';
-import { ChangeEventHandler, ReactNode, useCallback, useEffect, useRef, useState } from "react";
+import { ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { RecipePreview } from "@/helpers/types";
@@ -9,6 +9,7 @@ import { recipesActions } from "@/store/recipesState";
 import { fetchRecipes } from "@/helpers/dataClient";
 import RecipeList from "./RecipeList";
 import Spinner from "../Spinner";
+import PageWrapper from "../PageWrapper";
 
 function getLoadBtnText(hasMore: boolean) {
     return hasMore ? 'Load more recipes' : 'No more recipes to load';
@@ -85,28 +86,28 @@ export default function Recipes({recipes: initRecipes, children}: {recipes: Reci
         }
     }, [hasMoreRecipes, setHasMoreRecipes]);
 
-    return (<div className={`fadeIn ${isMobileVisible ? 'open' : ''}`}>
-        <div className="row align-items-center search-bar">
-            <div className="col-auto">
-                <Link href="/recipes/new" className="btn btn-success">New Recipe</Link>
+    return (<PageWrapper className={isMobileVisible ? 'open' : ''}>
+            <div className="row align-items-center search-bar">
+                <div className="col-auto">
+                    <Link href="/recipes/new" className="btn btn-success">New Recipe</Link>
+                </div>
+                <div className="col input-cont">
+                    <input type="text" className="form-control" ref={filterRef} onChange={handleFilterChange} placeholder="Type for a recipe..." />
+                    <button type="button" className="btn btn-danger" onClick={clearFilter}>X</button>
+                </div>
             </div>
-            <div className="col input-cont">
-                <input type="text" className="form-control" ref={filterRef} onChange={handleFilterChange} placeholder="Type for a recipe..." />
-                <button type="button" className="btn btn-danger" onClick={clearFilter}>X</button>
+            <div className="show-recipes-btn mb-2">
+                <button type="button" className={`btn w-100 ${isMobileVisible ? 'btn-danger' : 'btn-success'}`} onClick={toggleMobileRecipes}>{ isMobileVisible ? 'Hide recipes' : 'Show recipes'}</button>
             </div>
-        </div>
-        <div className="show-recipes-btn mb-2">
-            <button type="button" className={`btn w-100 ${isMobileVisible ? 'btn-danger' : 'btn-success'}`} onClick={toggleMobileRecipes}>{ isMobileVisible ? 'Hide recipes' : 'Show recipes'}</button>
-        </div>
-        <div className="row mb-3">
-            <aside className="col-md-5 side">
-                <button type="button" className="btn btn-success" disabled={!hasMoreRecipes} onClick={loadMoreRecipes}>{getLoadBtnText(hasMoreRecipes)}</button>  
-                <RecipeList recipes={isInitialized ? recipes : initRecipes} filterString={filterString}/>
-                {spinnerVisible && <Spinner />}
-            </aside>
-            <article className="col-md-7 main">
-                {children}
-            </article>
-        </div>
-    </div>)
+            <div className="row mb-3">
+                <aside className="col-md-5 side">
+                    <button type="button" className="btn btn-success" disabled={!hasMoreRecipes} onClick={loadMoreRecipes}>{getLoadBtnText(hasMoreRecipes)}</button>  
+                    <RecipeList recipes={isInitialized ? recipes : initRecipes} filterString={filterString}/>
+                    {spinnerVisible && <Spinner />}
+                </aside>
+                <article className="col-md-7 main">
+                    {children}
+                </article>
+            </div>
+    </PageWrapper>)
 }

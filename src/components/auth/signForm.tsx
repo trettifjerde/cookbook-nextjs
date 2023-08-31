@@ -8,6 +8,7 @@ import { AuthForm, AuthMode } from '@/helpers/types';
 import { registerLogIn } from '@/store/complexActions';
 import { useRouter } from 'next/navigation';
 import { fetchAuth } from '@/helpers/authClient';
+import PageWrapper from '../PageWrapper';
 
 export default function SignForm({mode}: {mode: AuthMode}) {
 
@@ -80,8 +81,7 @@ export default function SignForm({mode}: {mode: AuthMode}) {
         setErrors({});
     }, [isSignUpMode, setErrors]);
 
-    return (
-        <div className="row fadeIn">
+    return (<PageWrapper className="row">
             <div className="col-xs-12 col-md-6 m-auto">
                 <h3>Sign {isSignUpMode? 'up' : 'in'}</h3>
                 <form onSubmit={onSubmitForm}>
@@ -121,6 +121,6 @@ export default function SignForm({mode}: {mode: AuthMode}) {
                     </div>
                 </form>      
             </div>
-        </div>
+        </PageWrapper>
     )
 }

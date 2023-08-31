@@ -1,5 +1,5 @@
 'use client';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, LazyMotion, domAnimation, m } from 'framer-motion';
 import RecipeItem from "./RecipeItem";
 import { RecipePreview } from '@/helpers/types';
 import { usePathname } from 'next/navigation';
@@ -27,7 +27,7 @@ export const itemVariants = (n: number) => ({
         scale: 0.7,
         transition: {
             duration: 0.2,
-            delay: 0.05 * n
+            delay: 0.1 * n
         }
     },
     visible: {
@@ -35,7 +35,7 @@ export const itemVariants = (n: number) => ({
         scale: 1,
         transition: {
             duration: 0.2,
-            delay: 0.05 * n
+            delay: 0.1 * n
         }
     }
 })
@@ -45,19 +45,20 @@ const RecipeList = ({filterString, recipes}: {recipes: RecipePreview[], filterSt
     const filteredRecipes = recipes.filter(recipe => recipe.name.toLowerCase().includes(filterString));
     const pathname = usePathname();
 
-    return (
-        <motion.div className="recipes-c fadeIn" variants={listVariants} initial="hidden" exit="hidden" animate="visible">
+    return (<LazyMotion features={domAnimation}>
+        <m.div className="recipes-c" variants={listVariants} initial="hidden" exit="hidden" animate="visible">
             <AnimatePresence>
-                {filteredRecipes.map((r, i) => <motion.div key={r.id} layout 
+                {filteredRecipes.map((r, i) => <m.div key={r.id} layout 
                 variants={itemVariants(filteredRecipes.length - 1 - i)}
                 initial="hidden" animate="visible" exit="hidden">
                     <RecipeItem recipe={r} isActive={pathname.endsWith(r.id)}/>
-                </motion.div>) }
-                {filteredRecipes.length === 0 && <motion.div key="recipes-btn" variants={itemVariants(0)}>
+                </m.div>) }
+                {filteredRecipes.length === 0 && <m.div key="recipes-btn" variants={itemVariants(0)}>
                     <div className="empty">No recipes found</div>
-                </motion.div>}
+                </m.div>}
             </AnimatePresence>
-        </motion.div> 
+        </m.div> 
+        </LazyMotion>
     )
 }
 export default RecipeList;

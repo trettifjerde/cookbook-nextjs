@@ -10,7 +10,7 @@ import { recipesActions } from "@/store/recipesState";
 import useListManager from "@/helpers/useListManger";
 import { generalActions } from "@/store/generalState";
 import { fetchData } from "@/helpers/utils";
-
+import RecipePageWrapper from "./RecipePageWrapper";
 
 export default function RecipeForm({recipe}: {recipe: FormRecipe}) {
     useRedirectOnLogout();
@@ -62,7 +62,7 @@ export default function RecipeForm({recipe}: {recipe: FormRecipe}) {
 
     const cancelSubmit = useCallback(() => router.back(), [router]);
 
-    return <div className="fadeIn">
+    return <RecipePageWrapper>
         <div className="label-row" ref={contTop}>
             <h3>{ recipe.id ? 'Edit recipe' : 'Add recipe'}</h3> 
             {Object.keys(errors).length > 0 && <p className="form-text text-danger">Form contains errors</p>}
@@ -158,7 +158,7 @@ export default function RecipeForm({recipe}: {recipe: FormRecipe}) {
                 </div>
             </form>
         </div> 
-    </div>
+    </RecipePageWrapper>
 };
 
 function makeNewIng(i: number, ing?: FirebaseIngredient) {

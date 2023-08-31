@@ -6,7 +6,6 @@ import { memo } from 'react';
 const sizes = "(max-width: 380px) 50vw, (max-width: 768px) 33vw, 20vw";
 
 function RecipeItem({recipe, isActive} : {recipe: RecipePreview, isActive: boolean}) {
-    console.log('recipe item');
     return (
             <Link className={`card p-2 ${isActive? 'active' : ''}`} href={`/recipes/${recipe.id!}`}>
                 <div className="card-wrapper">
