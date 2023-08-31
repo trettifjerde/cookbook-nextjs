@@ -7,36 +7,38 @@ import { usePathname } from 'next/navigation';
 export const listVariants = {
     hidden: {
         transition: {
-            //staggerChildren: 0.1, 
-            //staggerDirection: -1
+            staggerChildren: 0.1, 
+            staggerDirection: -1,
             duration: 0
         }
     },
     visible: {
         transition: {
-            //staggerChildren: 0.1, 
-            //staggerDirection: -1
+            staggerChildren: 0.1, 
+            staggerDirection: -1,
             duration: 0
         }
     }
 };
 
-export const itemVariants = {
+export const itemVariants = (n: number) => ({
     hidden: {
         opacity: 0,
         scale: 0.7,
         transition: {
-            duration: 0.2
+            duration: 0.2,
+            delay: 0.05 * n
         }
     },
     visible: {
         opacity: 1,
         scale: 1,
         transition: {
-            duration: 0.2
+            duration: 0.2,
+            delay: 0.05 * n
         }
     }
-}
+})
 
 
 const RecipeList = ({filterString, recipes}: {recipes: RecipePreview[], filterString: string}) => {
@@ -46,8 +48,12 @@ const RecipeList = ({filterString, recipes}: {recipes: RecipePreview[], filterSt
     return (
         <motion.div className="recipes-c fadeIn" variants={listVariants} initial="hidden" exit="hidden" animate="visible">
             <AnimatePresence>
-                {filteredRecipes.map(r => <RecipeItem key={r.id} recipe={r} isActive={pathname.endsWith(r.id)}/>) }
-                {filteredRecipes.length === 0 && <motion.div key="recipes-btn" variants={itemVariants}>
+                {filteredRecipes.map((r, i) => <motion.div key={r.id} layout 
+                variants={itemVariants(filteredRecipes.length - 1 - i)}
+                initial="hidden" animate="visible" exit="hidden">
+                    <RecipeItem recipe={r} isActive={pathname.endsWith(r.id)}/>
+                </motion.div>) }
+                {filteredRecipes.length === 0 && <motion.div key="recipes-btn" variants={itemVariants(0)}>
                     <div className="empty">No recipes found</div>
                 </motion.div>}
             </AnimatePresence>

@@ -1,16 +1,13 @@
 import { RecipePreview } from '@/helpers/types';
-import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ForwardedRef, forwardRef, memo } from 'react';
-import { itemVariants } from './RecipeList';
+import { memo } from 'react';
 
 const sizes = "(max-width: 380px) 50vw, (max-width: 768px) 33vw, 20vw";
 
-function RecipeItem(preview: {recipe: RecipePreview, isActive: boolean}) {
-    const {recipe, isActive} = preview;
+function RecipeItem({recipe, isActive} : {recipe: RecipePreview, isActive: boolean}) {
+    console.log('recipe item');
     return (
-        <motion.div layout variants={itemVariants}>
             <Link className={`card p-2 ${isActive? 'active' : ''}`} href={`/recipes/${recipe.id!}`}>
                 <div className="card-wrapper">
                     <div className="card-body">
@@ -22,8 +19,7 @@ function RecipeItem(preview: {recipe: RecipePreview, isActive: boolean}) {
                     </div>
                 </div>
             </Link>
-        </motion.div>
     )
 }
 
-export default RecipeItem;
+export default memo(RecipeItem);
