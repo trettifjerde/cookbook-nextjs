@@ -1,7 +1,11 @@
 @import '~bootstrap/scss/bootstrap.scss';
 
+$primary: #198754 !important;
+$gray: rgba(88, 88, 88, 0.6);
+
 :root {
     --primary: #198754 !important;
+    --gray: rgba(88, 88, 88, 0.6);
 }
 
 ::-webkit-scrollbar {
@@ -12,19 +16,28 @@
 }
 
 ::-webkit-scrollbar-thumb {
-    background: var(--primary);
+    background: $primary;
     border-radius: 5px;
 }
 
 .dropdown-menu {
     min-width: unset;
+    padding: 3px;
+    overflow: hidden;
+    background-color: transparent;
+    border-color: transparent;
+    left: -3px;
 }
 
-.dropdown-menu-end {
-    right: 0;
+.dropdown-menu-inner {
+    box-shadow: 0 0 3px $gray;
+    border-radius: 5px;
+    overflow: hidden;
 }
 
 .dropdown-item {
+    padding: 0.5rem 1rem;
+    background-color: white;
     cursor: pointer;
     transition: all .2s ease-in-out;
 }
@@ -65,7 +78,7 @@ a {
 .nav-link:hover, 
 .nav-link:active,
 .nav-link:focus {
-    color: var(--primary);
+    color: $primary;
 }
 
 nav.navbar {
@@ -157,7 +170,7 @@ h3 {
 hr {
     border: none;
     height: 1px;
-    background-image: linear-gradient(to left, #257d54bb, var(--primary), #257d54bb);
+    background-image: linear-gradient(to left, #257d54bb, $primary, #257d54bb);
     margin: 1.5rem 0;
 }
 
@@ -194,7 +207,7 @@ textarea.form-control.larger {
 
 .card {
     cursor: pointer;
-    background-color: transparent;
+    background-color: white;
     transition: background-color .2s ease-in-out;
     color: black;
 }
@@ -205,8 +218,8 @@ textarea.form-control.larger {
 
 .card.active, .card.active:hover {
     background-color: #40e96f17;
-    border-color: var(--primary);
-    color: var(--primary);
+    border-color: $primary;
+    color: $primary;
     cursor: default;
 }
 
@@ -248,13 +261,6 @@ textarea.form-control.larger {
     gap: 0.5rem;
 }
 
-.recipes-c .empty {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-}
-
 .spinner-c {
     position: absolute;
     top: 0;
@@ -266,7 +272,6 @@ textarea.form-control.larger {
 
 .detail-header {
     position: relative;
-    overflow: hidden;
     height: 60vh;
     z-index: 0;
 }
@@ -277,6 +282,7 @@ textarea.form-control.larger {
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
 }
 
 .detail-header-text {
@@ -326,10 +332,6 @@ h5 {
         .col-auto {
             margin-top: 1.5rem;
         }
-
-        .dropdown-menu {
-            right: unset;
-        }
     }
 }
 
@@ -342,7 +344,8 @@ h5 {
 
 @media (min-width: 1200px) {
     .detail-header-text .dropdown-menu {
-        right: 0;
+        left: unset;
+        right: -3px;
     }
 }
 
@@ -389,18 +392,6 @@ h5 {
 
 .f-sm {
     font-size: 0.8rem;
-}
-
-.dropdown-menu {
-    overflow: hidden;
-    background-color: transparent;
-    border-color: transparent;
-    padding: 0;
-}
-
-.dropdown-item {
-    padding: 0.5rem 1rem;
-    background-color: white;
 }
 
 @keyframes ddSlide {
@@ -464,7 +455,7 @@ h5 {
 hr {
     border: none;
     height: 1px;
-    background-image: linear-gradient(to left, #257d54bb, var(--primary), #257d54bb);
+    background-image: linear-gradient(to left, #257d54bb, $primary, #257d54bb);
     margin: 1.5rem 0;
 }
 
@@ -509,7 +500,7 @@ textarea.form-control {
         &::marker {
             padding-right: 1rem;
             font-weight: 600;
-            color: var(--primary);
+            color: $primary;
         }
     }
 }
@@ -606,10 +597,5 @@ textarea.form-control {
 
     .open .main {
         display: none;
-    }
-
-    .recipes-c .empty {
-        top: 4rem;
-    }
-    
+    }    
 }

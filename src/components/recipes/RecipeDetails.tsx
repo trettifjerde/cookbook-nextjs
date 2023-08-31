@@ -1,6 +1,6 @@
 'use client';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { FirebaseIngredient, Recipe } from '@/helpers/types';
+import { Recipe } from '@/helpers/types';
 import { useStoreDispatch } from '@/store/store';
 import { addRecipeToShoppingList } from '@/store/complexActions';
 import { generalActions } from '@/store/generalState';
@@ -13,7 +13,7 @@ import useAuthenticator from '@/helpers/useAuthenticator';
 import { fetchData } from '@/helpers/utils';
 
 export default function RecipeDetails({recipe}: {recipe: Recipe}) {
-    const {user, authenticated} = useAuthenticator();
+    const {authenticated} = useAuthenticator();
     const dispatch = useStoreDispatch();
     const router = useRouter();
 
@@ -45,7 +45,7 @@ export default function RecipeDetails({recipe}: {recipe: Recipe}) {
         }
 
         router.push('/recipes');
-    }, [router, recipe, user, closeDeleteRecipeConfirm, dispatch]);
+    }, [router, recipe, closeDeleteRecipeConfirm, dispatch]);
 
     const askDeleteRecipeConfirm = useCallback((recipe: Recipe) => setModalInfo({
         visible: true,

@@ -30,6 +30,7 @@
     padding: 2rem;
     border-radius: 5px;
     border: 1px solid var(--primary);
+    box-shadow: 0 0 10px var(--gray);
 }
 
 .m-message {
