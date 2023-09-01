@@ -9,7 +9,6 @@ import { recipesActions } from "@/store/recipesState";
 import { fetchRecipes } from "@/helpers/dataClient";
 import RecipeList from "./RecipeList";
 import Spinner from "../Spinner";
-import PageWrapper from "../PageWrapper";
 
 function getLoadBtnText(hasMore: boolean) {
     return hasMore ? 'Load more recipes' : 'No more recipes to load';
@@ -24,7 +23,7 @@ export default function Recipes({recipes: initRecipes, children}: {recipes: Reci
     const [isMobileVisible, setMobileVisible] = useState(true);
     const [filterString, setFilterString] = useState('');
     const [isFetching, setIsFetching] = useState(false);
-    const [spinnerVisible, setSpinnerVisible] = useState(false);
+    const [spinnerVisible, setSpinnerVisible] = useState(true);
     const filterRef = useRef<HTMLInputElement>(null);
     const [isTypingTimer, setIsTypingTimer] = useState<any>(null);
 
@@ -86,7 +85,7 @@ export default function Recipes({recipes: initRecipes, children}: {recipes: Reci
         }
     }, [hasMoreRecipes, setHasMoreRecipes]);
 
-    return (<PageWrapper className={isMobileVisible ? 'open' : ''}>
+    return (<div className={isMobileVisible ? 'open' : ''}>
             <div className="row align-items-center search-bar">
                 <div className="col-auto">
                     <Link href="/recipes/new" className="btn btn-success">New Recipe</Link>
@@ -109,5 +108,5 @@ export default function Recipes({recipes: initRecipes, children}: {recipes: Reci
                     {children}
                 </article>
             </div>
-    </PageWrapper>)
+    </div>)
 }

@@ -6,32 +6,30 @@ import { shoppingListActions } from '../../store/shoppingListState';
 
 import ShoppingListItem from "./ShoppingListItem";
 import ConfirmationModal from "../ConfirmationModal";
-import '../../components/Modal.css';
 import { Ingredient } from "@/helpers/types";
 import { useStoreDispatch, useStoreSelector } from "@/store/store";
 import Spinner from "../Spinner";
 import { updateShoppingList } from "@/helpers/dataClient";
+import { AnimatePresence } from "framer-motion";
+
+const defaultItemToDelete = {name: '', id: ''};
 
 export default function ShoppingList() {
     const dispatch = useStoreDispatch();
     const shoppingList = useStoreSelector(state => state.shoppingList);
     const user = useStoreSelector(state => state.general.user);
+    
     const [info, setInfo] = useState<{items: Ingredient[], isInitialized: boolean }>({items: [], isInitialized: false});
-
-    const [itemToDeleteInfo, setItemToDeleteInfo] = useState({
-        visible: false, 
-        name: '', 
-        id: ''
-    }); 
+    const [itemToDeleteInfo, setItemToDeleteInfo] = useState(defaultItemToDelete); 
 
     const editItem = useCallback((item: Ingredient) => {
         dispatch(shoppingListActions.selectItem(item));
         window.scrollTo({top: 0, behavior: 'smooth'});
     }, [dispatch]);
 
-    const askDeleteConfirm = useCallback((item: Ingredient) => setItemToDeleteInfo({visible: true, name: item.name, id: item.id}), [setItemToDeleteInfo]);
+    const askDeleteConfirm = useCallback((item: Ingredient) => setItemToDeleteInfo({name: item.name, id: item.id}), [setItemToDeleteInfo]);
 
-    const closeModal = useCallback(() => setItemToDeleteInfo(prev => ({...prev, visible: false})), [setItemToDeleteInfo]);
+    const closeModal = useCallback(() => setItemToDeleteInfo(defaultItemToDelete), [setItemToDeleteInfo]);
 
     const deleteItem = useCallback(async () => {
         const id = itemToDeleteInfo.id;
@@ -75,6 +73,8 @@ export default function ShoppingList() {
 
         {!info.isInitialized && <Spinner root/>}
 
-        <ConfirmationModal question="Delete item" info={itemToDeleteInfo} onClose={closeModal} onConfirm={deleteItem}  />
+        <AnimatePresence>
+            {itemToDeleteInfo.name && <ConfirmationModal question="Delete item" itemName={itemToDeleteInfo.name} onClose={closeModal} onConfirm={deleteItem}  />}
+        </AnimatePresence>
     </div>
 }

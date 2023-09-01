@@ -1,6 +1,7 @@
 'use client';
 import { Provider } from 'react-redux'
 import '@/styles/custom.scss';
+import '@/styles/Modal.css';
 import { store } from '@/store/store'
 import LayoutComp from '@/components/LayoutComp';
 

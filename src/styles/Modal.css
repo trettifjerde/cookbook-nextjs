@@ -17,7 +17,6 @@
     left: 0;
     background-color: rgb(231 255 225 / 35%);
     cursor: pointer;
-    transition: opacity 1s;
 }
 
 .m-content {
@@ -30,7 +29,7 @@
     padding: 2rem;
     border-radius: 5px;
     border: 1px solid var(--primary);
-    box-shadow: 0 0 10px var(--gray);
+    box-shadow: 0 0 20px var(--gray);
 }
 
 .m-message {
@@ -46,38 +45,9 @@
     font-weight: 600;
 }
 
-@keyframes modal {
-    0% {
-        opacity: 0;
-        transform: translateY(-100%);
-    }
-    60% {
-        transform: translateY(10%);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0%);
-    }
-}
-
 @media (min-width: 768px) {
     .m-content {
         min-width: 400px;
     }
-}
-
-.m-trans-enter .m-shadow {
-    animation: fadeIn .3s ease-in-out;
-}
-
-.m-trans-exit .m-shadow {
-    animation: fadeIn .3s ease-in-out reverse forwards;
-}
-
-.m-trans-enter .m-content {
-    animation: modal .2s ease-in-out;
-}
-.m-trans-exit .m-content {
-    animation: modal .2s ease-in-out reverse forwards;
 }
 

@@ -24,7 +24,7 @@ export const listVariants = {
 export const itemVariants = (n: number) => ({
     hidden: {
         opacity: 0,
-        scale: 0.7,
+        scale: 0.8,
         transition: {
             duration: 0.2,
             delay: 0.1 * n

@@ -11,8 +11,8 @@ import ConfirmationModal from '../ConfirmationModal';
 import { recipesActions } from '@/store/recipesState';
 import useAuthenticator from '@/helpers/useAuthenticator';
 import { fetchData } from '@/helpers/utils';
-import {motion} from 'framer-motion';
 import RecipePageWrapper from './RecipePageWrapper';
+import { AnimatePresence } from 'framer-motion';
 
 export default function RecipeDetails({recipe}: {recipe: Recipe}) {
     const {authenticated} = useAuthenticator();
@@ -22,14 +22,11 @@ export default function RecipeDetails({recipe}: {recipe: Recipe}) {
     const top = useRef<HTMLDivElement>(null);
     const ddBtnRef = useRef<HTMLButtonElement>(null);
     const [isDropdownVisible, setDropdownVisible] = useState(false);
-    const [modalInfo, setModalInfo] = useState({
-        visible: false, 
-        name: '', 
-    });
+    const [isModalVisible, setIsModalVisible] = useState(false);
 
     const toggleDropdown = useCallback(() => setDropdownVisible((prevState) => (!prevState)), [setDropdownVisible]);
     const toShoppingList = useCallback(() => dispatch(addRecipeToShoppingList(recipe.ingredients)), [recipe, dispatch]);
-    const closeDeleteRecipeConfirm = useCallback(() => setModalInfo(prev => ({...prev, visible: false})), [setModalInfo]);
+    const closeDeleteRecipeConfirm = useCallback(() => setIsModalVisible(false), [setIsModalVisible]);
 
     const onDeleteRecipe = useCallback(async ()=> {
         closeDeleteRecipeConfirm();
@@ -49,10 +46,7 @@ export default function RecipeDetails({recipe}: {recipe: Recipe}) {
         router.push('/recipes');
     }, [router, recipe, closeDeleteRecipeConfirm, dispatch]);
 
-    const askDeleteRecipeConfirm = useCallback((recipe: Recipe) => setModalInfo({
-        visible: true,
-        name: recipe.name
-    }), [setModalInfo]);
+    const askDeleteRecipeConfirm = useCallback((recipe: Recipe) => setIsModalVisible(true), [setIsModalVisible]);
 
     useEffect(() => {
         if (top.current) top.current.scrollIntoView();
@@ -103,11 +97,13 @@ export default function RecipeDetails({recipe}: {recipe: Recipe}) {
                     { recipe.steps.map((step, i) => <li key={i} className="list-group-item">{step}</li>)}
                 </ol>
             </div>
-            {authenticated && <ConfirmationModal 
-                question="Delete recipe" 
-                info={modalInfo} 
-                onConfirm={onDeleteRecipe} 
-                onClose={closeDeleteRecipeConfirm}/>}
+            <AnimatePresence>
+                {authenticated && isModalVisible && <ConfirmationModal 
+                    question="Delete recipe" 
+                    itemName={recipe.name} 
+                    onConfirm={onDeleteRecipe} 
+                    onClose={closeDeleteRecipeConfirm}/>}
+            </AnimatePresence>
         </div>
     </RecipePageWrapper>)
 };

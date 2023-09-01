@@ -68,7 +68,7 @@ const ShoppingListForm = () => {
     return (
         <div className="row">
             <div className="col">
-                <form onSubmit={validateIngredient} ref={formEl}>
+                <form onSubmit={validateIngredient} ref={formEl} autoComplete="false">
                     <input type="hidden" name="id" />
                     <div className="row mb-2 g-2">
                         <div className="col-8 form-group">

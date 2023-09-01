@@ -1,10 +1,9 @@
 import { Ingredient } from "@/helpers/types";
-import { useCallback } from "react";
+import { memo, useCallback } from "react";
 
-export default function ShoppingListItem({item, onEdit, onDelete} : {
+function ShoppingListItem({item, onEdit, onDelete} : {
     item: Ingredient, onEdit: (item: Ingredient) => void, onDelete: (item: Ingredient) => void
 }) {
-
     const getItemInfo = useCallback(() => {
         let info = item.name;
         if (item.amount) {
@@ -27,3 +26,5 @@ export default function ShoppingListItem({item, onEdit, onDelete} : {
         </div>
     )
 }
+
+export default memo(ShoppingListItem);
