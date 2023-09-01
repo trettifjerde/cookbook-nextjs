@@ -4,11 +4,13 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState: {
     isSubmitting: boolean, 
     message: {text: string, isError: boolean} | null,
-    user: TimedUser | null
+    user: TimedUser | null,
+    authChecked: boolean
 } = {
     isSubmitting: false,
     message: null,
-    user: null
+    user: null,
+    authChecked: false
 };
 
 const general = createSlice({
@@ -30,7 +32,7 @@ const general = createSlice({
         },
         setSubmitting(state, action) {
             state.isSubmitting = action.payload;
-        }
+        },
     }
 });
 

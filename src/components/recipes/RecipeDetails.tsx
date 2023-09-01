@@ -13,6 +13,9 @@ import useAuthenticator from '@/helpers/useAuthenticator';
 import { fetchData } from '@/helpers/utils';
 import RecipePageWrapper from './RecipePageWrapper';
 import { AnimatePresence } from 'framer-motion';
+import Image from 'next/image';
+
+const sizes = "(max-width: 576px) 100vw, 60vw";
 
 export default function RecipeDetails({recipe}: {recipe: Recipe}) {
     const {authenticated} = useAuthenticator();
@@ -56,7 +59,7 @@ export default function RecipeDetails({recipe}: {recipe: Recipe}) {
         <div className="r" ref={top}>
             <div className="detail-header">
                 <div className="detail-header-img">
-                    <img src={recipe.imagePath} className="img-fluid" />
+                    <Image alt={recipe.name} src={recipe.imagePath} fill sizes={sizes}/>
                 </div>
                 <div className="detail-header-text">
                     <div className="row flex-wrap g-2 justify-content-between mb-3 align-items-center">

@@ -294,6 +294,10 @@ textarea.form-control.larger {
     align-items: center;
     justify-content: center;
     overflow: hidden;
+
+    img {
+        object-fit: cover;
+    }
 }
 
 .detail-header-text {

@@ -2,7 +2,6 @@
 import { useCallback, useState, useRef, FormEventHandler } from "react";
 import { FirebaseIngredient, FirebaseRecipe, FormErrors, FormIngredient, FormRecipe } from "@/helpers/types";
 import { useRouter } from "next/navigation";
-import useRedirectOnLogout from "@/helpers/useRedirectOnLogout";
 import { useStoreDispatch } from "@/store/store";
 import { recipesActions } from "@/store/recipesState";
 import useListManager from "@/helpers/useListManger";
@@ -10,6 +9,7 @@ import { generalActions } from "@/store/generalState";
 import { fetchData } from "@/helpers/utils";
 import RecipePageWrapper from "./RecipePageWrapper";
 import { AnimatePresence, motion } from "framer-motion";
+import useRedirectOnLogout from "@/helpers/useRedirectOnLogout";
 
 const listVariants = {
     initial: {
@@ -30,7 +30,6 @@ const listVariants = {
 export default function RecipeForm({recipe}: {recipe: FormRecipe}) {
     useRedirectOnLogout();
     const dispatch = useStoreDispatch();
-
     const recipeId = recipe.id;
     const router = useRouter();
     const {list: ings, addItem: addIng, removeItem: removeIng} = useListManager<FirebaseIngredient, FormIngredient>(recipe.ingredients, makeNewIng);

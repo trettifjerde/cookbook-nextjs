@@ -68,7 +68,8 @@ export default function SignForm({mode}: {mode: AuthMode}) {
                 try {
                     const {user} = response;
                     dispatch(registerLogIn(user));
-                    router.replace('/recipes');
+                    router.refresh();
+                    router.push('/recipes');
                 }
                 catch(err) {
                     dispatch(generalActions.flashToast({text: 'An error has occurred', isError: true}))

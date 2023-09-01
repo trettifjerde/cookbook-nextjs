@@ -5,4 +5,5 @@ export default function RecipeFormPage() {
     const recipe = makeFormRecipe();
 
     return <RecipeForm recipe={recipe}/>
+
 };

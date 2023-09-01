@@ -1,5 +1,6 @@
 import { authenticate } from "@/helpers/authServer";
 import { AuthForm, AuthMode } from "@/helpers/types";
+import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -8,11 +9,19 @@ export async function POST(req: NextRequest) {
     const res = await authenticate(mode, form);
 
     if ('info' in res) {
-        const response = new Response(JSON.stringify({user: res.info.user}));
-        const token = `token=${res.info.user.token}; HttpOnly; Secure; Max-Age=${res.info.expiresIn}; Path=/;`;
-        const id = `id=${res.info.user.id}; HttpOnly; Secure; Max-Age=${res.info.expiresIn}; Path=/;`
-        response.headers.append('Set-Cookie', token);
-        response.headers.append('Set-Cookie', id);
+        const response = new NextResponse(JSON.stringify({user: res.info.user}));
+        cookies().set({
+            name: 'token',
+            value: res.info.user.token,
+            httpOnly: true,
+            maxAge: res.info.expiresIn
+        });
+        cookies().set({
+            name: 'id',
+            value: res.info.user.id,
+            httpOnly: true,
+            maxAge: res.info.expiresIn
+        })
         return response;
     }
 
@@ -21,7 +30,7 @@ export async function POST(req: NextRequest) {
 
 export async function DELETE() {
     const res = new NextResponse(JSON.stringify({ok: ''}));
-    res.cookies.delete('token');
-    res.cookies.delete('id');
+    cookies().delete('token');
+    cookies().delete('id');
     return res;
 }

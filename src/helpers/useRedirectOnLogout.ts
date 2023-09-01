@@ -9,7 +9,8 @@ export const useRedirectOnLogout = () => {
 
     useEffect(() => {
         if (!user) {
-            router.replace('/auth/login');
+            router.refresh();
+            router.push('/auth/login');
         }
     }, [user, router]);
 
