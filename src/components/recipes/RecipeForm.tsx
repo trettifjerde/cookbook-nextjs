@@ -1,7 +1,5 @@
 'use client';
 import { useCallback, useState, useRef, FormEventHandler } from "react";
-import { TransitionGroup, CSSTransition } from "react-transition-group";
-import './RecipeForm.css';
 import { FirebaseIngredient, FirebaseRecipe, FormErrors, FormIngredient, FormRecipe } from "@/helpers/types";
 import { useRouter } from "next/navigation";
 import useRedirectOnLogout from "@/helpers/useRedirectOnLogout";
@@ -11,6 +9,23 @@ import useListManager from "@/helpers/useListManger";
 import { generalActions } from "@/store/generalState";
 import { fetchData } from "@/helpers/utils";
 import RecipePageWrapper from "./RecipePageWrapper";
+import { AnimatePresence, motion } from "framer-motion";
+
+const listVariants = {
+    initial: {
+        opacity: 0,
+        y: -30
+    },
+    animate: {
+        opacity: 1,
+        y: 0,
+        scale: 1
+    },
+    exit: {
+        scale: 0.7,
+        opacity: 0
+    }
+};
 
 export default function RecipeForm({recipe}: {recipe: FormRecipe}) {
     useRedirectOnLogout();
@@ -96,9 +111,10 @@ export default function RecipeForm({recipe}: {recipe: FormRecipe}) {
                             Ingredients are required
                         </p>}
                     </div>
-                    <TransitionGroup>
+                    <AnimatePresence mode="popLayout">
                         { ings.map(ing => (
-                            <CSSTransition key={ing.id} timeout={300} classNames='list-item'>
+                            <motion.div layout key={ing.id} 
+                                variants={listVariants} exit="exit" initial="initial" animate="animate">
                                 <div className="row row-cols-auto align-items-center g-2 flex-nowrap ingred-cont">
                                     <div className="col flex-shrink-1">
                                         <input type="number" className={`form-control ${errors[ing.id + '-amount'] ? 'invalid' : ''}`} defaultValue={ing.amount} name={`${ing.id}-amount`} placeholder="amount" />
@@ -113,41 +129,42 @@ export default function RecipeForm({recipe}: {recipe: FormRecipe}) {
                                         <button className="btn btn-outline-danger" type="button" onClick={removeIng.bind(null, ing.id)}>X</button>
                                     </div>            
                                 </div>
-                            </CSSTransition>
+                            </motion.div>
                         )) }
-                    </TransitionGroup>
-                    <button type="button" className="btn btn-outline-success mt-2" onClick={addIng}>
-                        Add new ingredient
-                    </button>
+                        <motion.button layout key="ing-btn" type="button" className="btn btn-outline-success mt-2" onClick={addIng}>
+                            Add new ingredient
+                        </motion.button>
+                    </AnimatePresence>  
                 </div>
                 <hr/>
                 <div className="form-group">
-                    <div className="label-row">
-                        <label>Steps</label>
-                        { errors.steps && <p className="form-text text-danger">
-                            Steps cannot be empty or longer than 1000 characters each
-                        </p>}
-                    </div>
-                    <TransitionGroup component="ol" className="list-group list-group-flush steps">
-                        { steps.map(step => <CSSTransition key={step.id} timeout={300} classNames="list-item">
-                            <li className="list-group-item row step">
-                                <div className="col-auto step-num-n-del">
-                                    <div className="btn order-btn"></div>
-                                    <button className="btn btn-outline-danger" type="button" onClick={removeStep.bind(null, step.id)}>X</button>      
-                                </div>
-                                <div className="col-md-8 step-area">
-                                    <textarea className={`form-control ${errors[step.id] ? 'invalid' : ''}`} name={step.id} defaultValue={step.step}></textarea>
-                                </div>
-                                <div className="col-auto step-move-btns">
-                                    <button className="btn btn-outline-success" type="button" onClick={moveStep.bind(null, step.id, -1)}>🡅</button>
-                                    <button className="btn btn-outline-success" type="button" onClick={moveStep.bind(null, step.id, 1)}>🡇</button>      
-                                </div>
-                            </li>
-                        </CSSTransition>)}     
-                    </TransitionGroup>
-                    <button type="button" className="btn btn-outline-success" onClick={addStep}>
-                        Add new step
-                    </button>
+                    <AnimatePresence mode="popLayout">
+                        <motion.div layout key="h-d" className="label-row">
+                            <motion.label layout key="h-l">Steps</motion.label>
+                            { errors.steps && <motion.p layout key="h-e" className="form-text text-danger">
+                                Steps cannot be empty or longer than 1000 characters each
+                            </motion.p>}
+                        </motion.div>
+                        <motion.ol layout key="s-o" className="list-group list-group-flush steps">
+                                { steps.map(step => <motion.li layout key={step.id} className="list-group-item row step"
+                                    variants={listVariants} initial="initial" animate="animate" exit="exit">
+                                        <div className="col-auto step-num-n-del">
+                                            <div className="btn order-btn"></div>
+                                            <button className="btn btn-outline-danger" type="button" onClick={removeStep.bind(null, step.id)}>X</button>      
+                                        </div>
+                                        <div className="col-md-8 step-area">
+                                            <textarea className={`form-control ${errors[step.id] ? 'invalid' : ''}`} name={step.id} defaultValue={step.step}></textarea>
+                                        </div>
+                                        <div className="col-auto step-move-btns">
+                                            <button className="btn btn-outline-success" type="button" onClick={moveStep.bind(null, step.id, -1)}>🡅</button>
+                                            <button className="btn btn-outline-success" type="button" onClick={moveStep.bind(null, step.id, 1)}>🡇</button>      
+                                        </div>
+                                    </motion.li>)} 
+                        </motion.ol>
+                        <motion.button key="step-btn" type="button" className="btn btn-outline-success" onClick={addStep}>
+                            Add new step
+                        </motion.button>
+                    </AnimatePresence>
                 </div>
                 <hr/>
                 <div className="row justify-content-between g-0">

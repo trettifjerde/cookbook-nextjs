@@ -8,6 +8,7 @@ import { AuthForm, AuthMode } from '@/helpers/types';
 import { registerLogIn } from '@/store/complexActions';
 import { useRouter } from 'next/navigation';
 import { fetchAuth } from '@/helpers/authClient';
+import { LazyMotion, domAnimation, m } from 'framer-motion';
 
 export default function SignForm({mode}: {mode: AuthMode}) {
 
@@ -80,7 +81,8 @@ export default function SignForm({mode}: {mode: AuthMode}) {
         setErrors({});
     }, [isSignUpMode, setErrors]);
 
-    return (<div className="row">
+    return (<LazyMotion features={domAnimation}>
+        <m.div initial={{opacity: 0, y: '50%'}} animate={{opacity: 1, y: 0}} className="row">
             <div className="col-xs-12 col-md-6 m-auto">
                 <h3>Sign {isSignUpMode? 'up' : 'in'}</h3>
                 <form onSubmit={onSubmitForm}>
@@ -110,7 +112,7 @@ export default function SignForm({mode}: {mode: AuthMode}) {
                         </div>
                         <input ref={confRef} type="password" className='form-control' name="confirmation" />
                     </div>}
-                    <div className="row justify-content-between g-0 mt-4">
+                    <div className="row justify-content-between g-1 mt-3">
                         <button type="submit" className="btn btn-success col-md-5">
                             Sign {isSignUpMode ? 'up' : 'in'}
                         </button> 
@@ -120,6 +122,6 @@ export default function SignForm({mode}: {mode: AuthMode}) {
                     </div>
                 </form>      
             </div>
-        </div>
-    )
+        </m.div>
+    </LazyMotion> )
 }

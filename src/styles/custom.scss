@@ -140,6 +140,17 @@ nav.navbar {
     overflow: auto;
 }
 
+.drag-handle {
+    cursor: grab;
+    
+    &::before {
+        content: 'O';
+        width: 1rem;
+        height: 1rem;
+        display: inline-block;
+    }
+}
+
 @media (max-width: 768px) {
     .list-group-item {
         padding-inline: 0.5rem;

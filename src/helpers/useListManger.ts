@@ -19,5 +19,5 @@ export default function useListManager<T, N extends {id: string}>(init: T[], new
         return filteredItems;
     }), [setList]);
 
-    return {list, addItem, removeItem, moveItem};
+    return {list, setList, addItem, removeItem, moveItem};
 }

@@ -1,5 +1,5 @@
 'use client';
-import { AnimatePresence, LazyMotion, domAnimation, m } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import RecipeItem from "./RecipeItem";
 import { RecipePreview } from '@/helpers/types';
 import { usePathname } from 'next/navigation';
@@ -45,20 +45,18 @@ const RecipeList = ({filterString, recipes}: {recipes: RecipePreview[], filterSt
     const filteredRecipes = recipes.filter(recipe => recipe.name.toLowerCase().includes(filterString));
     const pathname = usePathname();
 
-    return (<LazyMotion features={domAnimation}>
-        <m.div className="recipes-c" variants={listVariants} initial="hidden" exit="hidden" animate="visible">
+    return (<motion.div className="recipes-c" variants={listVariants} initial="hidden" exit="hidden" animate="visible">
             <AnimatePresence>
-                {filteredRecipes.map((r, i) => <m.div key={r.id} layout 
+                {filteredRecipes.map((r, i) => <motion.div key={r.id} layout 
                 variants={itemVariants(filteredRecipes.length - 1 - i)}
                 initial="hidden" animate="visible" exit="hidden">
                     <RecipeItem recipe={r} isActive={pathname.endsWith(r.id)}/>
-                </m.div>) }
-                {filteredRecipes.length === 0 && <m.div key="recipes-btn" variants={itemVariants(0)}>
+                </motion.div>) }
+                {filteredRecipes.length === 0 && <motion.div key="recipes-btn" variants={itemVariants(0)}>
                     <div className="empty">No recipes found</div>
-                </m.div>}
+                </motion.div>}
             </AnimatePresence>
-        </m.div> 
-        </LazyMotion>
+        </motion.div> 
     )
 }
 export default RecipeList;
