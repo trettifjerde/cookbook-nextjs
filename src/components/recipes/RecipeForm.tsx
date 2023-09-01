@@ -5,7 +5,7 @@ import './RecipeForm.css';
 import { FirebaseIngredient, FirebaseRecipe, FormErrors, FormIngredient, FormRecipe } from "@/helpers/types";
 import { useRouter } from "next/navigation";
 import useRedirectOnLogout from "@/helpers/useRedirectOnLogout";
-import { useStoreDispatch, useStoreSelector } from "@/store/store";
+import { useStoreDispatch } from "@/store/store";
 import { recipesActions } from "@/store/recipesState";
 import useListManager from "@/helpers/useListManger";
 import { generalActions } from "@/store/generalState";
@@ -14,8 +14,6 @@ import RecipePageWrapper from "./RecipePageWrapper";
 
 export default function RecipeForm({recipe}: {recipe: FormRecipe}) {
     useRedirectOnLogout();
-
-    const user = useStoreSelector(state => state.general.user);
     const dispatch = useStoreDispatch();
 
     const recipeId = recipe.id;
