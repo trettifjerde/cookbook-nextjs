@@ -7,7 +7,7 @@ export default async function RecipeDetailsPage({params}: {params: {id: string}}
     return <RecipeDetails recipe={recipe} />
 };
 
-export async function getRecipe(id: string) {
+async function getRecipe(id: string) {
     const recipe = await fetchRecipe(id);
     if ('error' in recipe) {
         notFound();
