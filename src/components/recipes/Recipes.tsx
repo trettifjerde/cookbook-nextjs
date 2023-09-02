@@ -9,7 +9,7 @@ import { recipesActions } from "@/store/recipesState";
 import { fetchRecipes } from "@/helpers/dataClient";
 import RecipeList from "./RecipeList";
 import Spinner from "../Spinner";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 
 function getLoadBtnText(hasMore: boolean) {
     return hasMore ? 'Load more recipes' : 'No more recipes to load';
@@ -102,7 +102,7 @@ export default function Recipes({recipes: initRecipes, children}: {recipes: Reci
             <div className={`row mb-3 ${isMobileVisible ? 'open' : ''}`}>
                 <aside className="col-md-5 side">
                     <button type="button" className="btn btn-success" disabled={!hasMoreRecipes} onClick={loadMoreRecipes}>{getLoadBtnText(hasMoreRecipes)}</button>  
-                    <RecipeList recipes={isInitialized ? recipes : initRecipes} filterString={filterString}/>
+                        <RecipeList recipes={isInitialized ? recipes : initRecipes} filterString={filterString}/>
                     {spinnerVisible && <Spinner />}
                 </aside>
                 <article className="col-md-7 main">

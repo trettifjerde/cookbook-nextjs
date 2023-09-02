@@ -48,3 +48,11 @@ export async function fetchIngredients(user: CookieUser) {
 export async function updateShoppingList(data: any) {
     return fetchData('/api/list', 'POST', data);
 }
+
+export async function getRecipe(id: string) {
+    const recipe = await fetchRecipe(id);
+    if ('error' in recipe) {
+        throw new Error('Recipe not found');
+    }
+    return recipe;
+}
