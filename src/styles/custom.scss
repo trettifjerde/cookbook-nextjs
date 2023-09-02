@@ -22,11 +22,12 @@ $gray: rgba(88, 88, 88, 0.6);
 
 .dropdown-menu {
     min-width: unset;
-    padding: 3px;
+    padding: 0 3px 3px 3px;
     overflow: hidden;
     background-color: transparent;
     border-color: transparent;
     left: -3px;
+    display: block;
 }
 
 .dropdown-menu-inner {
@@ -40,6 +41,11 @@ $gray: rgba(88, 88, 88, 0.6);
     background-color: white;
     cursor: pointer;
     transition: all .2s ease-in-out;
+    border-color: white;
+
+    &:active {
+        background-color: $primary;
+    }
 }
 
 .empty {
@@ -79,6 +85,10 @@ a {
 .nav-link:active,
 .nav-link:focus {
     color: $primary;
+}
+
+.nav-item:last-of-type {
+    margin-left: auto;
 }
 
 nav.navbar {
@@ -294,6 +304,7 @@ textarea.form-control.larger {
     align-items: center;
     justify-content: center;
     overflow: hidden;
+    background-color: rgba(7, 71, 27, 0.7);
 
     img {
         object-fit: cover;
@@ -407,29 +418,6 @@ h5 {
 
 .f-sm {
     font-size: 0.8rem;
-}
-
-@keyframes ddSlide {
-    from {
-        opacity: 0;
-        transform: translateY(-100%);
-    }
-    to {
-        transform: translateY(0%);
-        opacity: 1;
-    }
-}
-
-.dd-enter, .dd-open, .dd-exit {
-    display: block;
-}
-
-.dd-enter .dropdown-menu-inner {
-    animation: ddSlide .15s ease-out forwards;
-}
-
-.dd-exit .dropdown-menu-inner  {
-    animation: ddSlide .15s ease-in reverse forwards;
 }
 
 .recipe-item-enter {

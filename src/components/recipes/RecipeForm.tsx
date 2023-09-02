@@ -10,11 +10,13 @@ import { fetchData } from "@/helpers/utils";
 import RecipePageWrapper from "./RecipePageWrapper";
 import { AnimatePresence, motion } from "framer-motion";
 import useRedirectOnLogout from "@/helpers/useRedirectOnLogout";
+import RecipeFormInput from "./formComponents/RecipeFormInput";
 
 const listVariants = {
     initial: {
         opacity: 0,
-        y: -30
+        y: -30,
+        scale: 1
     },
     animate: {
         opacity: 1,
@@ -23,19 +25,20 @@ const listVariants = {
     },
     exit: {
         scale: 0.7,
-        opacity: 0
+        opacity: 0,
+        y: 0
     }
 };
 
 export default function RecipeForm({recipe}: {recipe: FormRecipe}) {
     useRedirectOnLogout();
     const dispatch = useStoreDispatch();
-    const recipeId = recipe.id;
     const router = useRouter();
     const {list: ings, addItem: addIng, removeItem: removeIng} = useListManager<FirebaseIngredient, FormIngredient>(recipe.ingredients, makeNewIng);
     const {list: steps, addItem: addStep, removeItem: removeStep, moveItem: moveStep} = useListManager<string, {id: string, step: string}>(recipe.steps, makeNewStep);
     const [errors, setErrors] = useState<FormErrors>({});
     const contTop = useRef<HTMLDivElement>(null);
+    const recipeId = recipe.id;
 
     const submitForm = useCallback(async (data: FirebaseRecipe) => {
         dispatch(generalActions.setSubmitting(true));
@@ -77,31 +80,14 @@ export default function RecipeForm({recipe}: {recipe: FormRecipe}) {
     return <RecipePageWrapper>
         <div className="label-row" ref={contTop}>
             <h3>{ recipe.id ? 'Edit recipe' : 'Add recipe'}</h3> 
-            {Object.keys(errors).length > 0 && <p className="form-text text-danger">Form contains errors</p>}
         </div>
         <div className="r">        
-            <form className="recipe-form" onSubmit={handleSubmit}>     
-                <div className="form-group">
-                    <div className="label-row">
-                        <label htmlFor="name">Name</label>
-                        { errors.name && <p className="form-text text-danger">Name is required</p>}
-                    </div>
-                    <input type="text" id="name" name="name" className={`form-control ${errors.name ? 'invalid' : ''}`} defaultValue={recipe.name} />
-                </div>
+            <form className="recipe-form" onSubmit={handleSubmit}>
+                <RecipeFormInput name="name" label="Name" defaultValue={recipe.name} errors={errors}/>     
                 <hr/>
-                <div className="form-group">
-                    <div className="label-row">
-                        <label htmlFor="description">Description</label>
-                        { errors.description && <p className="form-text text-danger">Description is required</p>}
-                    </div>
-                    <textarea className={`form-control larger ${errors.description ? 'invalid' : ''}`} name="description" defaultValue={recipe.description}></textarea>
-                    
-                </div>
+                <RecipeFormInput type="textarea" name="description" label="Description" defaultValue={recipe.description} errors={errors}/> 
                 <hr/>
-                <div className="form-group">
-                    <label htmlFor="imagePath">Image URL</label>
-                    <input type="text" className="form-control" name="imagePath" defaultValue={recipe.imagePath}/>
-                </div>
+                <RecipeFormInput name="imagePath" label="Image URL" defaultValue={recipe.imagePath} errors={errors} />
                 <hr/>
                 <div className="form-group">
                     <div className="label-row">
@@ -145,20 +131,20 @@ export default function RecipeForm({recipe}: {recipe: FormRecipe}) {
                             </motion.p>}
                         </motion.div>
                         <motion.ol layout key="s-o" className="list-group list-group-flush steps">
-                                { steps.map(step => <motion.li layout key={step.id} className="list-group-item row step"
-                                    variants={listVariants} initial="initial" animate="animate" exit="exit">
-                                        <div className="col-auto step-num-n-del">
-                                            <div className="btn order-btn"></div>
-                                            <button className="btn btn-outline-danger" type="button" onClick={removeStep.bind(null, step.id)}>X</button>      
-                                        </div>
-                                        <div className="col-md-8 step-area">
-                                            <textarea className={`form-control ${errors[step.id] ? 'invalid' : ''}`} name={step.id} defaultValue={step.step}></textarea>
-                                        </div>
-                                        <div className="col-auto step-move-btns">
-                                            <button className="btn btn-outline-success" type="button" onClick={moveStep.bind(null, step.id, -1)}>🡅</button>
-                                            <button className="btn btn-outline-success" type="button" onClick={moveStep.bind(null, step.id, 1)}>🡇</button>      
-                                        </div>
-                                    </motion.li>)} 
+                            { steps.map(step => <motion.li layout key={step.id} className="list-group-item row step"
+                                variants={listVariants} initial="initial" animate="animate" exit="exit">
+                                    <div className="col-auto step-num-n-del">
+                                        <div className="btn order-btn"></div>
+                                        <button className="btn btn-outline-danger" type="button" onClick={removeStep.bind(null, step.id)}>X</button>      
+                                    </div>
+                                    <div className="col-md-8 step-area">
+                                        <textarea className={`form-control ${errors[step.id] ? 'invalid' : ''}`} name={step.id} defaultValue={step.step}></textarea>
+                                    </div>
+                                    <div className="col-auto step-move-btns">
+                                        <button className="btn btn-outline-success" type="button" onClick={moveStep.bind(null, step.id, -1)}>🡅</button>
+                                        <button className="btn btn-outline-success" type="button" onClick={moveStep.bind(null, step.id, 1)}>🡇</button>      
+                                    </div>
+                                </motion.li>)} 
                         </motion.ol>
                         <motion.button key="step-btn" type="button" className="btn btn-outline-success" onClick={addStep}>
                             Add new step

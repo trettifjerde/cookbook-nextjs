@@ -4,30 +4,13 @@ import RecipeItem from "./RecipeItem";
 import { RecipePreview } from '@/helpers/types';
 import { usePathname } from 'next/navigation';
 
-export const listVariants = {
-    hidden: {
-        transition: {
-            staggerChildren: 0.1, 
-            staggerDirection: -1,
-            duration: 0
-        }
-    },
-    visible: {
-        transition: {
-            staggerChildren: 0.1, 
-            staggerDirection: -1,
-            duration: 0
-        }
-    }
-};
-
 export const itemVariants = (n: number) => ({
     hidden: {
         opacity: 0,
         scale: 0.8,
         transition: {
             duration: 0.2,
-            delay: 0.1 * n
+            delay: 0.13 * n
         }
     },
     visible: {
@@ -35,7 +18,7 @@ export const itemVariants = (n: number) => ({
         scale: 1,
         transition: {
             duration: 0.2,
-            delay: 0.1 * n
+            delay: 0.13 * n
         }
     }
 })
@@ -45,7 +28,7 @@ const RecipeList = ({filterString, recipes}: {recipes: RecipePreview[], filterSt
     const filteredRecipes = recipes.filter(recipe => recipe.name.toLowerCase().includes(filterString));
     const pathname = usePathname();
 
-    return (<motion.div className="recipes-c" variants={listVariants} initial="hidden" exit="hidden" animate="visible">
+    return (<div className="recipes-c">
             <AnimatePresence>
                 {filteredRecipes.map((r, i) => <motion.div key={r.id} layout 
                 variants={itemVariants(filteredRecipes.length - 1 - i)}
@@ -56,7 +39,7 @@ const RecipeList = ({filterString, recipes}: {recipes: RecipePreview[], filterSt
                     <div className="empty">No recipes found</div>
                 </motion.div>}
             </AnimatePresence>
-        </motion.div> 
+        </div> 
     )
 }
 export default RecipeList;

@@ -1,33 +1,39 @@
 'use client';
+import { LazyMotion, domAnimation, m } from "framer-motion";
 import { ReactNode, RefObject, useEffect } from "react";
-import { CSSTransition } from 'react-transition-group';
 
-export default function Dropdown({isVisible, onBgClick, btn, children}: {
-    isVisible: boolean, 
+const variants = {
+    hidden: {
+        opacity: 0,
+        y: '-100%'
+    },
+    visible: {
+        opacity: 1,
+        y: 0
+    }
+}
+
+export default function Dropdown({onBgClick, btn, children}: {
     onBgClick: () => void, 
     btn: RefObject<HTMLButtonElement>,
     children: ReactNode
 }) {
 
     useEffect(() => {
-        if (isVisible) {
-            document.addEventListener('click', (event) => {
-                if (event.target !== btn.current)
-                    onBgClick()
-            }, {once: true, capture: true})
-        }
-
-    }, [isVisible, onBgClick, btn]);
+        document.addEventListener('click', (event) => {
+            if (event.target !== btn.current)
+                onBgClick()
+        }, {once: true, capture: true})
+    }, [onBgClick, btn]);
 
     return (
-        <CSSTransition in={isVisible} classNames={{
-            enter: 'dd-enter',
-            exit: 'dd-exit',
-            enterDone: 'dd-open'
-        }} timeout={150}>
-            <div className="dropdown-menu">
-                <div className="dropdown-menu-inner">{children}</div>
-            </div>
-        </CSSTransition>
+        <div className="dropdown-menu" >
+            <LazyMotion features={domAnimation}>
+                <m.div className="dropdown-menu-inner"
+                    variants={variants} initial="hidden" exit="hidden" animate="visible">
+                        {children}
+                </m.div>
+            </LazyMotion>
+        </div>
     )
 }

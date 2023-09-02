@@ -5,7 +5,9 @@ import { fetchRecipes } from '@/helpers/dataClient';
 export default async function RecipePage({children}:{children: ReactNode}) {
     const recipes = await getRecipes();
 
-    return <Recipes recipes={recipes}>{children}</Recipes>
+    return <Recipes recipes={recipes}>
+        {children}
+    </Recipes>
 };
 
 async function getRecipes() {

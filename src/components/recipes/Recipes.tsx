@@ -9,6 +9,7 @@ import { recipesActions } from "@/store/recipesState";
 import { fetchRecipes } from "@/helpers/dataClient";
 import RecipeList from "./RecipeList";
 import Spinner from "../Spinner";
+import { AnimatePresence } from "framer-motion";
 
 function getLoadBtnText(hasMore: boolean) {
     return hasMore ? 'Load more recipes' : 'No more recipes to load';
@@ -85,7 +86,7 @@ export default function Recipes({recipes: initRecipes, children}: {recipes: Reci
         }
     }, [hasMoreRecipes, setHasMoreRecipes]);
 
-    return (<div className={isMobileVisible ? 'open' : ''}>
+    return (<>
             <div className="row align-items-center search-bar">
                 <div className="col-auto">
                     <Link href="/recipes/new" className="btn btn-success">New Recipe</Link>
@@ -98,7 +99,7 @@ export default function Recipes({recipes: initRecipes, children}: {recipes: Reci
             <div className="show-recipes-btn mb-2">
                 <button type="button" className={`btn w-100 ${isMobileVisible ? 'btn-danger' : 'btn-success'}`} onClick={toggleMobileRecipes}>{ isMobileVisible ? 'Hide recipes' : 'Show recipes'}</button>
             </div>
-            <div className="row mb-3">
+            <div className={`row mb-3 ${isMobileVisible ? 'open' : ''}`}>
                 <aside className="col-md-5 side">
                     <button type="button" className="btn btn-success" disabled={!hasMoreRecipes} onClick={loadMoreRecipes}>{getLoadBtnText(hasMoreRecipes)}</button>  
                     <RecipeList recipes={isInitialized ? recipes : initRecipes} filterString={filterString}/>
@@ -108,5 +109,5 @@ export default function Recipes({recipes: initRecipes, children}: {recipes: Reci
                     {children}
                 </article>
             </div>
-    </div>)
+    </>)
 }

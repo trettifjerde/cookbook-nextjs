@@ -1,17 +1,37 @@
 'use client';
-import { useCallback } from 'react';
+import { memo, useCallback, useEffect, useState } from 'react';
 import { tryLogOut } from '../store/complexActions';
-import { useStoreDispatch } from '../store/store';
+import { useStoreDispatch, useStoreSelector } from '../store/store';
 import Link from 'next/link';
-import useAuthenticator from '@/helpers/useAuthenticator';
 import { generalActions } from '@/store/generalState';
 import { logOut } from '@/helpers/authClient';
+import { usePathname } from 'next/navigation';
 
-export default function Navigation() {
-    const {user, authenticated} = useAuthenticator();
+type LinkType = 'all'| 'authed'| 'unauthed';
+
+type Link = {
+    url: string,
+    name: string,
+    access: LinkType
+};
+
+const LINKS : Link[] = [
+    {url: '/recipes', name: 'Recipes', access: 'all'},
+    {url: '/list', name: 'Shopping List', access: 'authed'},
+    {url: '/auth/login', name: 'Sign In', access: 'unauthed'},
+];
+
+function getLinksExclude(type: LinkType) {
+    return LINKS.filter(link => link.access !== type);
+}
+
+function Navigation() {
+    const user = useStoreSelector(state => state.general.user);
     const dispatch = useStoreDispatch();
+    const pathname = usePathname();
+    const [links, setLinks] = useState(getLinksExclude('authed'));
 
-    const logout = useCallback(async () => {
+    async function logout() {
         const res = await logOut();
         if ('error' in res) {
             dispatch(generalActions.flashToast({text: res.error, isError: true}));
@@ -19,7 +39,14 @@ export default function Navigation() {
         else {
             dispatch(tryLogOut(user!.timer));
         }
-    }, [dispatch, user]);
+    }
+
+    useEffect(() => {
+        if (user) 
+            setLinks(getLinksExclude('unauthed'))
+        else 
+            setLinks(getLinksExclude('authed'))
+    }, [user, setLinks]);
 
     return <nav className="navbar navbar-expand p-3">
         <div className="navbar-header">
@@ -27,19 +54,15 @@ export default function Navigation() {
         </div>
         <div className="navbar w-100">
             <ul className="nav nav-tabs flex-grow-1">
-                <li className="nav-item">
-                    <Link className="nav-link" href="/recipes">Recipes</Link>
-                </li>
-                { authenticated && <li className="nav-item">
-                    <Link className="nav-link" href="/list">Shopping List</Link>
+                {links.map(link =><li key={link.name} className="nav-item">
+                    <Link className={`nav-link ${pathname.startsWith(link.url) ? 'active' : ''}`} href={link.url}>{link.name}</Link>
+                </li>)}
+                {user && <li className="nav-item">
+                     <button className="nav-link" onClick={logout}>Log out</button>
                 </li>}
-            </ul>
-            <ul className="nav nav-tabs">
-                <li className="nav-item">
-                    {! authenticated && <Link className="nav-link" href="/auth/login">Sign in</Link>}
-                    {authenticated && <button className="nav-link" onClick={logout}>Log out</button> }
-                </li>
             </ul>
         </div>
     </nav>
 }
+
+export default memo(Navigation);

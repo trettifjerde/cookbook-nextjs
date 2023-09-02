@@ -1,5 +1,8 @@
-import EmptyComponent from "@/components/Empty"
+'use client';
+import RecipePageWrapper from "@/components/recipes/RecipePageWrapper"
 
 export default function Empty() {
-    return <EmptyComponent message="No recipe selected" />
+    return <RecipePageWrapper className="empty">
+        No recipe selected
+    </RecipePageWrapper>
 }
