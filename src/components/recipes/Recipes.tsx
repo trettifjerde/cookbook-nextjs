@@ -9,7 +9,6 @@ import { recipesActions } from "@/store/recipesState";
 import { fetchRecipes } from "@/helpers/dataClient";
 import RecipeList from "./RecipeList";
 import Spinner from "../Spinner";
-import { AnimatePresence, motion } from "framer-motion";
 
 function getLoadBtnText(hasMore: boolean) {
     return hasMore ? 'Load more recipes' : 'No more recipes to load';
