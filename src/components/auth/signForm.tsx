@@ -67,8 +67,8 @@ export default function SignForm({mode}: {mode: AuthMode}) {
             else {
                 try {
                     const {user} = response;
-                    dispatch(registerLogIn(user));
                     router.refresh();
+                    dispatch(registerLogIn(user));
                     router.push('/recipes');
                 }
                 catch(err) {

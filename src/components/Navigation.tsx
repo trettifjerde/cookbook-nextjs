@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { generalActions } from '@/store/generalState';
 import { logOut } from '@/helpers/authClient';
 import { usePathname } from 'next/navigation';
+import useAuthenticator from '@/helpers/useAuthenticator';
 
 type LinkType = 'all'| 'authed'| 'unauthed';
 
@@ -26,7 +27,7 @@ function getLinksExclude(type: LinkType) {
 }
 
 function Navigation() {
-    const user = useStoreSelector(state => state.general.user);
+    const {authenticated, user} = useAuthenticator();
     const dispatch = useStoreDispatch();
     const pathname = usePathname();
     const [links, setLinks] = useState(getLinksExclude('authed'));
@@ -42,11 +43,11 @@ function Navigation() {
     }
 
     useEffect(() => {
-        if (user) 
+        if (authenticated) 
             setLinks(getLinksExclude('unauthed'))
         else 
             setLinks(getLinksExclude('authed'))
-    }, [user, setLinks]);
+    }, [authenticated, setLinks]);
 
     return <nav className="navbar navbar-expand p-3">
         <div className="navbar-header">
@@ -57,7 +58,7 @@ function Navigation() {
                 {links.map(link =><li key={link.name} className="nav-item">
                     <Link className={`nav-link ${pathname.startsWith(link.url) ? 'active' : ''}`} href={link.url}>{link.name}</Link>
                 </li>)}
-                {user && <li className="nav-item">
+                {authenticated && <li className="nav-item">
                      <button className="nav-link" onClick={logout}>Log out</button>
                 </li>}
             </ul>

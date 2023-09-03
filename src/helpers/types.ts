@@ -81,8 +81,6 @@ export type FormIngredient = {
     unit: string
 }
 
-export type FormErrors = {
-    [key: string]: string
-}
+export type FormErrors = {[key: string]: string};
 
 export type AuthMode = 'login' | 'signup';

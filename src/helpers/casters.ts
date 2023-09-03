@@ -57,19 +57,6 @@ export function castIngredDbToClient(id: string, data: FirebaseIngredient) {
     } as Ingredient
 }
 
-export function castIngredFormDataToClient(formData: FormData) {
-    const name = formData.get('name')?.toString().trim();
-    const amount = formData.get('amount')?.toString().trim();
-    const unit = formData.get('unit')?.toString().trim();
-    const id = formData.get('id')?.toString().trim();
-    return {
-        id,
-        name,
-        amount: amount ? +amount : 0,
-        unit: unit || null,
-    } as Ingredient;
-}
-
 export function castIngredClientToDb(ingred: Ingredient) {
     const ing: FirebaseIngredient = {name: ingred.name};
     if (ingred.amount)

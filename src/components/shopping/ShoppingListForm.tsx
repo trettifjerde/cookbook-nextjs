@@ -2,96 +2,86 @@ import { FormEventHandler, useCallback, useEffect, useRef, useState } from "reac
 
 import { shoppingListActions } from "../../store/shoppingListState";
 import { useStoreDispatch, useStoreSelector } from "@/store/store";
-import { FormErrors, Ingredient } from "@/helpers/types";
+import { FirebaseIngredient, Ingredient } from "@/helpers/types";
 import { generalActions } from "@/store/generalState";
-import { castIngredClientToDb, castIngredFormDataToClient } from "@/helpers/casters";
+import { castIngredClientToDb, castIngredDbToClient } from "@/helpers/casters";
 import { updateShoppingList } from "@/helpers/dataClient";
+import { ING_AMOUNT, ING_NAME, ING_UNIT, getIngredientErrorLog, ingredientErrorsInit, validateIngredient } from "@/helpers/forms";
+import ShoppingListFormItem from "./ShoppingFormtem";
+import useErrors from "@/helpers/useErrors";
 
 const ShoppingListForm = () => {
-
-    const {selectedItem : item, items} = useStoreSelector(state => state.shoppingList);
-    const user = useStoreSelector(state => state.general.user);
+    const {selectedItem: item, items} = useStoreSelector(state => state.shoppingList);
     const dispatch = useStoreDispatch();
+    const formRef = useRef<HTMLFormElement>(null);
 
-    const [errors, setErrors] = useState<FormErrors>({});
-    const formEl = useRef<HTMLFormElement>(null);
+    const {errors, setErrors, clearErrors, touchField} = useErrors(ingredientErrorsInit);
     
-    const submitForm = useCallback(async (formData: FormData) => {
-        if (user) {
-            dispatch(generalActions.setSubmitting(true));
+    const submitForm = async (ing: FirebaseIngredient) => {
+        dispatch(generalActions.setSubmitting(true));
 
-            const {submitFn, message} = prepareIngredientSubmit(formData, items);
+        const {submitFn, message} = prepareIngredientSubmit(item.id, ing, items);
 
-            if (!submitFn) {
-                dispatch(generalActions.flashToast({text: message, isError: true}));
-                return;
-            }
-
-            const res = await submitFn();
-            if ('error' in res) 
-                dispatch(generalActions.flashToast({text: res.error, isError: true}));
-            else {
-                dispatch(shoppingListActions.updateItem(res));
-                dispatch(generalActions.flashToast({text: message, isError: false}))
-            }
-        }
-    }, [items, user]);
-
-    const validateIngredient: FormEventHandler = useCallback(async event => {
-        event.preventDefault();
-        const formData = new FormData(event.target as HTMLFormElement);
-        const errors = checkIngredErrors(formData);
-
-        if (Object.keys(errors).length > 0) {
-            setErrors(errors);
+        if (!submitFn) {
+            dispatch(generalActions.flashToast({text: message, isError: true}));
             return;
         }
 
-        submitForm(formData);
-
-    }, [setErrors, submitForm]);
-
-
-    const clearForm = useCallback(() => dispatch(shoppingListActions.clearItem()), [dispatch]);
-
-    useEffect(() => {
-        if (formEl.current) {
-            (formEl.current.elements.namedItem('id') as HTMLFormElement).value = item.id ? item.id : '';
-            (formEl.current.elements.namedItem('name') as HTMLFormElement).value = item.name;
-            (formEl.current.elements.namedItem('amount') as HTMLFormElement).value = item.amount;
-            (formEl.current.elements.namedItem('unit') as HTMLFormElement).value = item.unit;
-            (formEl.current.elements.namedItem('name') as HTMLFormElement).focus();
-            setErrors({});
+        const res = await submitFn();
+        if ('error' in res) 
+            dispatch(generalActions.flashToast({text: res.error, isError: true}));
+        else {
+            dispatch(shoppingListActions.updateItem(res));
+            dispatch(generalActions.flashToast({text: message, isError: false}))
         }
-    }, [item, formEl, setErrors]);
+    };
+
+    const validateForm: FormEventHandler = async (event) => {
+        event.preventDefault();
+        const formData = new FormData(event.target as HTMLFormElement);
+        const {cleanIngredient, errors: errs} = validateIngredient(formData);
+
+        if (errs) 
+            setErrors(errs);
+        else 
+            submitForm(cleanIngredient);
+    };
+
+    const clearForm = () => {
+        dispatch(shoppingListActions.clearItem());
+        clearErrors();
+        formRef.current?.reset();
+    };
+
+    const registerTouch = useCallback((v: string) => touchField('general', v), [touchField]);
 
     return (
         <div className="row">
             <div className="col">
-                <form onSubmit={validateIngredient} ref={formEl} autoComplete="false">
-                    <input type="hidden" name="id" />
+                <form onSubmit={validateForm} autoComplete="false" ref={formRef}>
+                    <input type="hidden" name="id" value={item.id} />
                     <div className="row mb-2 g-2">
                         <div className="col-8 form-group">
-                            <label htmlFor="name">Name</label>
-                            <input type="text" id="name" name="name" className={`form-control ${errors.name ? 'invalid' : ''}`} />
+                            <ShoppingListFormItem type="text" label="Name" name={ING_NAME} defaultValue={item.name} 
+                                showError={errors.general.has(ING_NAME)} registerTouch={registerTouch} />
                         </div>
                         <div className="col-2 form-group">
-                            <label htmlFor="amount">Amount</label>
-                            <input type="number" id="amount" name="amount" className={`form-control ${errors.amount ? 'invalid' : ''}`} />
+                            <ShoppingListFormItem type="number" label="Amount" name={ING_AMOUNT} defaultValue={item.amount} 
+                                showError={errors.general.has(ING_AMOUNT)} registerTouch={registerTouch} />
                         </div>
                         <div className="col-2 form-group">
-                            <label htmlFor="unit">Units</label>
-                            <input type="text" id="unit" name="unit" className={`form-control ${errors.unit ? 'invalid' : ''}`} />
+                            <ShoppingListFormItem type="text" label="Units" name={ING_UNIT} defaultValue={item.unit} 
+                                showError={errors.general.has(ING_UNIT)} registerTouch={registerTouch} />
                         </div>
                     </div>
                     <div className="row align-items-center row-cols-auto mg-2 g-2">
                         <div className="col">
                             <button type="submit" className="btn-success btn">{item.id ? 'Edit' : 'Add'}</button>
                         </div>
-                        <div className="col ">
+                        <div className="col">
                             <button type="button" className="btn btn-outline-secondary" onClick={clearForm}>Clear</button>
                         </div>
-                        {Object.keys(errors).length > 0 && <div className="col text-danger form-text text-end flex-grow-1">{Object.values(errors).join('. ')}</div>}
+                        <div className="col text-danger form-text text-end flex-grow-1">{getIngredientErrorLog(errors.general)}</div>
                     </div>
                 </form>
             </div>
@@ -100,70 +90,44 @@ const ShoppingListForm = () => {
 }
 export default ShoppingListForm;
 
-function checkIngredErrors(formData: FormData) {
-    const errors: FormErrors = {};
-    for (const [key, value] of formData.entries()) {
-        const val = value.toString().trim();
+function prepareIngredientSubmit(id: string, ing: FirebaseIngredient, items: Ingredient[]) {
+    let submitFn;
+    let message;
 
-        if (key === 'name') {
-            if (!val) {
-                errors[key] = 'Name is required';
+    if (id) {
+        submitFn = updateShoppingList.bind(null, {id, ing});
+        message = `Item updated: ${ing.name}`;
+    }
+    else {
+        const [existId, updatedIng] = checkIfIngredExists(id, ing, items);
+        if (existId) {
+            if (updatedIng) {
+                submitFn = updateShoppingList.bind(null, {id: existId, ing: updatedIng});
+                message = `Item updated: ${ing.name}`;
+            }
+            else {
+                submitFn = null;
+                message = 'Item already on the list: ' + ing.name;
             }
         }
-        else if (key === 'amount') {
-            if (val && (isNaN(+val) || +val < 0.01)) {
-                errors[key] = 'Invalid amount';
-            }
-        }
-        else if (key === 'unit') {
-            if (val) {
-                const amount = formData.get('amount')?.toString() || '';
-                if (!amount || isNaN(+amount) || +amount < 0.01) {
-                    errors[key] = 'Cannot enter units without specifying amount'
-                }
-            }
+        else {
+            submitFn = updateShoppingList.bind(null, {ing});
+            message = `Item added: ${ing.name}`;
         }
     }
-    return errors;
+    return {submitFn, message};
 }
 
-function checkIfIngredExists(ingredient: Ingredient, items: Ingredient[]) : [string, Ingredient | null] {
-    const ex = items.find(it => it.name === ingredient.name && it.unit === ingredient.unit);
+function checkIfIngredExists(id: string, ingredient: FirebaseIngredient, items: Ingredient[]) : [string, FirebaseIngredient | null] {
+    const ing = castIngredDbToClient(id, ingredient);
+
+    const ex = items.find(it => it.name === ing.name && it.unit === ing.unit);
     if (ex) {
-        if (ingredient.amount)
-            return [ex.id, {...ex, amount: ex.amount + ingredient.amount}];
+        if (ing.amount)
+            return [ex.id, castIngredClientToDb({...ex, amount: ex.amount + ing.amount})];
         else
             return [ex.id, null];
     }
     else 
         return ['', null];
-}
-
-function prepareIngredientSubmit(formData: FormData, items: Ingredient[]) {
-    const ingredient = castIngredFormDataToClient(formData);
-    let submitFn;
-    let message;
-
-    if (ingredient.id) {
-        submitFn = updateShoppingList.bind(null, {id: ingredient.id, ing: castIngredClientToDb(ingredient)});
-        message = `Item updated: ${ingredient.name}`;
-    }
-    else {
-        const [existId, updatedData] = checkIfIngredExists(ingredient, items);
-        if (existId) {
-            if (updatedData) {
-                submitFn = updateShoppingList.bind(null, {id: existId, ing: castIngredClientToDb(updatedData)});
-                message = `Item updated: ${ingredient.name}`;
-            }
-            else {
-                submitFn = null;
-                message = 'Item already on the list: ' + ingredient.name;
-            }
-        }
-        else {
-            submitFn = updateShoppingList.bind(null, {ing: castIngredClientToDb(ingredient)});
-            message = `Item added: ${ingredient.name}`;
-        }
-    }
-    return {submitFn, message};
 }

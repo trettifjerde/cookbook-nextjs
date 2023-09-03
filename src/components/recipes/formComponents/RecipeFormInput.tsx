@@ -1,32 +1,26 @@
-import { useEffect, useState } from "react"
+import FormItem from "@/components/FormItem";
+import { memo, useCallback } from "react";
 
 type Props = {
     label: string,
     name: string,
-    errors: {[key: string]: string},
+    showError: boolean,
     defaultValue: string,
-    type?: 'textarea'
+    type: 'textarea' | 'text' | 'number',
+    touchField: (key: string, value: string) => void
 }
 
-export default function RecipeFormInput({type, label, name, errors, defaultValue}: Props) {
-    const [isTouched, setIsTouched] = useState(false);
+function RecipeFormInput({type, label, name, showError, defaultValue, touchField}: Props) {
 
-    const showError = errors[name] && !isTouched;
-    const className = `form-control ${showError ? 'invalid' : ''}`;
-
-    useEffect(() => {
-        setIsTouched(false);
-    }, [errors, setIsTouched]);
+    const registerTouch = useCallback((v: string) => touchField('general', v), [touchField]);
 
     return <div className="form-group">
         <div className="label-row">
             <label htmlFor={name}>{label}</label>
             { showError && <p className="form-text text-danger">{label} is required</p>}
         </div>
-        {type &&  <textarea className={className} id={name} name={name} defaultValue={defaultValue}
-            onFocus={() => setIsTouched(true)}></textarea>}
-        {!type && <input type="text" id={name} name={name} className={className} defaultValue={defaultValue} 
-            onFocus={() => setIsTouched(true)}/>
-        }
+        <FormItem type={type} name={name} showError={showError} defaultValue={defaultValue} registerTouch={registerTouch} />
     </div>
 }
+
+export default memo(RecipeFormInput);
