@@ -1,9 +1,7 @@
-'use client';
-import { Provider } from 'react-redux'
 import '@/styles/custom.scss';
 import '@/styles/Modal.css';
-import { store } from '@/store/store'
 import LayoutComp from '@/components/LayoutComp';
+import StoreProvider from '@/store/provider';
 
 export default function RootLayout({
   children,
@@ -14,11 +12,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Provider store={store}>
+        <StoreProvider>
           <LayoutComp>
             {children}
           </LayoutComp>
-        </Provider>
+        </StoreProvider>  
       </body>
     </html>
   )
