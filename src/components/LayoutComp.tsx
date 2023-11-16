@@ -1,11 +1,11 @@
 'use client';
 import { ReactNode, useEffect, useState } from "react";
-import Alert from "./Alert";
-import Navigation from "./Navigation";
 import { useStoreDispatch, useStoreSelector } from "@/store/store";
 import { registerLogIn } from "@/store/complexActions";
-import Spinner from "./Spinner";
 import { getToken } from "@/helpers/authClient";
+import Alert from "./Alert";
+import Navigation from "./Navigation";
+import Spinner from "./Spinner";
 
 export default function LayoutComp({ children }: { children: ReactNode }) {
 

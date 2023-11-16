@@ -1,5 +1,5 @@
-import { FormEventHandler, useCallback, useEffect, useRef, useState } from "react";
-
+'use client';
+import { FormEventHandler, useCallback, useRef } from "react";
 import { shoppingListActions } from "../../store/shoppingListState";
 import { useStoreDispatch, useStoreSelector } from "@/store/store";
 import { FirebaseIngredient, Ingredient } from "@/helpers/types";
