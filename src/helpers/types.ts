@@ -1,86 +1,84 @@
-export type FirebaseToken = {
-    email: string, 
-    localId: string, 
-    idToken: string, 
-    expiresIn: number
-}
+import { ObjectId, WithId } from "mongodb"
 
-export type CookieUser = {
-    id: string,
-    token: string
-}
-
-export interface User {
-    email: string, 
-    id: string, 
-    token: string, 
-    expirationDate: string
-}
-
-export interface TimedUser extends User {
-    timer: any
-}
+export const EMAIL = 'email';
+export const PASSWORD = 'password';
+export const CONFIRMATION = 'confirmation';
+export const ING_NAME = 'name';
+export const ING_AMOUNT = 'amount';
+export const ING_UNIT = 'unit';
+export const RECIPE_NAME = 'title';
+export const RECIPE_DESC = 'description';
+export const RECIPE_IMAGE_PATH = 'imagePath';
+export const RECIPE_IMAGE_FILE = 'imageFile';
+export const RECIPE_INGREDIENTS = 'ingredients';
+export const RECIPE_STEPS = 'steps';
+export const RECIPE_ING = 'ing';
+export const RECIPE_STEP = 'step';
 
 export type AuthForm = {
     email: string,
     password: string
 }
 
-export type Method = 'GET' | 'POST' | 'PATCH' | 'DELETE' | 'PUT';
-
-export type Recipe = {
-    name: string,
-    id: string | null,
-    description: string,
-    imagePath: string,
-    steps: string[],
-    ingredients: FirebaseIngredient[]
-}
+export type Method = 'GET' | 'POST' | 'DELETE' | 'PUT';
 
 export type RecipePreview = {
-    name: string,
+    title: string,
     id: string,
     description: string,
-    imagePath: string
+    imagePath: string,
 }
+
+export type InitPreviewsBatch = {previews: RecipePreview[], id: number};
+
+export type RecipePreviewClient = RecipePreview & {isClient: boolean};
 
 export type FormRecipe = {
-    name: string,
-    id: string | null,
+    title: string,
     description: string,
     imagePath: string,
     steps: string[],
-    ingredients: FirebaseIngredient[]
-}
+    ingredients: RecipeIngredient[]
+};
 
-export type FirebaseRecipe = {
-    name: string,
+export type PreUploadFormRecipe = FormRecipe & {imageFile: File | null};
+
+export type Recipe = FormRecipe & {id: string, authorId: string };
+
+export type MongoRecipe = WithId<{
+    authorId: ObjectId,
+    title: string,
     description: string,
-    imagePath: string,
+    imagePath?: string,
     steps: string[],
-    ingredients: FirebaseIngredient[]
-}
+    ingredients: RecipeIngredient[]
+}>
 
-export type FirebaseIngredient = {
-    name: string,
-    amount?: number,
-    unit?: string
-}
-
-export type Ingredient = {
-    id: string,
-    name: string,
-    amount: number,
-    unit: string
-}
+export type RecipeIngredient = {name: string, amount?: number, unit?: string};
+export type Ingredient = RecipeIngredient & {id: string};
+export type MongoIngredient = WithId<RecipeIngredient>;
+export type MongoList = WithId<{list: MongoIngredient[]}>;
 
 export type FormIngredient = {
-    id: string,
     name: string,
     amount: string,
-    unit: string
+    unit: string,
+    id: string
 }
 
-export type FormErrors = {[key: string]: string};
+export type MongoUser = WithId<{
+    email: string,
+    hash: string
+}>
+export type AuthFormData = {email: string, password: string};
 
-export type AuthMode = 'login' | 'signup';
+export type FetchSuccess<T> = {type: 'success', data: T};
+export type FetchError<T> = {type: 'error', message: string};
+export type FetchResponse<T> = FetchSuccess<T> | FetchError<T>;
+
+export type ErrorCodes = 400 | 401 | 404 | 500 | 503;
+export type ServerActionError = {status: ErrorCodes};
+export type ServerActionResponse = {status: 200} | ServerActionError;
+export type ServerActionResponseWithData<T> = {status: 200, data: T} | ServerActionError;
+
+export type Alert = {message: string, isError: boolean};

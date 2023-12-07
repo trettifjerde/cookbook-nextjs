@@ -1,8 +1,5 @@
-'use client';
-import RecipePageWrapper from "@/components/recipes/RecipePageWrapper"
-
 export default function Empty() {
-    return <RecipePageWrapper className="empty">
+    return <div className="empty fadeUp">
         No recipe selected
-    </RecipePageWrapper>
+    </div>
 }

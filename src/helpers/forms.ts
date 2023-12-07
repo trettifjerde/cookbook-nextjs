@@ -1,16 +1,6 @@
-import { FirebaseIngredient, FirebaseRecipe, Ingredient } from "./types";
+import { RECIPE_IMAGE_FILE_FORMATS } from "./config";
+import { FormIngredient, FormRecipe, ING_AMOUNT, ING_NAME, ING_UNIT, PreUploadFormRecipe, RECIPE_DESC, RECIPE_IMAGE_FILE, RECIPE_IMAGE_PATH, RECIPE_ING, RECIPE_NAME, RECIPE_STEP, RecipeIngredient } from "./types";
 
-export const ING_NAME = 'name';
-export const ING_AMOUNT = 'amount';
-export const ING_UNIT = 'unit';
-
-export const RECIPE_NAME = 'name';
-export const RECIPE_DESC = 'description';
-export const RECIPE_IMAGE = 'imagePath';
-export const RECIPE_INGREDIENTS = 'ingredients';
-export const RECIPE_STEPS = 'steps';
-export const RECIPE_ING = 'ing';
-export const RECIPE_STEP = 'step';
 export const RECIPE_STEP_ID = (i: number) => `${RECIPE_STEP}${i}-`;
 export const RECIPE_ING_ID = (i: number) => `${RECIPE_ING}${i}-`;
 
@@ -26,7 +16,7 @@ export const ingredientErrorsInit = () => ({
 
 export function validateIngredient(formData: FormData, ingId='') {
     const errors = ingredientErrorsInit();
-    const cleanIngredient = {} as FirebaseIngredient;
+    const cleanIngredient = {} as RecipeIngredient;
 
     const {name, amount, unit} = readIngredInfo(formData, ingId);
 
@@ -44,7 +34,7 @@ export function validateIngredient(formData: FormData, ingId='') {
     }
 
     if (unit) {
-        if (cleanIngredient.amount)
+        if (cleanIngredient[ING_AMOUNT])
             cleanIngredient[ING_UNIT] = unit;
         else 
             errors.general.add(ingId + ING_AMOUNT);
@@ -60,40 +50,60 @@ export function validateAmount(v: string) {
 export function validateRecipe(formData: FormData) {
     const errors = recipeErrorsInit();
     const ingIds = new Set<string>();
-    const cleanData : FirebaseRecipe = {
-        name: '',
+    const cleanData : PreUploadFormRecipe = {
+        title: '',
         description: '',
         imagePath: '',
+        imageFile: null,
         steps: [],
         ingredients: []
     };
 
     for (const [key, value] of formData.entries()) {
-        const v = value.toString().trim();
+        const valueOf = value.valueOf();
 
-        switch (key) {
-            case RECIPE_DESC:
-            case RECIPE_NAME:
-            case RECIPE_IMAGE:
-                if (v)
-                    cleanData[key] = v;
-                else 
-                    errors.general.add(key);
-                break;
+        if (typeof valueOf === 'string') {
 
-            default:
-                if (key.startsWith(RECIPE_STEP)) {
+            const v = value.toString().trim();
+
+            switch (key) {
+                case RECIPE_DESC:
+                case RECIPE_NAME:
                     if (v)
-                        cleanData.steps.push(v);
-                    else {
-                        errors.steps.add(key);
+                        cleanData[key] = v;
+                    else 
+                        errors.general.add(key);
+                    break;
+            
+                case RECIPE_IMAGE_PATH:
+                    if (v)
+                        cleanData[key] = v;
+                    break;
+
+                default:
+                    if (key.startsWith(RECIPE_STEP)) {
+                        if (v)
+                            cleanData.steps.push(v);
+                        else {
+                            errors.steps.add(key);
+                        }
                     }
-                }
-                else if (key.startsWith(RECIPE_ING)) {
-                    ingIds.add(key.slice(0, key.indexOf('-') + 1));
-                }
+                    else if (key.startsWith(RECIPE_ING)) {
+                        ingIds.add(key.slice(0, key.indexOf('-') + 1));
+                    }
+            }
+        }
+        else {
+            const file = valueOf as File;
+            if (file.size) {
+                if (RECIPE_IMAGE_FILE_FORMATS.includes(file.type))
+                    cleanData.imageFile = file;
+                else
+                    errors.general.add(key);
+            }
         }
     }
+
     ingIds.forEach(ingId => {
         const {cleanIngredient, errors: ingErrors} = validateIngredient(formData, ingId);
         if (ingErrors) {
@@ -102,11 +112,15 @@ export function validateRecipe(formData: FormData) {
         else {
             cleanData.ingredients.push(cleanIngredient);
         }
-    })
+    });
+    
+    if (cleanData.ingredients.length === 0)
+        errors.ingredients.add('');
+    if (cleanData.steps.length === 0)
+        errors.steps.add('');
 
     return Object.values(errors).every(s => s.size === 0) ? {data: cleanData, errors: null} : {data: null, errors};
 }
-
 
 function readIngredInfo(formData: FormData, ingId: string) {
     return {
@@ -116,7 +130,11 @@ function readIngredInfo(formData: FormData, ingId: string) {
     }
 }
 
-export function getIngredientErrorLog(errors: Set<string>) {
+export function getIngredientErrorLog(errors: Set<string>, noChanges: boolean) {
+    if (noChanges)
+        return 'No changes to submit';
+
+
     let errorStr = '';
     errors.forEach(error => {
         switch(error) {
@@ -132,4 +150,26 @@ export function getIngredientErrorLog(errors: Set<string>) {
         }
     })
     return errorStr;
+}
+
+export function makeEmptyRecipe() {
+    const data : FormRecipe = {
+        title: '',
+        steps: [],
+        ingredients: [],
+        description: '',
+        imagePath: ''
+    }
+    return data;
+}
+
+export function ingredientNotChanged(selected: FormIngredient, updated: RecipeIngredient) {
+    const initial : RecipeIngredient = {name: selected.name};
+    if (selected.amount) 
+        initial.amount = +selected.amount;
+    
+    if (selected.unit)
+        initial.unit = selected.unit;
+
+    return initial.name === updated.name && initial.amount === updated.amount && initial.unit === updated.unit;
 }

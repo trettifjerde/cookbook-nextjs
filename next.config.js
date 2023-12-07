@@ -1,10 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  experimental: {
+    ppr: true
+  },
+  reactStrictMode: false,
   images: {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'img.jamieoliver.com',
+        hostname: 'i.ibb.co',
       }
     ]
   },
@@ -14,6 +18,11 @@ const nextConfig = {
           source: '/',
           destination: '/recipes',
           permanent: true,
+        },
+        {
+          source: '/auth',
+          destination: '/auth/login',
+          permanent: true
         }
       ]
   }

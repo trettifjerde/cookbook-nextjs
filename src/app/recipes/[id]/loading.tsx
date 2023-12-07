@@ -1,5 +1,5 @@
-import Spinner from "@/components/Spinner";
+import DetailsSkeleton from "@/components/recipes/DetailsSkeleton";
 
-export default function LoadingPage() {
-    return <Spinner />
+export default function RecipeLoading() {
+    return <DetailsSkeleton />
 }

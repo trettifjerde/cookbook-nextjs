@@ -1,5 +1,5 @@
-import Spinner from "@/components/Spinner";
+import FormSkeleton from "@/components/recipes/FormSkeleton";
 
-export default function LoadingPage() {
-    return <Spinner />
+export default function EditLoading() {
+    return <FormSkeleton title="Edit recipe" />
 }

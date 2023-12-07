@@ -10,11 +10,11 @@ function RecipeItem({recipe, isActive} : {recipe: RecipePreview, isActive: boole
             <Link className={`card p-2 ${isActive? 'active' : ''}`} href={`/recipes/${recipe.id!}`}>
                 <div className="card-wrapper">
                     <div className="card-body">
-                        <h4 className="card-title">{ recipe.name }</h4>
+                        <h4 className="card-title">{ recipe.title }</h4>
                         <div className="card-text">{ recipe.description }</div>
                     </div>
                     <div className='ic c'>
-                        <Image src={recipe.imagePath} fill alt={`${recipe.name} photo`} sizes={sizes}/>
+                        {recipe.imagePath && <Image src={recipe.imagePath} fill alt={`${recipe.title} photo`} sizes={sizes}/>}
                     </div>
                 </div>
             </Link>

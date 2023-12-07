@@ -1,16 +1,16 @@
 import RecipeDetails from "@/components/recipes/RecipeDetails";
-import { fetchRecipe } from "@/helpers/dataClient";
+import { fetchRecipe } from "@/helpers/fetchers";
 import { notFound } from "next/navigation";
 
 export default async function RecipeDetailsPage({params}: {params: {id: string}}) {
-    const recipe = await getRecipe(params.id);
-    return <RecipeDetails recipe={recipe} />
-};
+    const response = await fetchRecipe(params.id, 'RecipeDetailsPage');
 
-async function getRecipe(id: string) {
-    const recipe = await fetchRecipe(id);
-    if ('error' in recipe) {
-        notFound();
+    switch (response.type) {
+        case 'error':
+            notFound();
+
+        case 'success':
+
+        return <RecipeDetails recipe={response.data} />
     }
-    return recipe;
-}
+};

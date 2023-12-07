@@ -1,26 +1,28 @@
-import FormItem from "@/components/FormItem";
+import FormItem from "@/components/ui/FormItem";
 import { memo, useCallback } from "react";
 
 type Props = {
     label: string,
     name: string,
-    showError: boolean,
+    hasError: boolean,
+    placeholder?: string,
     defaultValue: string,
     type: 'textarea' | 'text' | 'number',
-    touchField: (key: string, value: string) => void
+    touchField: (key: string, value: string) => void,
+    disabled?: boolean
 }
 
-function RecipeFormInput({type, label, name, showError, defaultValue, touchField}: Props) {
+const RecipeFormInput = memo(({type, label, name, hasError, defaultValue, placeholder, touchField, disabled}: Props) => {
 
     const registerTouch = useCallback((v: string) => touchField('general', v), [touchField]);
 
     return <div className="form-group">
         <div className="label-row">
             <label htmlFor={name}>{label}</label>
-            { showError && <p className="form-text text-danger">{label} is required</p>}
+            <p className="form-text text-danger">{hasError && `${label} is required`}</p>
         </div>
-        <FormItem type={type} name={name} showError={showError} defaultValue={defaultValue} registerTouch={registerTouch} />
+        <FormItem type={type} placeholder={placeholder} name={name} hasError={hasError} defaultValue={defaultValue} registerTouch={registerTouch} disabled={disabled} />
     </div>
-}
+});
 
-export default memo(RecipeFormInput);
+export default RecipeFormInput;

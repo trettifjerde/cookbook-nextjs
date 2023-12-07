@@ -1,14 +1,13 @@
-import { RECIPE_INGREDIENTS, RECIPE_ING_ID } from "@/helpers/forms";
-import { FirebaseIngredient, FormIngredient } from "@/helpers/types";
+import { RECIPE_ING_ID } from "@/helpers/forms";
+import { FormIngredient, RecipeIngredient } from "@/helpers/types";
 import useListManager from "@/helpers/useListManger";
-import { AnimatePresence, MotionConfig } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import RecipeFormIngredient from "./RecipeFormIngredient";
 import { useCallback } from "react";
 
-
 type Props = {
     errors: Set<string>, 
-    ingredients: FirebaseIngredient[], 
+    ingredients: RecipeIngredient[], 
     touchField: (key: string, value: string) => void
 };
 export default function RecipeFormIngredients({errors, ingredients, touchField}: Props) {
@@ -23,17 +22,18 @@ export default function RecipeFormIngredients({errors, ingredients, touchField}:
                 Ingredients are required
             </p>}
         </div>
-        <AnimatePresence mode="popLayout">
+        <AnimatePresence mode="popLayout" initial={false}>
             { list.map(ing => <RecipeFormIngredient key={ing.id} ing={ing} 
                 errors={errors} removeIng={removeItem} touchField={registerTouch} />) }
-            <button type="button" className="btn btn-outline-success mt-2" onClick={addItem}>
+
+            <motion.button layout type="button" className="btn btn-outline-success mt-2" onClick={addItem}>
                 Add new ingredient
-            </button>
+            </motion.button>
         </AnimatePresence>  
     </div>
 }
 
-function makeNewIng(i: number, ing?: FirebaseIngredient) {
+function makeNewIng(i: number, ing?: RecipeIngredient) {
     return {
         id: RECIPE_ING_ID(i),
         name: ing?.name || '',

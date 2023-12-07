@@ -1,9 +1,9 @@
 'use client';
-import EmptyComponent from '../../components/Empty';
+import EmptyComponent from '../../components/ui/Empty';
 
 export default function RecipeErrorPage() {
     return (
-        <div className="fadeIn empty">
+        <div className="fadeUp empty">
             <EmptyComponent message="An error has occurred" />
         </div>
     )

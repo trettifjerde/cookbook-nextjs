@@ -1,0 +1,62 @@
+@use '/src/styles/variables' as *;
+
+.url-cont {
+    position: relative;
+}
+
+.url-input {
+    padding-right: 6rem;
+}
+
+.url-load {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 5rem;
+}
+
+.recipe-image-cont {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+
+    img {
+        max-width: 100%;
+    }
+
+    .overlay {
+        opacity: 0;
+        position: absolute;
+        inset: 0;
+        background-color: rgba(255, 255, 255, 0.842);
+        transition: opacity .3s ease-in-out;
+        padding: 1rem;
+    }
+
+    &:hover {
+        .overlay {
+            opacity: 1;
+        }
+    }
+}
+
+.strikethrough {
+    position: absolute;
+    inset: 0;
+    transform: translateY(50%);
+    padding-inline: 1rem;
+
+    hr {
+        border: none;
+        width: 100%;
+        background-color: $red !important;
+        height: 2px;
+        margin: 0;
+        color: $red;
+        opacity: 0.85;
+    }
+}

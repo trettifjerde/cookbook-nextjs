@@ -1,7 +1,6 @@
+@use './animations' as *;
+@use './variables' as *;
 @import '~bootstrap/scss/bootstrap.scss';
-
-$primary: #198754 !important;
-$gray: rgba(88, 88, 88, 0.6);
 
 :root {
     --primary: #198754 !important;
@@ -66,18 +65,16 @@ a {
     text-decoration: none !important;
 }
 
-@keyframes fadeIn {
-    from {
-        opacity: 0
-    }
-
-    to {
-        opacity: 1;
-    }
+.fadeIn {
+    animation: fadeIn .35s ease-in-out;
 }
 
-.fadeIn {
-    animation: fadeIn .35s ease-in-out forwards;
+.fadeUp {
+    animation: fadeUp .35s ease-in-out;
+}
+
+.slideUp {
+    animation: slideUp .35s ease-in-out;
 }
 
 .nav-link, 
@@ -109,7 +106,7 @@ nav.navbar {
 
 .alert-cont {
     position: fixed !important;
-    bottom: 1rem;
+    bottom: 2rem;
     left: 0;
     width: 100%;
     z-index: 5;
@@ -117,15 +114,66 @@ nav.navbar {
 
 .alert {
     box-shadow: 1px 0 3px 0 var(--bs-alert-color);
+    margin-inline: auto;
 }
 
 .ingredient {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 3rem;
-    opacity: 0.5;
+    background-color: white;
     gap: 1rem;
+    transition: background-color .2s ease-in-out;
+
+    &.selected {
+        background-color: $green-shadow;
+    }
+}
+
+.skeleton-cont {
+    transform: translateY(10px);
+}
+
+.skeleton {
+    input:disabled, textarea:disabled {
+        animation: skeleton-gray 1.5s ease-in-out infinite;
+    }
+}
+
+.skeleton .list-group-item {
+    animation-duration: 1.5s;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+
+    &:nth-child(odd) {
+        animation-name: skeleton-white;
+    }
+    &:nth-child(even) {
+        animation-name: skeleton-gray;
+    }
+}
+
+@keyframes skeleton-white {
+    0% {
+        background-color: white;
+    }
+    50% {
+        background-color: #f0f0f0;
+    }
+    100% {
+        background-color: white;
+    }
+}
+@keyframes skeleton-gray {
+    0% {
+        background-color: #f0f0f0;
+    }
+    50% {
+        background-color: #e0e0e0;
+    }
+    100% {
+        background-color: #f0f0f0;
+    }
 }
 
 .ingredient-text {
@@ -140,10 +188,6 @@ nav.navbar {
 
 .btn-group-sm>* {
     margin: 0 0.25rem;
-}
-
-.interactive {
-    opacity: 1;
 }
 
 .ingred-cont {
@@ -168,15 +212,19 @@ nav.navbar {
 }
 
 @media (pointer: fine) {
-    .btn-group-sm {
-        visibility: hidden;
-        opacity: 0;
-        transition: opacity .2s ease-in-out, visibility .2s ease-in-out;
-    }
+    .ingredient {
+        .btn-group-sm {
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity .2s ease-in-out, visibility .2s ease-in-out;
+        }
 
-    .ingredient.interactive:hover .btn-group-sm {
-        visibility: visible;
-        opacity: 1;
+        &.selected, &:hover {
+            .btn-group-sm {
+                visibility: visible;
+                opacity: 1;
+            }
+        }
     }
 }
 
@@ -212,6 +260,12 @@ label {
 
 .form-control.invalid {
     border-color: red;
+}
+
+.form-text {
+    margin-block: 0.5rem;
+    line-height: 1;
+    min-height: 1rem;
 }
 
 textarea.form-control.larger {
@@ -279,7 +333,16 @@ textarea.form-control.larger {
 .recipes-c {
     display: flex;
     flex-direction: column-reverse;
+    justify-content: flex-end;
     gap: 0.5rem;
+    flex-grow: 1;
+}
+
+.no-recipes {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .spinner-c {
@@ -294,7 +357,7 @@ textarea.form-control.larger {
 .detail-header {
     position: relative;
     height: 60vh;
-    z-index: 0;
+    z-index: 1;
 }
 
 .detail-header-img {
@@ -332,6 +395,10 @@ textarea.form-control.larger {
 
 .list-group-numbered .list-group-item {
     padding-left: 0.5rem;
+}
+
+.list-group-item {
+    min-height: 2.5rem;
 }
 
 .disabled {
@@ -382,8 +449,10 @@ h5 {
     overflow: auto;
 }
 
-.main .fadeIn {
-    padding-left: 1rem;
+.side {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 }
 
 .search-bar {
@@ -438,6 +507,12 @@ h5 {
 .ic {
     position: relative;
     aspect-ratio: 2/3;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
 }
 
 @keyframes listItem {
@@ -573,10 +648,6 @@ textarea.form-control {
         min-height: 30vh;
     }
 
-    .main .fadeIn {
-        padding-left: 0;
-    }
-
     .show-recipes-btn {
         display: flex;
         position: sticky;
@@ -594,11 +665,19 @@ textarea.form-control {
         overflow: auto;
     }
 
-    .open .side {
-        display: block;
+    .search-bar {
+        display: none;
     }
 
-    .open .main {
-        display: none;
-    }    
+    .recipes.open {
+        .search-bar,
+        .side {
+            display: flex;
+        }
+    
+        .main {
+            display: none;
+        }    
+    }
+
 }

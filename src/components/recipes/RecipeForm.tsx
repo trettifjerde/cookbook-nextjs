@@ -1,90 +1,93 @@
 'use client';
-import { useState, useRef, FormEventHandler } from "react";
-import { FirebaseRecipe, FormRecipe } from "@/helpers/types";
-import { useRouter } from "next/navigation";
+import { useEffect, useRef } from "react";
+import { redirect, useRouter } from "next/navigation";
 import { useStoreDispatch } from "@/store/store";
-import { recipesActions } from "@/store/recipesState";
-import { generalActions } from "@/store/generalState";
-import { fetchData } from "@/helpers/utils";
-import RecipePageWrapper from "./RecipePageWrapper";
-import useRedirectOnLogout from "@/helpers/useRedirectOnLogout";
+import { recipesActions } from "@/store/recipes";
+import { statusCodeToMessage } from "@/helpers/client-helpers";
+import { sendRecipe } from "@/helpers/recipe-actions";
+import useErrors from "@/helpers/useErrors";
+import { recipeErrorsInit, validateRecipe } from "@/helpers/forms";
+import { FormRecipe, RECIPE_DESC, RECIPE_IMAGE_FILE, RECIPE_NAME } from "@/helpers/types";
 import RecipeFormInput from "./formComponents/RecipeFormInput";
-import { RECIPE_DESC, RECIPE_IMAGE, RECIPE_NAME, recipeErrorsInit, validateRecipe } from "@/helpers/forms";
 import RecipeFormSteps from "./formComponents/RecipeFormSteps";
 import RecipeFormIngredients from "./formComponents/RecipeFormIngredients";
-import useErrors from "@/helpers/useErrors";
+import SubmitButton from "../ui/SubmitButton/SubmitButton";
+import RecipeFormImage from "./formComponents/RecipeFormImage";
+import { useFormState } from "react-dom";
 
-export default function RecipeForm({recipe}: {recipe: FormRecipe}) {
-    useRedirectOnLogout();
+export default function RecipeForm({recipe, id}: {recipe: FormRecipe, id?: string}) {
+    console.log('Recipe form');
     const dispatch = useStoreDispatch();
     const router = useRouter();
-    const {errors, setErrors, clearErrors, touchField} = useErrors(recipeErrorsInit);
+
     const contTop = useRef<HTMLDivElement>(null);
-    const recipeId = recipe.id;
+    const [formState, formAction] = useFormState(sendRecipe, {id: id || '', status: 0});
+    const {errors, hasErrors, setErrors, touchField} = useErrors(recipeErrorsInit);
 
-    const submitForm = async (data: FirebaseRecipe) => {
-        dispatch(generalActions.setSubmitting(true));
+    const handleSubmit = (formData: FormData) => {
+        if (contTop.current) {
+            const {errors: validationErrors} = validateRecipe(formData);
 
-        const res = await fetchData('/api/recipes', 'POST', {
-            recipe: data, 
-            id: recipeId,
-        });
+            if (validationErrors) {
+                setErrors(validationErrors);
+                contTop.current.scrollIntoView({behavior: 'smooth'});
+                return;
+            }
 
-        if ('error' in res) {
-            dispatch(generalActions.flashToast({text: res.error, isError: true}));
-        }
-        else if ('id' in res) {
-            const newRecipe = {...data, id: res.id};
-            dispatch(recipeId ? recipesActions.updateRecipe(newRecipe) : recipesActions.addRecipe(newRecipe));
-            dispatch(generalActions.flashToast({text: recipeId ? 'Recipe updated' : 'Recipe added', isError: false}));
-            router.push(`/recipes/${res.id}`);
+            formAction(formData);
         }
     };
 
-    const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
-        e.preventDefault()
+    useEffect(() => {
+        switch(formState.status) {
+            case 200:
+                const instruction = formState.instruction;
+                let redirectId: string;
 
-        const formData = new FormData(e.target as HTMLFormElement);
-        const {data, errors: errs} = validateRecipe(formData);
+                switch (instruction.command) {
+                    case 'add':
+                    case 'update':
+                        redirectId = instruction.preview.id;
+                        const preview = instruction.preview;
+                        const updPreviews = id ? recipesActions.editRecipe : recipesActions.addRecipe;
+                        dispatch(updPreviews(preview));
+                        break;
+                    default:
+                        redirectId = instruction.id;
+                }
 
-        if (errs) {
-            setErrors(errs);
-            contTop.current?.scrollIntoView({behavior: 'smooth'});
+                redirect(`/recipes/${redirectId}`);
+
+            default:
+                contTop.current?.scrollIntoView({behavior: 'smooth'});
+                break;
         }
-        else {
-            submitForm(data);
-        }
-    };
+    }, [formState, contTop])
 
-    const cancelSubmit = () => router.back();
-
-    return <RecipePageWrapper>
+    return <form className="recipe-form slideUp" action={handleSubmit} autoComplete="off">
         <div className="label-row" ref={contTop}>
-            <h3>{ recipe.id ? 'Edit recipe' : 'Add recipe'}</h3> 
-            {Object.values(errors).some(s => s.size !== 0) && <p className="form-text text-danger">Form contains errors</p>}
+            <h3>{ id ? 'Edit recipe' : 'Add recipe'}</h3> 
+            <p className="form-text text-danger">{(hasErrors && 'Form contains errors') || statusCodeToMessage(formState.status)}</p>
+        </div>     
+        <RecipeFormInput type="text" name={RECIPE_NAME} label="Title" defaultValue={recipe.title} 
+            hasError={errors.general.has(RECIPE_NAME)} touchField={touchField}/>     
+        <hr/>
+        <RecipeFormInput type="textarea" name={RECIPE_DESC} label="Description" defaultValue={recipe.description} 
+            hasError={errors.general.has(RECIPE_DESC)} touchField={touchField}/> 
+        <hr/>
+        <RecipeFormImage defaultValue={recipe.imagePath} hasError={errors.general.has(RECIPE_IMAGE_FILE)} touchField={touchField}/>
+        <hr/>
+        <RecipeFormIngredients ingredients={recipe.ingredients} errors={errors.ingredients} touchField={touchField}/>
+        <hr/>
+        <RecipeFormSteps steps={recipe.steps} errors={errors.steps} touchField={touchField} />
+        <hr/>
+        <div className="row align-items-center justify-content-between g-0">
+            <div className="col-5">
+                <SubmitButton className="btn btn-success w-100">Submit</SubmitButton>
+            </div>
+            <button className="btn btn-outline-success col-5" type="button" onClick={() => router.back()}>Cancel</button>
         </div>
-        <div className="r">        
-            <form className="recipe-form" onSubmit={handleSubmit}>
-                <RecipeFormInput type="text" name={RECIPE_NAME} label="Name" defaultValue={recipe.name} 
-                    showError={errors.general.has(RECIPE_NAME)} touchField={touchField}/>     
-                <hr/>
-                <RecipeFormInput type="textarea" name={RECIPE_DESC} label="Description" defaultValue={recipe.description} 
-                    showError={errors.general.has(RECIPE_DESC)} touchField={touchField}/> 
-                <hr/>
-                <RecipeFormInput type="text" name={RECIPE_IMAGE} label="Image URL" defaultValue={recipe.imagePath} 
-                    showError={errors.general.has(RECIPE_IMAGE)} touchField={touchField} />
-                <hr/>
-                <RecipeFormIngredients ingredients={recipe.ingredients} errors={errors.ingredients} touchField={touchField}/>
-                <hr/>
-                <RecipeFormSteps steps={recipe.steps} errors={errors.steps} touchField={touchField} />
-                <hr/>
-                <div className="row justify-content-between g-0">
-                    <button className="btn btn-success col-5" type="submit">Submit</button>
-                    <button className="btn btn-outline-success col-5" type="button" onClick={cancelSubmit}>Cancel</button>
-                </div>
-            </form>
-        </div> 
-    </RecipePageWrapper>
+    </form> 
 };
 
 export const listVariants = {

@@ -1,24 +1,22 @@
-import { addRecipe, deleteRecipe, updateRecipe } from "@/helpers/dataServer";
-import { NextRequest, NextResponse } from "next/server";
+import { RECIPE_PREVIEW_BATCH_SIZE } from "@/helpers/config";
+import { fromMongoToRecipePreview, queryDB } from "@/helpers/server-helpers";
+import { InitPreviewsBatch, MongoRecipe, RecipePreview } from "@/helpers/types";
 
-export async function POST(req: NextRequest) {
-    const token = req.cookies.get('token')?.value;
+export async function GET() {
+    console.log('querying db: init recipes');
+    const recipes = await queryDB<MongoRecipe, RecipePreview[]>('recipes', async (col) => {
+        const result = await col.find({}, {
+            sort: {_id: 1},
+            limit: RECIPE_PREVIEW_BATCH_SIZE,
+            projection: {title: 1, description: 1, imagePath: 1},
+        }).toArray();
 
-    if (!token) 
-        return NextResponse.json({error: 'Your authentication token is invalid. Try logging out and in again.'});
+        return result.map(recipe => fromMongoToRecipePreview(recipe))
+    });
 
-    try {
-        const {recipe, id} = await req.json();
-
-        const dbResponse = !id ? addRecipe.bind(null, recipe, token) : 
-            recipe ? updateRecipe.bind(null, recipe, id, token) : 
-            deleteRecipe.bind(null, id, token);
-
-        const res = await dbResponse();
-        return NextResponse.json(res);
+    if (!recipes) {
+        return new Response(null, {status: 500});
     }
-    catch (error) {
-        console.log(error);
-        return NextResponse.json({error: 'Bad request'});
-    }
+    const data : InitPreviewsBatch = {previews: recipes, id: new Date().getTime()};
+    return Response.json(data);
 }

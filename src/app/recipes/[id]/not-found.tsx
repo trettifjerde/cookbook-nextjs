@@ -1,4 +1,4 @@
-import EmptyComponent from "@/components/Empty";
+import EmptyComponent from "@/components/ui/Empty";
 
 export default function NotFound() {
     return <div className="fadeIn empty">

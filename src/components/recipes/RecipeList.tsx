@@ -1,7 +1,10 @@
 'use client';
 import { AnimatePresence, motion } from 'framer-motion';
 import RecipeItem from "./RecipeItem";
-import { RecipePreview } from '@/helpers/types';
+import { useStoreDispatch, useStoreSelector } from '@/store/store';
+import { useEffect, useMemo } from 'react';
+import { InitPreviewsBatch } from '@/helpers/types';
+import { recipesActions } from '@/store/recipes';
 import { usePathname } from 'next/navigation';
 
 export const itemVariants = (n: number) => ({
@@ -23,23 +26,54 @@ export const itemVariants = (n: number) => ({
     }
 })
 
+export default function RecipeList ({initPreviews}: { initPreviews: InitPreviewsBatch}) {
+    const initialised = useStoreSelector(state => state.recipes.initialised);
+    const previews = useStoreSelector(state => state.recipes.previews);
+    const filterStr = useStoreSelector(state => state.recipes.filterStr);
 
-const RecipeList = ({filterString, recipes}: {recipes: RecipePreview[], filterString: string}) => {
-    const filteredRecipes = recipes.filter(recipe => recipe.name.toLowerCase().includes(filterString));
     const pathname = usePathname();
+    const dispatch = useStoreDispatch();
+
+    const filteredRecipes = useMemo(() => {
+        console.log('filtering recipes', initialised, previews, filterStr);
+        if (!initialised)
+            return initPreviews.previews;
+
+        return previews.filter(p => p.title.includes(filterStr))
+    }, [initialised, previews, filterStr]);
+
+    useEffect(() => {
+        if (!initialised)
+            dispatch(recipesActions.initialise())
+    }, []);
+
+    useEffect(() => {
+        console.log('init previews updated, dispatching in useeffect. current id', initPreviews.id);
+        dispatch(recipesActions.syncPreviews(initPreviews))
+    }, [initPreviews]);
 
     return (<div className="recipes-c">
-            <AnimatePresence>
-                {filteredRecipes.map((r, i) => <motion.div key={r.id} layout 
-                variants={itemVariants(filteredRecipes.length - 1 - i)}
-                initial="hidden" animate="visible" exit="hidden">
-                    <RecipeItem recipe={r} isActive={pathname.endsWith(r.id)}/>
-                </motion.div>) }
-                {filteredRecipes.length === 0 && <motion.div key="recipes-btn" variants={itemVariants(0)}>
-                    <div className="empty">No recipes found</div>
-                </motion.div>}
-            </AnimatePresence>
-        </div> 
-    )
+        <AnimatePresence mode='wait'>
+
+            {filteredRecipes.length > 0 && <motion.div className='recipes-c' 
+                layout variants={itemVariants(0)} initial="hidden" animate="visible" exit="hidden">
+
+                <AnimatePresence>
+                    {filteredRecipes.map((r, i) => <motion.div layout key={r.id} 
+                    variants={itemVariants(filteredRecipes.length - 1 - i)}
+                    initial="hidden" animate="visible" exit="hidden">
+                        <RecipeItem recipe={r} isActive={pathname.includes(r.id)}/>
+                    </motion.div>) }
+                </AnimatePresence>
+
+            </motion.div>
+            }
+
+            {filteredRecipes.length === 0 && <motion.div layout key="recipes-empty" className='no-recipes' 
+            variants={itemVariants(0)} initial="hidden" animate="visible" exit="hidden">
+                No recipes found
+            </motion.div>}
+
+        </AnimatePresence>
+    </div>)
 }
-export default RecipeList;

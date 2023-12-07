@@ -1,4 +1,4 @@
-import { RECIPE_STEPS, RECIPE_STEP_ID } from "@/helpers/forms";
+import { RECIPE_STEP_ID } from "@/helpers/forms";
 import { AnimatePresence } from "framer-motion";
 import RecipeFormStep from "./RecipeFormStep";
 import useListManager from "@/helpers/useListManger";
@@ -23,7 +23,7 @@ export default function RecipeFormSteps({steps, errors, touchField}: Props) {
             </p>}
         </div>
         <ol className="list-group list-group-flush steps">
-            <AnimatePresence mode="popLayout">
+            <AnimatePresence mode="popLayout" initial={false}>
             { list.map(step => <RecipeFormStep key={step.id} step={step} errors={errors} removeStep={removeItem} moveStep={moveItem} touchField={registerTouch} />)} 
             </AnimatePresence>
         </ol>

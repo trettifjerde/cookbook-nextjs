@@ -1,9 +1,6 @@
-import { makeFormRecipe } from "@/helpers/casters";
 import RecipeForm from "@/components/recipes/RecipeForm";
+import { makeEmptyRecipe } from "@/helpers/forms";
 
 export default function RecipeFormPage() {
-    const recipe = makeFormRecipe();
-
-    return <RecipeForm recipe={recipe}/>
-
-};
+    return <RecipeForm recipe={makeEmptyRecipe()} />
+}

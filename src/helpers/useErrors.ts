@@ -1,4 +1,4 @@
-import { useCallback, useReducer } from "react";
+import { useCallback, useMemo, useReducer } from "react";
 
 type ErrorsState = {[key: string]: Set<string>};
 
@@ -18,12 +18,13 @@ type SetAction<T> = {
 type Action<T> = TouchAction | SetAction<T> | ClearAction;
 
 export default function useErrors(initializer: () => ErrorsState){
-    console.log()
+    
     const [errors, dispatch] = useReducer((state: ErrorsState, action: Action<ErrorsState>) => {
         switch (action.type) {
             case 'TOUCH':
                 const upd = {...state};
                 upd[action.key].delete(action.value);
+                upd[action.key].delete('');
                 return upd;
             case 'CLEAR_ERRORS':
                 return initializer();
@@ -33,9 +34,11 @@ export default function useErrors(initializer: () => ErrorsState){
                 return state;
         }}, null, initializer);
 
+    const hasErrors = useMemo(() => Object.values(errors).some(s => s.size > 0), [errors]);
+
     const clearErrors = useCallback(() => dispatch({type: 'CLEAR_ERRORS'}), [dispatch]);
     const setErrors = useCallback((errs: ErrorsState) => dispatch({type: 'SET_ERRORS', payload: errs}), [dispatch]);
     const touchField = useCallback((key: string, value: string) => dispatch({type: 'TOUCH', key, value}), [dispatch]);
 
-    return {errors, clearErrors, setErrors, touchField};
+    return {errors, hasErrors, clearErrors, setErrors, touchField};
 }
