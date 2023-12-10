@@ -1,6 +1,6 @@
 import RecipeForm from "@/components/recipes/RecipeForm";
+import { fromRecipeToForm } from "@/helpers/casters";
 import { fetchRecipe } from "@/helpers/fetchers";
-import { fromRecipeToForm } from "@/helpers/server-helpers";
 import { notFound } from "next/navigation";
 
 export default async function RecipeFormPage({params}: {params: {id: string}}) {

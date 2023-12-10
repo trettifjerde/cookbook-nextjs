@@ -52,13 +52,13 @@ export default function RecipeList ({initPreviews}: { initPreviews: InitPreviews
         dispatch(recipesActions.syncPreviews(initPreviews))
     }, [initPreviews]);
 
-    return (<div className="recipes-c">
-        <AnimatePresence mode='wait'>
+    return (<div className="grid">
+        <AnimatePresence mode='wait' initial={false}>
 
-            {filteredRecipes.length > 0 && <motion.div className='recipes-c' 
-                layout variants={itemVariants(0)} initial="hidden" animate="visible" exit="hidden">
+            {filteredRecipes.length > 0 && <motion.div className='flex flex-col-reverse justify-end gap-2' layout 
+                variants={itemVariants(0)} initial="hidden" animate="visible" exit="hidden">
 
-                <AnimatePresence>
+                <AnimatePresence initial={false}>
                     {filteredRecipes.map((r, i) => <motion.div layout key={r.id} 
                     variants={itemVariants(filteredRecipes.length - 1 - i)}
                     initial="hidden" animate="visible" exit="hidden">
@@ -69,7 +69,7 @@ export default function RecipeList ({initPreviews}: { initPreviews: InitPreviews
             </motion.div>
             }
 
-            {filteredRecipes.length === 0 && <motion.div layout key="recipes-empty" className='no-recipes' 
+            {filteredRecipes.length === 0 && <motion.div layout key="recipes-empty" className='flex items-center justify-center' 
             variants={itemVariants(0)} initial="hidden" animate="visible" exit="hidden">
                 No recipes found
             </motion.div>}

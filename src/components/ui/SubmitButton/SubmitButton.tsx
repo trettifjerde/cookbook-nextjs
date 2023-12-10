@@ -2,20 +2,15 @@
 
 import { ReactNode, memo } from "react";
 import { useFormStatus } from "react-dom";
-import MiniSpinner from "../MiniSpinner/MiniSpinner";
-import styles from './submit-btn.module.scss';
+import { SpinnerButton } from "../elements/buttons";
 
-const SubmitButton = memo(({type, className='', children}: {
-    type?: 'submit'|'button', 
+const SubmitButton = memo(({className='', children}: {
     className?: string, 
     children: ReactNode
 }) => {
     const {pending} = useFormStatus();
 
-    return <div className={styles.cnt}>
-        <button type={type} className={className} disabled={pending}>{children}</button>
-        {pending && <MiniSpinner absolute />}
-    </div>
+    return <SpinnerButton type="submit" color="green" className={className} disabled={pending} pending={pending}>{children}</SpinnerButton>
 });
 
 export default SubmitButton;

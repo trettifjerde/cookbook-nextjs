@@ -3,17 +3,18 @@ import ControlPanel from '../ControlPanel';
 import NavLink from './NavLink';
 import { Suspense } from 'react';
 import MiniSpinner from '../MiniSpinner/MiniSpinner';
+import NavLi from './NavLi';
 
 export default function Navigation() {
 
-    return <nav className="container mx-auto flex flex-row gap-4 h-20">
-        <div className="navbar-header">
-            <Link className="navbar-brand" href="/">Cookbook</Link>
+    return <nav className="flex flex-row items-center gap-4">
+        <div>
+            <Link className="text-xl" href="/">Cookbook</Link>
         </div>
-        <ul className="flex flex-row w-full gap-4 items-center">
+        <ul className="w-full border-b border-solid border-gray-300 flex flex-row items-center">
             <NavLink url='/recipes' name="Recipes" />
 
-            <Suspense fallback={<li className='nav-link'><MiniSpinner/></li>}>
+            <Suspense fallback={<NavLi><MiniSpinner/></NavLi>}>
                 <ControlPanel />
             </Suspense>
             

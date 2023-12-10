@@ -5,9 +5,10 @@ import { useStoreDispatch, useStoreSelector } from "@/store/store";
 import { recipesActions } from "@/store/recipes";
 import { RECIPE_PREVIEW_BATCH_SIZE } from "@/helpers/config";
 import { fetchMorePreviews } from "@/helpers/fetchers";
-import MiniSpinner from "../ui/MiniSpinner/MiniSpinner";
+import { SpinnerButton } from "../ui/elements/buttons";
 
 const RecipesLoadMoreButton = memo(() => {
+    console.log('RECIPES LOAD MORE BTN');
     const lastId = useStoreSelector(state => state.recipes.lastId);
     const dispatch = useStoreDispatch();
 
@@ -39,13 +40,9 @@ const RecipesLoadMoreButton = memo(() => {
         setFetching(false);
     }
 
-    return <div className="r">
-        <button type="button" className="btn btn-success w-100" 
-            disabled={!hasMoreRecipes} onClick={loadMoreRecipes}>
-                {loadBtnText}
-        </button>
-        {fetching && <MiniSpinner absolute />}  
-    </div>
+    return <SpinnerButton type="button" className="w-full" color="green" disabled={!hasMoreRecipes} pending={fetching} onClick={loadMoreRecipes}>
+        {loadBtnText}
+    </SpinnerButton>
 });
 
 export default RecipesLoadMoreButton;

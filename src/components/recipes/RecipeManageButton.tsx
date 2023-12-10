@@ -8,10 +8,8 @@ export default function RecipeManageButton({recipe}: {recipe: Recipe}) {
     const userId = verifyToken(cookies(), 'RecipeManageButton');
 
     if (userId) {
-        if (userId === recipe.authorId) 
-            return <AuthorDropdown recipe={recipe} />
-        else 
-            return <ShoppingListButton ingredients={recipe.ingredients} />
+        return userId === recipe.authorId ? <AuthorDropdown recipe={recipe} /> : 
+            <ShoppingListButton ingredients={recipe.ingredients} />
     }
 
     return <></>

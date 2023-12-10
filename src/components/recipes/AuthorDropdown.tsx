@@ -7,14 +7,14 @@ import { useStoreDispatch } from "@/store/store";
 import { recipesActions } from "@/store/recipes";
 import { Alert, Recipe } from "@/helpers/types";
 import { addRecipeToShoppingList, deleteRecipe } from "@/helpers/fetchers";
-import Dropdown from "../ui/Dropdown";
+import Dropdown, { dropdownItemClass } from "../ui/Dropdown";
 import ConfirmationModal from "../ui/ConfirmationModal";
-import MiniSpinner from "../ui/MiniSpinner/MiniSpinner";
 import { listActions } from "@/store/list";
 import PopUp from "../ui/PopUp";
+import { SpinnerButton } from "../ui/elements/buttons";
 
 export default function AuthorDropdown({recipe}: {recipe: Recipe}) {
-    const ddBtnRef = useRef<HTMLButtonElement>(null);
+    const ddBtnRef = useRef<HTMLDivElement>(null);
     const dispatch = useStoreDispatch();
     const router = useRouter();
     
@@ -59,18 +59,18 @@ export default function AuthorDropdown({recipe}: {recipe: Recipe}) {
         setPending(false);
     };
 
-    return <>
-        <button ref={ddBtnRef} className="btn btn-outline-light dropdown-toggle" 
-            disabled={pending}
-            onClick={() => setDropdownVisible(prev => !prev)}>
-            Manage
-        </button>
-        {pending && <MiniSpinner white absolute />}
+    return <div className="relative">
+        <SpinnerButton ref={ddBtnRef} color="whiteOutline"
+            disabled={pending} pending={pending}
+            onClick={() => setDropdownVisible(prev => !prev)}
+            >Manage</SpinnerButton>
 
         <Dropdown visible={isDropdownVisible} btn={ddBtnRef} closeDropdown={() => setDropdownVisible(false)}>
-            <div className='dropdown-item' onClick={toShoppingList}>To Shopping List</div>
-            <Link className='dropdown-item' href={`/recipes/${recipe.id}/edit`}>Edit Recipe</Link>
-            <div className='dropdown-item' onClick={() => setIsModalVisible(true)}>Delete Recipe</div>
+            <div className={dropdownItemClass} onClick={toShoppingList}>To Shopping List</div>
+            <div className={dropdownItemClass}>
+                <Link className="w-full block" href={`/recipes/${recipe.id}/edit`}>Edit Recipe</Link>
+            </div>
+            <div className={dropdownItemClass} onClick={() => setIsModalVisible(true)}>Delete Recipe</div>
         </Dropdown>
 
         <ConfirmationModal 
@@ -81,5 +81,5 @@ export default function AuthorDropdown({recipe}: {recipe: Recipe}) {
         </ConfirmationModal>
 
         <PopUp alert={alert} setPopUp={setAlert}></PopUp>
-    </>
+    </div>
 }

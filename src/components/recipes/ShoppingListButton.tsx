@@ -29,10 +29,10 @@ export default function ShoppingListButton({ingredients}: {ingredients: RecipeIn
         }
     }
 
-    return <>
+    return <div>
         <form action={handleSubmit}>
-            <SubmitButton type="submit" className="btn btn-outline-light">To Shopping List</SubmitButton>
+            <SubmitButton className="btn btn-outline-light">To Shopping List</SubmitButton>
         </form>
         <PopUp alert={alert} setPopUp={setAlert} />
-    </>
+    </div>
 }

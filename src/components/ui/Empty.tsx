@@ -1,4 +1,3 @@
-const EmptyComponent = ({message}: {message: string}) => {
-    return <div className='empty fadeIn'>{message}</div>;
+export default function EmptyComponent({message}: {message: string}) {
+    return <div className='fadeIn h-full flex items-center justify-center'>{message}</div>;
 }
-export default EmptyComponent;

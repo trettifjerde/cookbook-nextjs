@@ -3,6 +3,8 @@
 import { recipesActions } from "@/store/recipes";
 import { useStoreDispatch } from "@/store/store";
 import { useRef, useState } from "react";
+import { Input } from "../ui/elements/forms";
+import { Button } from "../ui/elements/buttons";
 
 export default function RecipesFilter() {
 
@@ -23,8 +25,11 @@ export default function RecipesFilter() {
             filterRef.current.value = '';
     };
 
-    return <div className="col input-cont">
-        <input type="text" className="form-control" ref={filterRef} onChange={handleFilterChange} placeholder="Type for a recipe..." />
-        <button type="button" className="btn btn-danger" onClick={clearFilter}>X</button>
+    return <div className="group relative flex-grow p-1">
+        <Input type="text" name="filter" id="filterStr" className="w-full pr-input-square-offset [&:focus+button]:opacity-100" placeholder="Type for a recipe..." 
+            ref={filterRef} onChange={handleFilterChange} />
+        <Button type="button" color="red" isSquare 
+            className="invisible opacity-0 absolute right-1 top-1 group-hover:visible group-hover:opacity-100 transition-hidden-btn duration-300" 
+            onClick={clearFilter}>X</Button>
     </div>
 }

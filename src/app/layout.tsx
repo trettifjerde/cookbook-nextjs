@@ -10,11 +10,11 @@ export default function RootLayout({
 
   return (
     <html lang="en">
-      <body>
+      <body className="h-screen px-4 flex flex-col gap-6 py-4 overflow-hidden">
         <StoreProvider>
           <Navigation />
 
-          <main className="container mx-auto">
+          <main className="container mx-auto flex-grow overflow-hidden">
               {children}
           </main>
 

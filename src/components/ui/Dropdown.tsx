@@ -1,6 +1,6 @@
 'use client';
 import { AnimatePresence, motion} from "framer-motion";
-import { ReactNode, RefObject, memo, useEffect } from "react";
+import { ReactNode, RefObject, useEffect } from "react";
 
 const variants = {
     hidden: {
@@ -13,10 +13,12 @@ const variants = {
     }
 }
 
+export const dropdownItemClass = 'py-2 px-3 whitespace-nowrap hover:text-green transition-colors cursor-pointer';
+
 export default function Dropdown ({visible, closeDropdown, btn, children}: {
     visible: boolean,
     closeDropdown: () => void, 
-    btn: RefObject<HTMLButtonElement>,
+    btn: RefObject<HTMLDivElement>,
     children: ReactNode
 }) {
 
@@ -31,10 +33,10 @@ export default function Dropdown ({visible, closeDropdown, btn, children}: {
         }
     }, [visible]);
 
-    return <div className="dropdown-menu" >
+    return <div className="absolute right-[-0.5rem] overflow-hidden p-2" >
         <AnimatePresence>
-            {visible && <motion.div className="dropdown-menu-inner" variants={variants} 
-                initial="hidden" exit="hidden" animate="visible">
+            {visible && <motion.div className="bg-white rounded-md text-gray-700 shadow-dd"
+                variants={variants} initial="hidden" exit="hidden" animate="visible">
                     {children}
             </motion.div>}
         </AnimatePresence>

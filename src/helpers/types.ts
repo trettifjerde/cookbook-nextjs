@@ -1,8 +1,5 @@
 import { ObjectId, WithId } from "mongodb"
 
-export const EMAIL = 'email';
-export const PASSWORD = 'password';
-export const CONFIRMATION = 'confirmation';
 export const ING_NAME = 'name';
 export const ING_AMOUNT = 'amount';
 export const ING_UNIT = 'unit';
@@ -14,11 +11,6 @@ export const RECIPE_INGREDIENTS = 'ingredients';
 export const RECIPE_STEPS = 'steps';
 export const RECIPE_ING = 'ing';
 export const RECIPE_STEP = 'step';
-
-export type AuthForm = {
-    email: string,
-    password: string
-}
 
 export type Method = 'GET' | 'POST' | 'DELETE' | 'PUT';
 

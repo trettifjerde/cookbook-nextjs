@@ -1,10 +1,6 @@
 import { RECIPE_PREVIEW_LENGTH } from "./config";
 import { FormRecipe, RecipePreview } from "./types";
 
-export function isValidEmail(value: string) {
-    return /^\w+([.\-!#$%&'*+\-/=?^_`{|}~]?\w+)*@\w+([.-]?\w+)*(.\w{2,3})+$/.test(value)
-}
-
 export function statusCodeToMessage(code: number) {
     switch (code) {
         case 400:

@@ -1,4 +1,3 @@
-import { INIT_RECIPES_TAG } from "./config";
 import { FetchResponse, FetchSuccess, Ingredient, Recipe, RecipeIngredient, RecipePreview } from "./types";
 
 export async function fetchData<T>(

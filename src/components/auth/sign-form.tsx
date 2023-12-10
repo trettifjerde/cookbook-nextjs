@@ -1,35 +1,38 @@
 'use client';
-import { useState } from 'react';
-import { LazyMotion, domAnimation, m } from 'framer-motion';
-import Link from 'next/link';
-import { CONFIRMATION, EMAIL, PASSWORD } from '@/helpers/types'; 
-import { authenticate } from '@/helpers/auth-actions';
-import { isValidEmail } from '@/helpers/client-helpers';
-import { useStoreDispatch } from '@/store/store';
-import SubmitButton from '../ui/SubmitButton/SubmitButton';
 
-type AuthFormError = {field: string, message: string};
-type AuthFormFeedback = {ok: true, email: string, password: string} | {ok: false, field: string, message: string};
+import { useState } from 'react';
+import { motion } from 'framer-motion';
+import { authenticate } from '@/helpers/auth-actions';
+import SubmitButton from '../ui/SubmitButton/SubmitButton';
+import { LinkButton } from '../ui/elements/buttons';
+import { AuthFormError, CONFIRMATION, EMAIL, PASSWORD, validateAuthForm } from '@/helpers/form-validators';
+import { Input } from '../ui/elements/forms';
 
 export default function SignForm({isSignUpMode}: {isSignUpMode: boolean}) {
+    console.log('Auth form');
     const [ validationError, setValidationError] = useState<AuthFormError|null>(null);
     const [ submitError, setSubmitError ] = useState('');
-    const dispatch = useStoreDispatch();
 
-    const hasError = (field: string) => {
-        return validationError && validationError.field === field;
-    } 
+    const fields = isSignUpMode ? [EMAIL, PASSWORD, CONFIRMATION] : [EMAIL, PASSWORD];
+
+    const hasError = (field: string) => validationError && validationError.field === field;
     
-    const getInputClass = (field: string) => {
-        return `form-control ${hasError(field) ? 'invalid' : ''}`;
-    }
+    const getInputClass = (field: string) => `w-full ${hasError(field) ? 'border-red' : ''}`;
     
-    const getFieldError = (field: string) => {
-        return hasError(field) ? validationError!.message : '';
+    const getFieldError = (field: string) => hasError(field) ? validationError!.message : '';
+
+    const clearError = (field: string) => {
+        if (hasError(field))
+            setValidationError(null);
+    };
+
+    const clearErrors = () => {
+        setSubmitError('');
+        setValidationError(null);
     }
 
     const validateThenAction = async (formData: FormData) => {
-        const validation = validateForm(formData, isSignUpMode);
+        const validation = validateAuthForm(formData, isSignUpMode);
 
         if (!validation.ok) {
             const {field, message} = validation;
@@ -51,87 +54,32 @@ export default function SignForm({isSignUpMode}: {isSignUpMode: boolean}) {
         }
     }
 
-    const clearError = (field: string) => {
-        if (hasError(field))
-            setValidationError(null);
-    };
+    return <motion.div initial={{opacity: 0, y: '50%'}} animate={{opacity: 1, y: 0}}
+        className='py-8 w-full max-w-lg m-auto'>
+            <h3 className='text-2xl font-medium mb-4'>Sign {isSignUpMode? 'up' : 'in'}</h3>
+            <form action={validateThenAction} onFocus={clearErrors} autoComplete='off'>
+                <p className="text-red text-xs min-h-error-msg my-1">{submitError}</p>
 
-    const clearErrors = () => {
-        setSubmitError('');
-        setValidationError(null);
-    }
-
-    return (<LazyMotion features={domAnimation}>
-        <m.div initial={{opacity: 0, y: '50%'}} animate={{opacity: 1, y: 0}} className="row">
-            <div className="col-xs-12 col-md-6 m-auto">
-                <h3>Sign {isSignUpMode? 'up' : 'in'}</h3>
-                <form action={validateThenAction} onFocus={clearErrors} autoComplete='off'>
-                    <p className="text-danger form-text">{submitError}</p>
-                    <div className="form-group mb-2">
-                        <div className='label-row'>
-                            <label htmlFor={EMAIL}>Email</label>
-                            <p className="text-danger form-text">{getFieldError(EMAIL)}</p>
-                        </div>
-                        <input type="text" name={EMAIL} id={EMAIL}
-                            className={getInputClass(EMAIL)}
-                            onFocus={() => clearError(EMAIL)}
-                            />
+                { fields.map(field => <div className="mb-4" key={field.name}>
+                    <div className='flex flex-row justify-between items-center'>
+                        <label htmlFor={field.name}>{field.label}</label>
+                        <p className="text-red text-xs">{getFieldError(field.name)}</p>
                     </div>
-                    <div className="form-group mb-2">
-                        <div className='label-row'>
-                            <label htmlFor={PASSWORD}>Password</label>
-                            <p className="text-danger form-text">{getFieldError(PASSWORD)}</p>
-                        </div>
-                        <input type="password" name={PASSWORD} id={PASSWORD}
-                            className={getInputClass(PASSWORD)} 
-                            onFocus={() => clearError(PASSWORD)}
-                            />
+                    <Input type={field.type} name={field.name} id={field.name}
+                        className={getInputClass(field.name)}
+                        onFocus={() => clearError(field.name)}
+                        />
+                </div>) }
 
+                <div className="flex flex-row flex-wrap gap-4">
+                    <div className='col-5'>
+                        <SubmitButton>Sign {isSignUpMode ? 'up' : 'in'}</SubmitButton>
                     </div>
-                    { isSignUpMode && <div className="form-group mb-2">
-                        <div className='label-row'>
-                            <label htmlFor={CONFIRMATION}>Confirm password</label>
-                            <p className="text-danger form-text">{getFieldError(CONFIRMATION)}</p>
-                        </div>
-                        <input type="password" name={CONFIRMATION} id={CONFIRMATION}
-                            className={getInputClass(CONFIRMATION)} 
-                            onFocus={() => clearError(CONFIRMATION)}
-                            />
-                    </div>}
-                    <div className="row align-items-center justify-content-between g-1 mt-3">
-                        <div className='col-5'>
-                            <SubmitButton className="btn btn-success w-100">Sign {isSignUpMode ? 'up' : 'in'}</SubmitButton>
-                        </div>
-                        <Link className="btn btn-outline-success col-5" type="button" href={isSignUpMode ? '/auth/login' : '/auth/signup'}>
-                            Go to sign {isSignUpMode ? 'in' : 'up'}
-                        </Link>
-                    </div>
-                </form>      
-            </div>
-        </m.div>
-    </LazyMotion> )
-}
+                    <LinkButton color='greenOutline' url={isSignUpMode ? '/auth/login' : '/auth/signup'}>
+                        Go to sign {isSignUpMode ? 'in' : 'up'}
+                    </LinkButton>
+                </div>
 
-function validateForm(formData: FormData, isSignUpMode: boolean) : AuthFormFeedback {
-    const email = formData.get(EMAIL)?.valueOf().toString().trim() || '';
-    const password = formData.get(PASSWORD)?.valueOf().toString().trim() || '';
-
-    if (!isValidEmail(email)) 
-        return {ok: false, field: EMAIL, message: 'Invalid email'};
-
-    if (isSignUpMode) {
-        if (password.length < 6) 
-            return {ok: false,  field: PASSWORD, message: 'Password is too short'};
-    
-        const confirmation = formData.get(CONFIRMATION)?.valueOf().toString().trim();
-        
-        if (password !== confirmation) 
-            return {ok: false,  field: CONFIRMATION, message: 'Password and confirmation do not match'};
-    }
-    else {
-        if (password.length === 0) 
-            return {ok: false, field: PASSWORD, message: 'Password is empty'};
-    }
-
-    return {ok: true, email, password};
+            </form>      
+        </motion.div>
 }

@@ -1,8 +1,9 @@
-import { fromMongoToRecipePreview, queryDB } from '@/helpers/server-helpers';
+import { queryDB } from '@/helpers/server-helpers';
 import { MongoRecipe, RecipePreview } from '@/helpers/types'; 
 import { RECIPE_PREVIEW_BATCH_SIZE } from '@/helpers/config'; 
 import { NextRequest } from 'next/server';
 import { ObjectId, Filter, FindOptions } from 'mongodb';
+import { fromMongoToRecipePreview } from '@/helpers/casters';
 
 export async function POST(req: NextRequest) {
     console.log('querying for more recipes');

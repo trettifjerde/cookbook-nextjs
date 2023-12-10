@@ -7,7 +7,7 @@ import NavLi from "./NavLi";
 export default function NavLink({name, url}: {name: string, url: string}) {
     const pathname = usePathname();
     
-    return <NavLi>
-        <Link className={`nav-link ${pathname.startsWith(url) ? 'active' : ''}`} href={url}>{name}</Link>
+    return <NavLi active={pathname.includes(url)}>
+        <Link className="block text-green" href={url}>{name}</Link>
     </NavLi>
 }

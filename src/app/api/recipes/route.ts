@@ -1,5 +1,6 @@
+import { fromMongoToRecipePreview } from "@/helpers/casters";
 import { RECIPE_PREVIEW_BATCH_SIZE } from "@/helpers/config";
-import { fromMongoToRecipePreview, queryDB } from "@/helpers/server-helpers";
+import { queryDB } from "@/helpers/server-helpers";
 import { InitPreviewsBatch, MongoRecipe, RecipePreview } from "@/helpers/types";
 
 export async function GET() {
