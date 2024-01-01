@@ -1,8 +1,9 @@
 'use client';
 
-import { motion, AnimatePresence } from 'framer-motion';
-import { ReactNode, memo, useEffect, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Button } from './elements/buttons';
 
 const shadowVariants = {
     hidden: {
@@ -58,20 +59,20 @@ export default function ConfirmationModal ({visible, children, onConfirm, closeM
 
     return mounted ? ReactDOM.createPortal(
         <AnimatePresence>
-            {visible && <div className="m">
-                <motion.div className='m-shadow' 
+            {visible && <div className="h-screen px-4 md:px-8 xl:px-20 2xl:px-40 flex flex-col gap-6 py-4 overflow-hidden">
+                <motion.div className='absolute inset-0 bg-green-shadow' 
                     variants={shadowVariants} initial="hidden" exit="hidden" animate="visible"
                     onClick={closeModal}
                     ></motion.div>
-                <motion.div className="m-content" 
+                <motion.div className="min-w-[400px] bg-white border border-green rounded-md p-8 shadow-modal" 
                     variants={dialogVariants} initial="hidden" exit="hidden" animate="visible"
                     >
-                        <div className="m-message">
+                        <div className="p-8 text-center">
                             {children}
                         </div>
-                        <div className='m-btns'>
-                            <button type='button' className='btn btn-success' onClick={onConfirm}>Confirm</button>
-                            <button type="button" className='btn btn-outline-success' onClick={closeModal}>Cancel</button>
+                        <div className='flex flex-row gap-4 justify-center'>
+                            <Button type='button' color='green' onClick={onConfirm}>Confirm</Button>
+                            <Button type="button" color='greenOutline' onClick={closeModal}>Cancel</Button>
                         </div>
                 </motion.div>
             </div>}

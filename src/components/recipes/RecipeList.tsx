@@ -1,11 +1,11 @@
 'use client';
-import { AnimatePresence, motion } from 'framer-motion';
-import RecipeItem from "./RecipeItem";
-import { useStoreDispatch, useStoreSelector } from '@/store/store';
 import { useEffect, useMemo } from 'react';
-import { InitPreviewsBatch } from '@/helpers/types';
-import { recipesActions } from '@/store/recipes';
 import { usePathname } from 'next/navigation';
+import { AnimatePresence, motion } from 'framer-motion';
+import { useStoreDispatch, useStoreSelector } from '@/store/store';
+import { recipesActions } from '@/store/recipes';
+import { InitPreviewsBatch } from '@/helpers/types';
+import RecipeItem from "./RecipeItem";
 
 export const itemVariants = (n: number) => ({
     hidden: {
@@ -52,28 +52,28 @@ export default function RecipeList ({initPreviews}: { initPreviews: InitPreviews
         dispatch(recipesActions.syncPreviews(initPreviews))
     }, [initPreviews]);
 
-    return (<div className="grid">
-        <AnimatePresence mode='wait' initial={false}>
+    return <AnimatePresence mode='wait'>
 
-            {filteredRecipes.length > 0 && <motion.div className='flex flex-col-reverse justify-end gap-2' layout 
+        {
+            filteredRecipes.length === 0 && <motion.div key="recipes-empty" 
+                className='h-recipe-item-sm md:h-recipe-item-md flex items-center justify-center' 
                 variants={itemVariants(0)} initial="hidden" animate="visible" exit="hidden">
+                    No recipes found
+            </motion.div>
+        }
 
-                <AnimatePresence initial={false}>
-                    {filteredRecipes.map((r, i) => <motion.div layout key={r.id} 
+        {
+            filteredRecipes.length > 0 && <motion.div key='recipes' className='h-full flex flex-col-reverse justify-end gap-2'>
+            { 
+                filteredRecipes.map((r, i) => <motion.div key={r.id} 
                     variants={itemVariants(filteredRecipes.length - 1 - i)}
                     initial="hidden" animate="visible" exit="hidden">
+
                         <RecipeItem recipe={r} isActive={pathname.includes(r.id)}/>
-                    </motion.div>) }
-                </AnimatePresence>
 
-            </motion.div>
+                    </motion.div>) 
             }
-
-            {filteredRecipes.length === 0 && <motion.div layout key="recipes-empty" className='flex items-center justify-center' 
-            variants={itemVariants(0)} initial="hidden" animate="visible" exit="hidden">
-                No recipes found
-            </motion.div>}
-
-        </AnimatePresence>
-    </div>)
+            </motion.div>
+        }
+    </AnimatePresence>
 }

@@ -40,7 +40,7 @@ const RecipesLoadMoreButton = memo(() => {
         setFetching(false);
     }
 
-    return <SpinnerButton type="button" className="w-full" color="green" disabled={!hasMoreRecipes} pending={fetching} onClick={loadMoreRecipes}>
+    return <SpinnerButton type="button" className="w-full overflow-hidden shadow-alert rounded-md" color="green" disabled={fetching || !hasMoreRecipes} pending={fetching} onClick={loadMoreRecipes}>
         {loadBtnText}
     </SpinnerButton>
 });

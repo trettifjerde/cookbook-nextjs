@@ -1,9 +1,9 @@
 'use client'
-import { useStoreDispatch, useStoreSelector } from "@/store/store";
-import PopUp from "../ui/PopUp";
 import { useCallback } from "react";
+import { useStoreDispatch, useStoreSelector } from "@/store/store";
 import { listActions } from "@/store/list";
 import { Alert } from "@/helpers/types";
+import PopUp from "../ui/PopUp";
 
 export default function ShoppingListAlert() {
     const alert = useStoreSelector(state => state.list.alert);

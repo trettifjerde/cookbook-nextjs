@@ -12,9 +12,12 @@ import { FormRecipe, RECIPE_DESC, RECIPE_IMAGE_FILE, RECIPE_NAME } from "@/helpe
 import RecipeFormInput from "./formComponents/RecipeFormInput";
 import RecipeFormSteps from "./formComponents/RecipeFormSteps";
 import RecipeFormIngredients from "./formComponents/RecipeFormIngredients";
-import SubmitButton from "../ui/SubmitButton/SubmitButton";
+import SubmitButton from "../ui/elements/SubmitButton";
 import RecipeFormImage from "./formComponents/RecipeFormImage";
 import { useFormState } from "react-dom";
+import { ErrorMessage } from "../ui/elements/misc";
+import { Button } from "../ui/elements/buttons";
+import RecipeFormGroup from "./formComponents/RecipeFormGroup";
 
 export default function RecipeForm({recipe, id}: {recipe: FormRecipe, id?: string}) {
     console.log('Recipe form');
@@ -65,28 +68,32 @@ export default function RecipeForm({recipe, id}: {recipe: FormRecipe, id?: strin
         }
     }, [formState, contTop])
 
-    return <form className="recipe-form slideUp" action={handleSubmit} autoComplete="off">
-        <div className="label-row" ref={contTop}>
-            <h3>{ id ? 'Edit recipe' : 'Add recipe'}</h3> 
-            <p className="form-text text-danger">{(hasErrors && 'Form contains errors') || statusCodeToMessage(formState.status)}</p>
+    return <form className="animate-slideUp py-4 px-2" action={handleSubmit} autoComplete="off">
+
+        <div className="flex flex-row items-center justify-between gap-2" ref={contTop}>
+            <h3 className="text-3xl font-medium mb-8">{ id ? 'Edit recipe' : 'Add recipe'}</h3> 
+            <ErrorMessage text={(hasErrors && 'Form contains errors') || statusCodeToMessage(formState.status)} />
         </div>     
-        <RecipeFormInput type="text" name={RECIPE_NAME} label="Title" defaultValue={recipe.title} 
-            hasError={errors.general.has(RECIPE_NAME)} touchField={touchField}/>     
-        <hr/>
-        <RecipeFormInput type="textarea" name={RECIPE_DESC} label="Description" defaultValue={recipe.description} 
-            hasError={errors.general.has(RECIPE_DESC)} touchField={touchField}/> 
-        <hr/>
-        <RecipeFormImage defaultValue={recipe.imagePath} hasError={errors.general.has(RECIPE_IMAGE_FILE)} touchField={touchField}/>
-        <hr/>
+
+        <RecipeFormGroup label="Title" htmlFor={RECIPE_NAME} hasError={errors.general.has(RECIPE_NAME)} errorMsg="Cannot be empty">
+            <RecipeFormInput type="text" name={RECIPE_NAME} defaultValue={recipe.title} 
+                hasError={errors.general.has(RECIPE_NAME)} touchField={touchField}/> 
+        </RecipeFormGroup>
+
+        <RecipeFormGroup label="Description" htmlFor={RECIPE_DESC} hasError={errors.general.has(RECIPE_DESC)} errorMsg="Cannot be empty">
+            <RecipeFormInput type="textarea" name={RECIPE_DESC} defaultValue={recipe.description} 
+                hasError={errors.general.has(RECIPE_DESC)} touchField={touchField}/> 
+        </RecipeFormGroup>
+
+        <RecipeFormImage defaultValue={recipe.imagePath} hasError={errors.general.has(RECIPE_IMAGE_FILE)} />
+
         <RecipeFormIngredients ingredients={recipe.ingredients} errors={errors.ingredients} touchField={touchField}/>
-        <hr/>
+
         <RecipeFormSteps steps={recipe.steps} errors={errors.steps} touchField={touchField} />
-        <hr/>
-        <div className="row align-items-center justify-content-between g-0">
-            <div className="col-5">
-                <SubmitButton className="btn btn-success w-100">Submit</SubmitButton>
-            </div>
-            <button className="btn btn-outline-success col-5" type="button" onClick={() => router.back()}>Cancel</button>
+
+        <div className="flex flex-row gap-2">
+            <SubmitButton className="grow">Submit</SubmitButton>
+            <Button color="greenOutline" type="button" className="grow" onClick={() => router.back()}>Cancel</Button>
         </div>
     </form> 
 };

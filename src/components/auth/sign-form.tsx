@@ -3,10 +3,11 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { authenticate } from '@/helpers/auth-actions';
-import SubmitButton from '../ui/SubmitButton/SubmitButton';
+import SubmitButton from '../ui/elements/SubmitButton';
 import { LinkButton } from '../ui/elements/buttons';
 import { AuthFormError, CONFIRMATION, EMAIL, PASSWORD, validateAuthForm } from '@/helpers/form-validators';
 import { Input } from '../ui/elements/forms';
+import { ErrorMessage } from '../ui/elements/misc';
 
 export default function SignForm({isSignUpMode}: {isSignUpMode: boolean}) {
     console.log('Auth form');
@@ -17,7 +18,7 @@ export default function SignForm({isSignUpMode}: {isSignUpMode: boolean}) {
 
     const hasError = (field: string) => validationError && validationError.field === field;
     
-    const getInputClass = (field: string) => `w-full ${hasError(field) ? 'border-red' : ''}`;
+    const getInputClass = (field: string) => hasError(field) ? 'border-red' : '';
     
     const getFieldError = (field: string) => hasError(field) ? validationError!.message : '';
 
@@ -58,12 +59,13 @@ export default function SignForm({isSignUpMode}: {isSignUpMode: boolean}) {
         className='py-8 w-full max-w-lg m-auto'>
             <h3 className='text-2xl font-medium mb-4'>Sign {isSignUpMode? 'up' : 'in'}</h3>
             <form action={validateThenAction} onFocus={clearErrors} autoComplete='off'>
-                <p className="text-red text-xs min-h-error-msg my-1">{submitError}</p>
+
+                <ErrorMessage text={submitError} />
 
                 { fields.map(field => <div className="mb-4" key={field.name}>
                     <div className='flex flex-row justify-between items-center'>
                         <label htmlFor={field.name}>{field.label}</label>
-                        <p className="text-red text-xs">{getFieldError(field.name)}</p>
+                        <ErrorMessage text={getFieldError(field.name)} />
                     </div>
                     <Input type={field.type} name={field.name} id={field.name}
                         className={getInputClass(field.name)}
@@ -71,10 +73,8 @@ export default function SignForm({isSignUpMode}: {isSignUpMode: boolean}) {
                         />
                 </div>) }
 
-                <div className="flex flex-row flex-wrap gap-4">
-                    <div className='col-5'>
-                        <SubmitButton>Sign {isSignUpMode ? 'up' : 'in'}</SubmitButton>
-                    </div>
+                <div className="flex flex-row justify-between flex-wrap gap-4 *:min-w-32">
+                    <SubmitButton>Sign {isSignUpMode ? 'up' : 'in'}</SubmitButton>
                     <LinkButton color='greenOutline' url={isSignUpMode ? '/auth/login' : '/auth/signup'}>
                         Go to sign {isSignUpMode ? 'in' : 'up'}
                     </LinkButton>

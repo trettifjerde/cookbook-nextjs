@@ -1,36 +1,36 @@
+import { useCallback } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { RECIPE_ING_ID } from "@/helpers/forms";
 import { FormIngredient, RecipeIngredient } from "@/helpers/types";
 import useListManager from "@/helpers/useListManger";
-import { AnimatePresence, motion } from "framer-motion";
 import RecipeFormIngredient from "./RecipeFormIngredient";
-import { useCallback } from "react";
+import RecipeFormGroup from "./RecipeFormGroup";
+import { Button } from "@/components/ui/elements/buttons";
 
 type Props = {
     errors: Set<string>, 
     ingredients: RecipeIngredient[], 
     touchField: (key: string, value: string) => void
 };
+
 export default function RecipeFormIngredients({errors, ingredients, touchField}: Props) {
     const {list, addItem, removeItem} = useListManager(ingredients, makeNewIng);
-
     const registerTouch = useCallback((v: string) => touchField('ingredients', v), [touchField]);
     
-    return <div className="form-group">
-        <div className="label-row">
-            <label>Ingredients</label>
-            { errors.size > 0 && <p className="form-text text-danger">
-                Ingredients are required
-            </p>}
-        </div>
-        <AnimatePresence mode="popLayout" initial={false}>
-            { list.map(ing => <RecipeFormIngredient key={ing.id} ing={ing} 
-                errors={errors} removeIng={removeItem} touchField={registerTouch} />) }
+    return <RecipeFormGroup label="Ingredients" errorMsg="Ingredients are required" hasError={errors.size > 0}>
+        <div>
+            <AnimatePresence mode="popLayout" initial={false}>
+                { list.map(ing => <RecipeFormIngredient key={ing.id} ing={ing} 
+                    errors={errors} removeIng={removeItem} touchField={registerTouch} />) }
 
-            <motion.button layout type="button" className="btn btn-outline-success mt-2" onClick={addItem}>
-                Add new ingredient
-            </motion.button>
-        </AnimatePresence>  
-    </div>
+                <motion.div key="add-btn" layout className="mt-4">
+                    <Button type="button" color="greenOutline" onClick={addItem}>
+                        Add new ingredient
+                    </Button>
+                </motion.div>
+            </AnimatePresence>  
+        </div>
+    </RecipeFormGroup>
 }
 
 function makeNewIng(i: number, ing?: RecipeIngredient) {

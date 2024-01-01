@@ -8,6 +8,6 @@ export default function NavLink({name, url}: {name: string, url: string}) {
     const pathname = usePathname();
     
     return <NavLi active={pathname.includes(url)}>
-        <Link className="block text-green" href={url}>{name}</Link>
+        <Link className="block text-green whitespace-nowrap" href={url}>{name}</Link>
     </NavLi>
 }

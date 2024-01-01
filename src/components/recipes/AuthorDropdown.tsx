@@ -77,7 +77,7 @@ export default function AuthorDropdown({recipe}: {recipe: Recipe}) {
             visible={isModalVisible}
             onConfirm={onDeleteRecipe} 
             closeModal={() => setIsModalVisible(false)}>
-                Delete recipe <span className="b">{recipe.title}</span>?
+                Delete recipe <span className="font-bold">{recipe.title}</span>?
         </ConfirmationModal>
 
         <PopUp alert={alert} setPopUp={setAlert}></PopUp>

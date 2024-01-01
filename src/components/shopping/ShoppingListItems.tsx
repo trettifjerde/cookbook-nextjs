@@ -1,13 +1,17 @@
 'use client'
 
-import { ForwardedRef, forwardRef, memo, useState } from "react";
+import { forwardRef, memo, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+
 import { useStoreDispatch, useStoreSelector } from "@/store/store";
 import { listActions } from "@/store/list";
+
 import { Ingredient } from "@/helpers/types";
 import { deleteIngredient } from "@/helpers/list-actions";
-import ConfirmationModal from "../ui/ConfirmationModal";
 import { statusCodeToMessage } from "@/helpers/client-helpers";
-import { AnimatePresence, motion } from "framer-motion";
+
+import ConfirmationModal from "../ui/ConfirmationModal";
+import { Button, SmallButton } from "../ui/elements/buttons";
 
 export default function ShoppingListItems() {
 
@@ -41,7 +45,7 @@ export default function ShoppingListItems() {
     }
 
     return <>
-        {list.length > 0 && <div className="list-group">
+        {list.length > 0 && <div>
             <AnimatePresence mode="popLayout">
             {
                 list.map(item => (
@@ -58,13 +62,13 @@ export default function ShoppingListItems() {
         </div>
         }
 
-        { list.length === 0 && <div className="text-center fadeIn">No items in the list</div>}
+        { list.length === 0 && <div className="text-center animate-fadeIn">No items in the list</div>}
 
         <ConfirmationModal 
             visible={!!itemToDelete} 
             closeModal={() => setItemToDelete(null)} 
             onConfirm={() => deleteItem()}> 
-                Delete item <span className="b">{itemToDelete?.name}</span>?
+                Delete item <span className="font-bold">{itemToDelete?.name}</span>?
         </ConfirmationModal>
     </>
 };
@@ -84,32 +88,35 @@ const variants = {
     }
 }
 
-const SHLI = forwardRef(({item, selected, pending, onDelete} : {
-    item: Ingredient, selected: boolean, pending: boolean, onDelete: (item: Ingredient) => void
-}, ref: ForwardedRef<HTMLDivElement>) => {
+type SHLIProps = { 
+    item: Ingredient, 
+    selected: boolean, 
+    pending: boolean, 
+    onDelete: (item: Ingredient) => void
+};
+
+const shLiClass = {
+    base: 'px-3 py-2 flex flex-row gap-2 items-center justify-between group transition-colors duration-200',
+    border: 'border-x border-gray-200 first:rounded-t-md first:border-t even:border-y last:rounded-b-md last:border-b-[1px]',
+    getClass(selected: boolean) {
+        return `${this.base} ${this.border} ${selected ? 'bg-green-shadow' : ''}`
+    }
+};
+
+const ShoppingListItem = memo(forwardRef<HTMLDivElement, SHLIProps>(({item, selected, pending, onDelete}, ref) => {
     const dispatch = useStoreDispatch();
 
     return <motion.div layout="preserve-aspect" ref={ref} variants={variants} 
         initial="hidden" animate={pending ? 'pending' : 'visible'} exit="hidden"
-        className={`list-group-item ingredient ${selected ? 'selected' : ''}`}>
-        <div className="ingredient-text">{getItemInfo(item)}</div>
-        <div className="btn-group-sm">
-            <button className="btn btn-outline-warning" onClick={() => dispatch(listActions.selectItem(item))}>Edit</button>
-            <button type="button" className="btn btn-outline-danger" onClick={() => onDelete(item)}>Delete</button>
-        </div>
+        className={shLiClass.getClass(selected)}>
+            <div>{getItemInfo(item)}</div>
+            <div className="flex flex-row gap-2 transition-hidden-btn duration-200 opacity-0 invisible group-hover:visible group-hover:opacity-100">
+                <SmallButton color="yellow" onClick={() => dispatch(listActions.selectItem(item))}>Edit</SmallButton>
+                <SmallButton color="red" onClick={() => onDelete(item)}>Delete</SmallButton>
+            </div>
     </motion.div>
-});
-
-const ShoppingListItem = memo(SHLI);
+}));
 
 function getItemInfo(item: Ingredient) {
-    let info = item.name;
-    if (item.amount) {
-        info += ` (${item.amount}`;
-        if (item.unit) {
-            info += ` ${item.unit}`;
-        }
-        info += ')';
-    }
-    return <span>{info}</span>;
+    return `${item.name}${item.amount ? ` (${item.amount}${item.unit ? ` ${item.unit}` : ''})` : ''}`;
 }

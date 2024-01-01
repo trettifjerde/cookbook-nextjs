@@ -1,14 +1,20 @@
 'use client'
+
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ING_NAME, ING_AMOUNT, ING_UNIT } from "@/helpers/types";
-import { getIngredientErrorLog, ingredientErrorsInit, ingredientNotChanged, validateIngredient } from "@/helpers/forms";
-import ShoppingListFormItem from "./ShoppingFormtem";
-import useErrors from "@/helpers/useErrors";
-import { sendIngredient } from "@/helpers/list-actions";
+
 import { useStoreDispatch, useStoreSelector } from "@/store/store";
 import { listActions } from "@/store/list";
+
+import useErrors from "@/helpers/useErrors";
+import { ING_NAME, ING_AMOUNT, ING_UNIT } from "@/helpers/types";
+import { getIngredientErrorLog, ingredientErrorsInit, ingredientNotChanged, validateIngredient } from "@/helpers/forms";
+import { sendIngredient } from "@/helpers/list-actions";
 import { statusCodeToMessage } from "@/helpers/client-helpers";
-import SubmitButton from "../ui/SubmitButton/SubmitButton";
+
+import SubmitButton from "../ui/elements/SubmitButton";
+import ShoppingListFormItem from "./ShoppingFormtem";
+import { ErrorMessage } from "../ui/elements/misc";
+import { Button } from "../ui/elements/buttons";
 
 export default function ShoppingListForm() {
 
@@ -72,37 +78,26 @@ export default function ShoppingListForm() {
         formRef.current?.reset();
     }, [selectedItem, formRef]);
 
-    return (<>
-        <div className="row">
-            <div className="col r">
-                <form action={validateForm} autoComplete="off" ref={formRef} onFocus={() => setNoChanges(false)}>
-                    <div className="row mb-2 g-2">
-                        <div className="col-8 form-group">
-                            <ShoppingListFormItem type="text" label="Name" name={ING_NAME} defaultValue={selectedItem.name} 
-                                hasError={errors.general.has(ING_NAME)} registerTouch={registerTouch} />
-                        </div>
-                        <div className="col-2 form-group">
-                            <ShoppingListFormItem type="number" label="Amount" name={ING_AMOUNT} defaultValue={selectedItem.amount} 
-                                hasError={errors.general.has(ING_AMOUNT)} registerTouch={registerTouch} />
-                        </div>
-                        <div className="col-2 form-group">
-                            <ShoppingListFormItem type="text" label="Units" name={ING_UNIT} defaultValue={selectedItem.unit} 
-                                hasError={errors.general.has(ING_UNIT)} registerTouch={registerTouch} />
-                        </div>
-                    </div>
-                    <div className="row align-items-center row-cols-auto mg-2 g-2">
-                        <div className="col">
-                            <SubmitButton className="btn-success btn">{selectedItem.id ? 'Edit' : 'Add'}</SubmitButton>
-                            </div>
-                        <div className="col">
-                            <button type="button" className="btn btn-outline-secondary" onClick={clearForm}>Clear</button>
-                        </div>
-                        <div className="col text-danger form-text text-end flex-grow-1">
-                            { getIngredientErrorLog(errors.general, noChanges) }</div>
-                    </div>
-                </form>
+    return (<form action={validateForm} className="w-full px-2" autoComplete="off" ref={formRef} onFocus={() => setNoChanges(false)}>
+        <div className="flex flex-row mb-2 gap-2">
+            <ShoppingListFormItem className="grow" type="text" label="Name" name={ING_NAME} defaultValue={selectedItem.name} 
+                hasError={errors.general.has(ING_NAME)} registerTouch={registerTouch} />
+
+            <ShoppingListFormItem className="" type="number" label="Amount" name={ING_AMOUNT} defaultValue={selectedItem.amount} 
+                hasError={errors.general.has(ING_AMOUNT)} registerTouch={registerTouch} />
+
+            <ShoppingListFormItem className="" type="text" label="Units" name={ING_UNIT} defaultValue={selectedItem.unit} 
+                hasError={errors.general.has(ING_UNIT)} registerTouch={registerTouch} />
+        </div>
+        <div className="flex flex-row items-center gap-2">
+            <div className="flex flex-row gap-2">
+                <SubmitButton>{selectedItem.id ? 'Edit' : 'Add'}</SubmitButton>
+                <Button type="button" color="greenOutline" onClick={clearForm}>Clear</Button>
+            </div>
+            <div className="grow text-right">
+                <ErrorMessage text={getIngredientErrorLog(errors.general, noChanges)} />
             </div>
         </div>
-        </>
+    </form>
     )
 }

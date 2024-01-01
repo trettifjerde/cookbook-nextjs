@@ -3,6 +3,8 @@ import { AnimatePresence } from "framer-motion";
 import RecipeFormStep from "./RecipeFormStep";
 import useListManager from "@/helpers/useListManger";
 import { useCallback } from "react";
+import RecipeFormGroup from "./RecipeFormGroup";
+import { Button } from "@/components/ui/elements/buttons";
 
 type Props = {
     steps: string[],
@@ -12,25 +14,23 @@ type Props = {
 
 export default function RecipeFormSteps({steps, errors, touchField}: Props) {
     const {list, addItem, removeItem, moveItem} = useListManager(steps, makeNewStep);
-
     const registerTouch = useCallback((v: string) => touchField('steps', v), [touchField]);
     
-    return <div className="form-group">
-        <div className="label-row">
-            <label>Steps</label>
-            { errors.size > 0 && <p className="form-text text-danger">
-                Steps cannot be empty or longer than 1000 characters each
-            </p>}
-        </div>
-        <ol className="list-group list-group-flush steps">
+    return <RecipeFormGroup label="Steps" hasError={errors.size > 0} errorMsg="Steps cannot be empty or longer than 1000 characters each">
+        <ol className="list-decimal list-inside divide-y">
+
             <AnimatePresence mode="popLayout" initial={false}>
-            { list.map(step => <RecipeFormStep key={step.id} step={step} errors={errors} removeStep={removeItem} moveStep={moveItem} touchField={registerTouch} />)} 
+                { list.map(step => <RecipeFormStep key={step.id} 
+                    step={step} errors={errors} removeStep={removeItem} moveStep={moveItem} touchField={registerTouch} />)} 
             </AnimatePresence>
+
         </ol>
-        <button type="button" className="btn btn-outline-success" onClick={addItem}>
-            Add new step
-        </button>
-    </div>
+        <div>
+            <Button type="button" color="greenOutline" onClick={addItem}>
+                Add new step
+            </Button>
+        </div>
+    </RecipeFormGroup>
 }
 
 function makeNewStep(i: number, step?: string) {

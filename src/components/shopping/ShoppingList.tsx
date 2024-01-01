@@ -7,6 +7,7 @@ import { listActions } from "@/store/list";
 import ShoppingListSkeleton from "./ShoppingListSkeleton";
 import ShoppingListItems from "./ShoppingListItems";
 import { fetchList } from "@/helpers/fetchers";
+import { Button } from "../ui/elements/buttons";
 
 const controller = new AbortController();
 
@@ -44,9 +45,9 @@ export default function ShoppingList () {
 
     return <> 
         {!isInitialised && <>
-            { fetchError && <div className="text-center">
-                <p>{fetchError}</p>
-                <button type="button" className="btn btn-success" onClick={initialiseList}>Retry</button>
+            { fetchError && <div className="text-center my-8">
+                <p className="mb-4">{fetchError}</p>
+                <Button type="button" color="green" onClick={initialiseList}>Retry</Button>
             </div>}
 
             {!fetchError && <ShoppingListSkeleton />}  

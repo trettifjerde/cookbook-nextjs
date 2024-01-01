@@ -1,14 +1,13 @@
 import ShoppingList from "@/components/shopping/ShoppingList";
 import ShoppingListAlert from "@/components/shopping/ShoppingListAlert";
 import ShoppingListForm from "@/components/shopping/ShoppingListForm";
+import { HR } from "@/components/ui/elements/misc";
 
 export default async function ShoppingListPage() {
-    return <div className="row mb-4">
-        <div className="col-xs-10">
-            <ShoppingListForm />
-            <hr/> 
-            <ShoppingList />
-            <ShoppingListAlert />
-        </div>
-    </div>
+    return <>
+        <ShoppingListForm />
+        <HR/> 
+        <ShoppingList />
+        <ShoppingListAlert />
+    </>
 }

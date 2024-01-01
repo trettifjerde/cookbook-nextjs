@@ -1,7 +1,7 @@
 'use client'
 
 import { Alert, RecipeIngredient } from "@/helpers/types";
-import SubmitButton from "../ui/SubmitButton/SubmitButton";
+import SubmitButton from "../ui/elements/SubmitButton";
 import { toShoppingListAction } from "@/helpers/recipe-actions";
 import { useStoreDispatch } from "@/store/store";
 import { listActions } from "@/store/list";

@@ -1,8 +1,9 @@
-import FormItem from "@/components/ui/FormItem";
-import { FormIngredient, ING_AMOUNT, ING_NAME, ING_UNIT } from "@/helpers/types";
+import { ForwardedRef, forwardRef, memo } from "react";
 import {motion} from 'framer-motion';
+import { FormIngredient, ING_AMOUNT, ING_NAME, ING_UNIT } from "@/helpers/types";
+import { Input } from "@/components/ui/elements/forms";
+import { Button } from "@/components/ui/elements/buttons";
 import { listVariants } from "../RecipeForm";
-import { ForwardedRef, forwardRef } from "react";
 
 type Props = {
     errors: Set<string>, 
@@ -10,31 +11,48 @@ type Props = {
     removeIng: (id: string) => void,
     touchField: (value: string) => void
 }
+type FieldType = typeof ING_AMOUNT | typeof ING_NAME | typeof ING_UNIT;
 
-function getFieldName(ing: FormIngredient, fieldType: 'name' | 'amount' | 'unit') {
-    return `${ing.id}${fieldType === 'amount' ? ING_AMOUNT : fieldType === 'unit' ? ING_UNIT : ING_NAME}`;
-}
+const getFieldName = (ing: FormIngredient, fieldType: FieldType) => `${ing.id}${fieldType}`;
 
-function RecipeFormIngredient({errors, ing, removeIng, touchField}: Props, ref: ForwardedRef<HTMLDivElement>) {
+function IngredientField({type, invalid, name, touchField, placeholder, defaultValue, className} : {
+    type: 'number' | 'text',
+    invalid: boolean,
+    placeholder: string,
+    name: string,
+    touchField: (value: string) => void,
+    defaultValue: string,
+    className: string
+}) {
 
-    return <motion.div ref={ref} layout className="row row-cols-auto align-items-center g-2 flex-nowrap ingred-cont"
+    return <div className={className}>
+        <Input type={type} name={name} id={name} placeholder={placeholder}
+            defaultValue={defaultValue} invalid={invalid} onFocus={() => touchField(name)}/>
+    </div>
+};
+
+const RecipeFormIngredient = forwardRef<HTMLDivElement, Props>(({errors, ing, removeIng, touchField}, ref) => {
+
+    return <motion.div ref={ref} layout className="flex flex-row items-center gap-1 flex-nowrap my-1"
         variants={listVariants} exit="exit" initial="initial" animate="animate">
-        <div className="col flex-shrink-1">
-            <FormItem type="number" name={getFieldName(ing, 'amount')} placeholder="amount"
-            defaultValue={ing.amount} hasError={errors.has(getFieldName(ing, 'amount'))} registerTouch={touchField}/>
-        </div>
-        <div className="col flex-shrink-1">
-            <FormItem type="text" name={getFieldName(ing, 'unit')} placeholder="unit"
-            defaultValue={ing.unit} hasError={errors.has(getFieldName(ing, 'unit'))} registerTouch={touchField}/>
-        </div>
-        <div className="col flex-grow-1">
-            <FormItem type="text" name={getFieldName(ing, 'name')} placeholder="name"
-            defaultValue={ing.name} hasError={errors.has(getFieldName(ing, 'name'))} registerTouch={touchField} />
-        </div>
-        <div className="col flex-shrink-1">
-            <button className="btn btn-outline-danger" type="button" onClick={() => removeIng(ing.id)}>X</button>
-        </div>            
-    </motion.div>
-}
 
-export default forwardRef(RecipeFormIngredient);
+            <IngredientField type="number" className="shrink"
+                name={getFieldName(ing, ING_AMOUNT)} placeholder={ING_AMOUNT} 
+                defaultValue={ing.amount} invalid={errors.has(getFieldName(ing, ING_AMOUNT))} touchField={touchField} />
+
+            <IngredientField type="text" className="shrink"
+                name={getFieldName(ing, ING_UNIT)} placeholder={ING_UNIT}
+                defaultValue={ing.unit} invalid={errors.has(getFieldName(ing, ING_UNIT))} touchField={touchField}/>
+
+            <IngredientField type="text" className="grow"
+                name={getFieldName(ing, 'name')} placeholder="name"
+                defaultValue={ing.name} invalid={errors.has(getFieldName(ing, 'name'))} touchField={touchField} />
+
+            <div>
+                <Button color="red" isSquare type="button" onClick={() => removeIng(ing.id)}>X</Button>
+            </div>  
+
+    </motion.div>
+})
+
+export default memo(RecipeFormIngredient);

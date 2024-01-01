@@ -34,8 +34,6 @@ export async function GET(req: NextRequest, {params}: {params: {id: string}}) {
     return Response.json(result);
 }
 
-type DeleteCommand = 'delete' | 'skip'; 
-
 export async function DELETE(req: NextRequest, {params}: {params: {id: string}}) {
 
     const userId = verifyToken(cookies(), '/api/recipes/:id delete');
@@ -59,8 +57,6 @@ export async function DELETE(req: NextRequest, {params}: {params: {id: string}})
 
     if (!response)
         return new Response(null, {status: 404});
-
-    let command : DeleteCommand;
 
     const initRecipes = await initRecipePreviews();
     if (initRecipes.previews.some(p => p.id === id)) 

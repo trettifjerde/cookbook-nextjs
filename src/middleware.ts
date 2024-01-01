@@ -27,10 +27,11 @@ export async function middleware(req: NextRequest) {
             return NextResponse.next();
     }
     else {
-        if (pathname.startsWith('/auth')) 
+        if (pathname === '/auth/login' || pathname === '/auth/signup') 
             return NextResponse.next();
-        else
-            return NextResponse.redirect(new URL('/auth/login', req.url));
+        
+        return NextResponse.redirect(new URL('/auth/login', req.url));
+
     }
 }
 

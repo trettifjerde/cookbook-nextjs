@@ -6,39 +6,73 @@ module.exports = {
   theme: {
     extend: {
       gridTemplateRows: {
-        'auto-full': 'auto 1fr'
+        'auto-full': 'auto 1fr',
+        '1-3': '1fr 3fr',
       },
       gridTemplateColumns: {
-        '3-5': '3fr 5fr'
+        '3-5': '3fr 5fr',
+        '2-1': '2fr 1fr',
       },
       minWidth: {
         'btn-square': '42px',
       },
       minHeight: {
-        'recipe-item': '200px',
-        'error-msg': '1rem'
+        'details-info': '200px',
+        'textarea': '140px',
+        'error-msg': '1rem',
+        'btn-square': '42px',
+      },
+      height: {
+        'recipe-item-sm': '250px',
+        'recipe-item-md': '500px'
       },
       spacing: {
         'input-square-offset': '54px'
       },
       boxShadow: {
         'form-element': '0 0 0 0.25rem #19875470',
-        'dd': '0 0 2px 2px rgba(70, 70, 70, 0.7)'
+        'dd': '0 0 2px 2px rgba(70, 70, 70, 0.7)',
+        'alert': '0 0 3px 1px rgba(120, 120, 120, 0.5)',
+        'modal': '0 0 10px 5px rgba(120, 120, 120, 0.2)'
       },
       colors: {
         'green': '#198754',
         'green-hover': '#136841',
         'green-active': '#104a2f',
-        'green-shadow': '#19875470',
+        'green-shadow': 'rgb(231 255 225 / 35%)',
+        'green-light': 'rgb(228, 247, 238)',
         'dark-green-shadow': 'rgba(7, 71, 27, 0.7)',
-        'green-light': 'rgb(237, 253, 241)',
         'red': '#dc3545',
         'red-hover': '#bb2d3b',
         'red-active': '#b02a37',
-        'white-shadow': '#ffffff50'
+        'red-light': '#ffdede',
+        'white-shadow': '#ffffff5c',
+        'white-overlay': '#ffffffb8'
       },
       transitionProperty: {
         'hidden-btn': 'visibility, opacity, border, color, background-color'
+      },
+      aspectRatio: {
+        '2/3': '2/3'
+      },
+      animation: {
+        'fadeUp': 'fadeUp .3s ease-in-out;',
+        'fadeIn': 'fadeIn .3s ease-in-out',
+        'slideUp': 'slideUp .3s ease-in-out'
+      },
+      keyframes: {
+        'fadeIn': {
+          '0%': { opacity: '0' },
+          '100%': {opacity: '1'}
+        },
+        'fadeUp': {
+          '0%': { opacity: '0', transform: 'translateY(8px)'},
+          '100%': { opacity: '1', transform: 'translateY(0px)'}
+        },
+        'slideUp': {
+          '0%': { transform: 'translateY(-16px)'},
+          '100%': { transform: 'translateY(0px)' }
+        }
       }
     }
   },
