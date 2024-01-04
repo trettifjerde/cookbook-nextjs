@@ -13,10 +13,13 @@ const RecipesFilter = memo(() => {
     const dispatch = useStoreDispatch();
 
     const handleFilterChange = () => {
-        if (isTypingTimer) {
+        if (isTypingTimer !== null)
             clearTimeout(isTypingTimer);
-        }
-        setIsTypingTimer(setTimeout(() => dispatch(recipesActions.setFilter(filterRef.current?.value || '')), 200));
+        
+        setIsTypingTimer(setTimeout(() => {
+            dispatch(recipesActions.setFilter(filterRef.current?.value || ''));
+            setIsTypingTimer(null);
+        }, 200));
     }
 
     const clearFilter = () => {

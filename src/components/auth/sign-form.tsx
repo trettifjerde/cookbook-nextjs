@@ -2,26 +2,23 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { authenticate } from '@/helpers/auth-actions';
 import SubmitButton from '../ui/elements/SubmitButton';
 import { LinkButton } from '../ui/elements/buttons';
 import { AuthFormError, CONFIRMATION, EMAIL, PASSWORD, validateAuthForm } from '@/helpers/form-validators';
 import { Input } from '../ui/elements/forms';
 import { ErrorMessage } from '../ui/elements/misc';
+import { authenticate } from '@/helpers/server-actions/auth-actions';
 
 export default function SignForm({isSignUpMode}: {isSignUpMode: boolean}) {
-    console.log('Auth form');
+
     const [ validationError, setValidationError] = useState<AuthFormError|null>(null);
     const [ submitError, setSubmitError ] = useState('');
 
     const fields = isSignUpMode ? [EMAIL, PASSWORD, CONFIRMATION] : [EMAIL, PASSWORD];
 
     const hasError = (field: string) => validationError && validationError.field === field;
-    
     const getInputClass = (field: string) => hasError(field) ? 'border-red' : '';
-    
     const getFieldError = (field: string) => hasError(field) ? validationError!.message : '';
-
     const clearError = (field: string) => {
         if (hasError(field))
             setValidationError(null);

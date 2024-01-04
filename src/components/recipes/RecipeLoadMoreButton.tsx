@@ -8,7 +8,6 @@ import { fetchMorePreviews } from "@/helpers/fetchers";
 import { SpinnerButton } from "../ui/elements/buttons";
 
 const RecipesLoadMoreButton = memo(() => {
-    console.log('RECIPES LOAD MORE BTN');
     const lastId = useStoreSelector(state => state.recipes.lastId);
     const dispatch = useStoreDispatch();
 

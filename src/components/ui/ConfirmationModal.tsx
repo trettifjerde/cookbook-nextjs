@@ -52,19 +52,17 @@ export default function ConfirmationModal ({visible, children, onConfirm, closeM
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
-        if (document?.getElementById('confirmation')) {
-            setMounted(true);
-        }
+        setMounted(true);
     }, []);
 
     return mounted ? ReactDOM.createPortal(
         <AnimatePresence>
-            {visible && <div className="h-screen px-4 md:px-8 xl:px-20 2xl:px-40 flex flex-col gap-6 py-4 overflow-hidden">
+            {visible && <div className="h-screen px-4 md:px-8 xl:px-20 2xl:px-40 flex flex-col items-center justify-center gap-6 py-4 fixed inset-0 overflow-hidden">
                 <motion.div className='absolute inset-0 bg-green-shadow' 
                     variants={shadowVariants} initial="hidden" exit="hidden" animate="visible"
                     onClick={closeModal}
                     ></motion.div>
-                <motion.div className="min-w-[400px] bg-white border border-green rounded-md p-8 shadow-modal" 
+                <motion.div className="md:min-w-[400px] bg-white border border-green rounded-md p-8" 
                     variants={dialogVariants} initial="hidden" exit="hidden" animate="visible"
                     >
                         <div className="p-8 text-center">
@@ -77,5 +75,5 @@ export default function ConfirmationModal ({visible, children, onConfirm, closeM
                 </motion.div>
             </div>}
         </AnimatePresence>,
-        document.getElementById('confirmation')!) : <></>
+        document.getElementById('modal')!) : <></>
 }

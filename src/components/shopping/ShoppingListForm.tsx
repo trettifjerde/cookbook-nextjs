@@ -1,16 +1,13 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from "react";
-
 import { useStoreDispatch, useStoreSelector } from "@/store/store";
 import { listActions } from "@/store/list";
-
-import useErrors from "@/helpers/useErrors";
 import { ING_NAME, ING_AMOUNT, ING_UNIT } from "@/helpers/types";
 import { getIngredientErrorLog, ingredientErrorsInit, ingredientNotChanged, validateIngredient } from "@/helpers/forms";
-import { sendIngredient } from "@/helpers/list-actions";
+import { sendIngredient } from "@/helpers/server-actions/list-actions";
+import useErrors from "@/helpers/hooks/useErrors";
 import { statusCodeToMessage } from "@/helpers/client-helpers";
-
 import SubmitButton from "../ui/elements/SubmitButton";
 import ShoppingListFormItem from "./ShoppingFormtem";
 import { ErrorMessage } from "../ui/elements/misc";
@@ -51,6 +48,7 @@ export default function ShoppingListForm() {
             switch (response.status) {
                 case 200:
                     const {data} = response;
+
                     switch (data.command) {
                         case 'add':
                             dispatch(listActions.add(data.ing));
@@ -78,17 +76,20 @@ export default function ShoppingListForm() {
         formRef.current?.reset();
     }, [selectedItem, formRef]);
 
-    return (<form action={validateForm} className="w-full px-2" autoComplete="off" ref={formRef} onFocus={() => setNoChanges(false)}>
-        <div className="flex flex-row mb-2 gap-2">
+    return (<form action={validateForm} className="w-full" autoComplete="off" ref={formRef} onFocus={() => setNoChanges(false)}>
+        <div className="flex flex-row flex-wrap mb-2 gap-2">
             <ShoppingListFormItem className="grow" type="text" label="Name" name={ING_NAME} defaultValue={selectedItem.name} 
                 hasError={errors.general.has(ING_NAME)} registerTouch={registerTouch} />
 
-            <ShoppingListFormItem className="" type="number" label="Amount" name={ING_AMOUNT} defaultValue={selectedItem.amount} 
-                hasError={errors.general.has(ING_AMOUNT)} registerTouch={registerTouch} />
+            <div className="flex flex-row gap-2 grow">
+                <ShoppingListFormItem className="grow" type="number" label="Amount" name={ING_AMOUNT} defaultValue={selectedItem.amount} 
+                    hasError={errors.general.has(ING_AMOUNT)} registerTouch={registerTouch} />
 
-            <ShoppingListFormItem className="" type="text" label="Units" name={ING_UNIT} defaultValue={selectedItem.unit} 
-                hasError={errors.general.has(ING_UNIT)} registerTouch={registerTouch} />
+                <ShoppingListFormItem className="grow" type="text" label="Units" name={ING_UNIT} defaultValue={selectedItem.unit} 
+                    hasError={errors.general.has(ING_UNIT)} registerTouch={registerTouch} />
+            </div>
         </div>
+
         <div className="flex flex-row items-center gap-2">
             <div className="flex flex-row gap-2">
                 <SubmitButton>{selectedItem.id ? 'Edit' : 'Add'}</SubmitButton>

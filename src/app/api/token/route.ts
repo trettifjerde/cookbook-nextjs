@@ -1,9 +1,8 @@
-import { verifyToken } from "@/helpers/server-helpers";
-import { cookies } from "next/headers";
+import getUserId from "@/helpers/cachers/token";
 import { NextRequest } from "next/server";
 
 export async function GET(req: NextRequest) {
-    const userId = verifyToken(cookies(), '/api/token');
+    const userId = getUserId();
 
     if (userId)
         return new Response(null, {status: 200});

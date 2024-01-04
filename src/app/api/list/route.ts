@@ -1,12 +1,13 @@
-import { fromMongoToIngredient } from "@/helpers/casters";
-import { addItemsToUserMongoList, queryDB, verifyToken } from "@/helpers/server-helpers";
-import { Ingredient, MongoList, RecipeIngredient } from "@/helpers/types";
 import { ObjectId } from "mongodb";
-import { cookies } from "next/headers";
 import { NextRequest } from "next/server";
 
+import { fromMongoToIngredient } from "@/helpers/casters";
+import { queryDB } from "@/helpers/db-controller";
+import getUserId from "@/helpers/cachers/token";
+import { Ingredient, MongoList } from "@/helpers/types";
+
 export async function GET(req: NextRequest) {
-    const userId = verifyToken(cookies(), '/api/list get');
+    const userId = getUserId();
     console.log('querying db shopping list for', userId);
     
     if (!userId)
@@ -24,33 +25,4 @@ export async function GET(req: NextRequest) {
         return new Response(null, {status: 500});
 
     return Response.json(result);
-}
-
-export async function POST(req: NextRequest) {
-    const userId = verifyToken(cookies(), '/api/list post');
-    if (!userId) 
-        return new Response(null, {status: 401});
-
-    const recipeIngList = await readList(req);
-    if (!recipeIngList)
-        return new Response(null, {status: 400});
-
-    const result = await addItemsToUserMongoList(userId, recipeIngList);
-    if (!result)
-        return new Response(null, {status: 500});
-
-    return Response.json(result, {status: 200});
-}
-
-async function readList(req: NextRequest) {
-    let list : RecipeIngredient[] | null = null
-
-    try {
-        list = await req.json();
-    }
-    catch(error) {
-        console.log('Error reading recipe list', error);
-    }
-
-    return list;
 }

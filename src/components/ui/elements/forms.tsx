@@ -32,10 +32,10 @@ const classes = {
         return `${this.base} resize-y min-h-textarea ${className} ${invalid ? 'border-red' : ''}`
     },
     skeletonInput() {
-        return `${this.base} mb-1 min-h-btn-square grow flicker`
+        return `${this.base} mb-1 min-h-btn-square grow animate-flicker`
     },
     skeletonTextarea() {
-        return `${this.base} mb-1 min-h-textarea grow flicker`
+        return `${this.base} mb-1 min-h-textarea grow animate-flicker`
     }
 }
 
@@ -50,7 +50,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(({
     onChange=() => {},
     onFocus=() => {}
 }, ref) => {
-    return <input type={type} ref={ref} name={name} id={id} placeholder={placeholder} 
+    return <input type={type} ref={ref} name={name} id={id} placeholder={placeholder} disabled={disabled}
         className={classes.input({className, invalid})} autoComplete="off"
         defaultValue={defaultValue} onChange={onChange} onFocus={onFocus}/>
 })
@@ -63,7 +63,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(({
     onChange=() => {},
     onFocus=() => {}
 }, ref) => {
-    return <textarea ref={ref} name={name} id={id}
+    return <textarea ref={ref} name={name} id={id} disabled={disabled}
         className={classes.textarea({className, invalid})} autoComplete="off"
         defaultValue={defaultValue} onChange={onChange} onFocus={onFocus}/>
 })

@@ -1,15 +1,15 @@
-import { ReactNode, } from 'react';
+import { ReactNode } from 'react';
 import RecipesFrame from '@/components/recipes/RecipesFrame';
 import RecipesLoadMoreButton from '@/components/recipes/RecipeLoadMoreButton';
 import RecipeList from '@/components/recipes/RecipeList';
-import { initRecipePreviews } from '@/helpers/init-recipe-cache';
+import { fetchInitPreviews } from '@/helpers/fetchers';
 
 export default async function RecipesLayout({children}:{children: ReactNode}) {
-    const initPreviews = await initRecipePreviews();
+    const initPreviews = await fetchInitPreviews();
     
     return <RecipesFrame>
         <div className="grow grid md:grid-cols-3-5 gap-2 overflow-hidden">
-            <aside className="p-1 relative h-full md:pr-3 flex flex-col gap-2 overflow-auto">
+            <aside className="relative h-full md:pr-3 flex flex-col gap-2 overflow-auto">
                 <div className='sticky top-0 z-10'>
                     <RecipesLoadMoreButton/>
                 </div>

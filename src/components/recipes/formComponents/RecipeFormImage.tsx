@@ -1,10 +1,9 @@
-import { RECIPE_IMAGE_FILE, RECIPE_IMAGE_PATH } from "@/helpers/types";
 import { ChangeEventHandler, useRef, useState } from "react";
-import { RECIPE_IMAGE_FILE_FORMATS, RECIPE_IMAGE_FILE_MIME } from "@/helpers/config";
 import { AnimatePresence, motion } from "framer-motion";
+import { RECIPE_IMAGE_FILE, RECIPE_IMAGE_PATH } from "@/helpers/types";
+import { RECIPE_IMAGE_FILE_FORMATS, RECIPE_IMAGE_FILE_MIME } from "@/helpers/config";
 import { readImage } from "@/helpers/client-helpers";
-import { recipeLabelClass } from "./RecipeFormInput";
-import { ErrorMessage, Note } from "@/components/ui/elements/misc";
+import { Note } from "@/components/ui/elements/misc";
 import { Button } from "@/components/ui/elements/buttons";
 import RecipeFormGroup from "./RecipeFormGroup";
 
@@ -77,7 +76,7 @@ export default function RecipeFormImage({defaultValue, hasError}: {
 
                 {!preview && <motion.div key="btn" 
                     variants={variants} initial="hidden" exit="hidden" animate="visible">
-                    <Button color="green" type="button" onClick={handleSelect}>Select</Button>
+                    <Button className="mr-1" color="green" type="button" onClick={handleSelect}>Select</Button>
                     {defaultValue && <Button type='button' color="greenOutline" onClick={setInitialPreview}>
                         Set back the current one
                         </Button>}

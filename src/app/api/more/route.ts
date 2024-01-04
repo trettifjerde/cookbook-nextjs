@@ -1,9 +1,10 @@
-import { queryDB } from '@/helpers/server-helpers';
+import { ObjectId, Filter, FindOptions } from 'mongodb';
+import { NextRequest } from 'next/server';
+
+import { queryDB } from '@/helpers/db-controller';
+import { fromMongoToRecipePreview } from '@/helpers/casters';
 import { MongoRecipe, RecipePreview } from '@/helpers/types'; 
 import { RECIPE_PREVIEW_BATCH_SIZE } from '@/helpers/config'; 
-import { NextRequest } from 'next/server';
-import { ObjectId, Filter, FindOptions } from 'mongodb';
-import { fromMongoToRecipePreview } from '@/helpers/casters';
 
 export async function POST(req: NextRequest) {
     console.log('querying for more recipes');
@@ -16,14 +17,13 @@ export async function POST(req: NextRequest) {
         projection: {title: 1, description: 1, imagePath: 1},
     };
 
-    if (lastId) {
+    if (lastId) 
         filter = {_id: {$gt : new ObjectId(lastId)}};
-    }
+    
     else {
         filter = {};
         options.skip = RECIPE_PREVIEW_BATCH_SIZE;
     }
-
 
     const recipes = await queryDB<MongoRecipe, RecipePreview[]>('recipes', async (col) => {
         const result = await col.find(filter, options).toArray();

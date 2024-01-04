@@ -1,14 +1,15 @@
 'use server'
 
-import { cookies } from "next/headers";
-import { addItemsToUserMongoList, queryDB, verifyToken } from "./server-helpers";
-import { ErrorCodes, Ingredient, MongoRecipe, PreUploadFormRecipe, RecipeIngredient, RecipePreview, ServerActionResponseWithData } from "./types";
 import { Collection, ObjectId } from "mongodb";
 import { revalidateTag } from "next/cache";
-import { INIT_RECIPES_TAG, RECIPE_PREVIEW_BATCH_SIZE } from "./config";
-import { initRecipePreviews } from "./init-recipe-cache";
-import { validateRecipe } from "./forms";
-import { fromMongoToRecipePreview } from "./casters";
+import { ErrorCodes, Ingredient, MongoRecipe, RecipeIngredient, RecipePreview, ServerActionResponse, ServerActionResponseWithData } from "../types";
+import { INIT_RECIPES_TAG, RECIPE_PREVIEW_BATCH_SIZE } from "../config";
+import { validateRecipe } from "../forms";
+import { fromMongoToRecipePreview } from "../casters";
+import getUserId from "../cachers/token";
+import { addItemsToUserMongoList, queryDB } from "../db-controller";
+import { uploadImageAndUpdateRecipe } from "../server-helpers";
+import { fetchInitPreviews } from "../fetchers";
 
 type Command = 'add'|'update'|'skip';
 type Instruction = {command: 'add', preview: RecipePreview} | {command: 'update', preview: RecipePreview} | {command: 'skip', id: string};
@@ -17,7 +18,7 @@ export type RecipeFormState = {id: string, status: ErrorCodes} |
     {id: string, status: 0};
 
 export async function sendRecipe(state: RecipeFormState, formData: FormData) : Promise<RecipeFormState>{
-    const authorId = verifyToken(cookies(), 'sendRecipe server action');
+    const authorId = getUserId();
     const id = state.id;
 
     if (!authorId)
@@ -58,7 +59,7 @@ export async function sendRecipe(state: RecipeFormState, formData: FormData) : P
 
     let instruction : Instruction;
 
-    const initPreviews = await initRecipePreviews();
+    const initPreviews = await fetchInitPreviews();
 
     if (initPreviews.previews.length < RECIPE_PREVIEW_BATCH_SIZE || initPreviews.previews.some(p => p.id === recipeId)) {
         console.log(`revalidating tag ${INIT_RECIPES_TAG}`);
@@ -74,8 +75,37 @@ export async function sendRecipe(state: RecipeFormState, formData: FormData) : P
     return {id, status: 200, instruction};
 }
 
+export async function deleteRecipeAction(recipeId: string) : Promise<ServerActionResponse> {
+    const userId = getUserId();
+
+    if (!userId)
+        return {status: 401};
+
+    console.log('querying db: deleting recipe', recipeId);
+
+    const response = await queryDB<MongoRecipe, boolean>('recipes', async (col) => {
+        const result = await col.deleteOne({_id: new ObjectId(recipeId), authorId: new ObjectId(userId)});
+        return result.acknowledged && result.deletedCount === 1;
+    });
+
+    if (response === null)
+        return {status: 500};
+
+    if (!response)
+        return {status: 404};
+
+    const initRecipes = await fetchInitPreviews();
+    if (initRecipes.previews.some(p => p.id === recipeId)) 
+        revalidateTag(INIT_RECIPES_TAG);
+
+    revalidateTag(recipeId);
+    
+    return {status: 200};
+}
+
 export async function toShoppingListAction(ings: RecipeIngredient[]) : Promise<ServerActionResponseWithData<Ingredient[]>> {
-    const userId = verifyToken(cookies(), 'to Shopping List Action');
+    const userId = getUserId();
+
     if (!userId)
         return {status: 401};
 
@@ -96,45 +126,4 @@ async function addRecipe(recipe: MongoRecipe, col: Collection<MongoRecipe>) : Pr
 
     const response = await col.insertOne(recipe);
     return response.acknowledged;
-}
-
-async function uploadImageAndUpdateRecipe({recipe, authorId, id} : {recipe: PreUploadFormRecipe, authorId: string, id: string}) {
-    const {imagePath, imageFile, ...rest} = recipe;
-
-    const mongoRecipe : MongoRecipe = {
-        ...rest, 
-        _id: new ObjectId(id || undefined),
-        authorId: new ObjectId(authorId),
-        imagePath: imagePath || undefined
-    };
-
-    if (imageFile) {
-
-        const imgBBData = new FormData();
-        imgBBData.append('key', process.env.IMG_BB_KEY!);
-        imgBBData.append('image', imageFile);
-        imgBBData.append('expiration', (60 * 60 * 24 * 30 * 3).toString());
-
-        const imgUrl = await fetch(process.env.IMG_BB_UPLOAD_URL!, {
-            method: 'POST',
-            body: imgBBData
-        })
-        .then(res => res.json())
-        .then(res => {
-            if (res.error)
-                throw new Error(res.error.message);
-            return res.data.display_url;
-        })
-        .catch(error => {
-            console.log('Error uploading image file to imgbb', error);
-            return null;
-        });
-
-        if (!imgUrl)
-            return {mongoRecipe, uploadError: true};
-
-        mongoRecipe.imagePath = imgUrl;
-    }
-
-    return {mongoRecipe, uploadError: false};
 }

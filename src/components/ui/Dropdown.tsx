@@ -33,7 +33,7 @@ export default function Dropdown ({visible, closeDropdown, btn, children}: {
         }
     }, [visible]);
 
-    return <div className="absolute right-[-0.5rem] overflow-hidden p-2" >
+    return <div className="absolute lg:right-0 overflow-hidden py-1">
         <AnimatePresence>
             {visible && <motion.div className="bg-white rounded-md text-black shadow-dd"
                 variants={variants} initial="hidden" exit="hidden" animate="visible">

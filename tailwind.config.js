@@ -4,6 +4,13 @@ module.exports = {
     './src/**/*.{tsx, ts}'
   ],
   theme: {
+    container: {
+      padding: {
+        DEFAULT: '1rem',
+        lg: '3vw',
+        xl: '8vw'
+      }
+    },
     extend: {
       gridTemplateRows: {
         'auto-full': 'auto 1fr',
@@ -58,24 +65,34 @@ module.exports = {
       animation: {
         'fadeUp': 'fadeUp .3s ease-in-out;',
         'fadeIn': 'fadeIn .3s ease-in-out',
-        'slideUp': 'slideUp .3s ease-in-out'
+        'slideUp': 'slideUp .3s ease-in-out',
+        'flicker': 'flicker .7s ease-in-out infinite alternate',
+        'flicker-reverse': 'flicker 0.7s ease-in-out infinite alternate-reverse'
       },
       keyframes: {
         'fadeIn': {
           '0%': { opacity: '0' },
-          '100%': {opacity: '1'}
+          '100%': { opacity: '1' }
         },
         'fadeUp': {
-          '0%': { opacity: '0', transform: 'translateY(8px)'},
-          '100%': { opacity: '1', transform: 'translateY(0px)'}
+          '0%': { opacity: '0', transform: 'translateY(8px)' },
+          '100%': { opacity: '1', transform: 'translateY(0px)' }
         },
         'slideUp': {
-          '0%': { transform: 'translateY(-16px)'},
+          '0%': { transform: 'translateY(-16px)' },
           '100%': { transform: 'translateY(0px)' }
+        },
+        'flicker': {
+          '0%': { backgroundColor: '#f3f4f6' },
+          '100%': { backgroundColor: '#fff' },
+        },
+        'spin': {
+          '0%': { transform: 'rotate(0deg)' },
+          '100%': { transform: 'rotate(360deg)' }
         }
       }
     }
   },
-  plugins: [],
-}
+    plugins: [],
+  }
 

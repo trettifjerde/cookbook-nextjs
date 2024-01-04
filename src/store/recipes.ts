@@ -20,11 +20,6 @@ export const recipeSlice = createSlice({
     name: 'recipes',
     initialState,
     reducers: {
-        initialise(state) {
-            if (!state.initialised) {
-                state.initialised = true;
-            }
-        },
         addRecipe(state, action: PayloadAction<RecipePreview>) {
             state.previews.push(action.payload);
         },
@@ -48,10 +43,11 @@ export const recipeSlice = createSlice({
             if (state.initBatchId !== batch.id) {
                 state.previews = filterPreviews(batch, state.previews);
                 state.initBatchId = batch.id;
+                state.initialised = true;
             }
         },
         setFilter(state, {payload: filterStr}: PayloadAction<string>) {
-            state.filterStr = filterStr;
+            state.filterStr = filterStr.toLowerCase();
         }
     }
 });

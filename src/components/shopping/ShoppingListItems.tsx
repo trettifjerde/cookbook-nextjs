@@ -7,11 +7,11 @@ import { useStoreDispatch, useStoreSelector } from "@/store/store";
 import { listActions } from "@/store/list";
 
 import { Ingredient } from "@/helpers/types";
-import { deleteIngredient } from "@/helpers/list-actions";
 import { statusCodeToMessage } from "@/helpers/client-helpers";
+import { deleteIngredient } from "@/helpers/server-actions/list-actions";
 
 import ConfirmationModal from "../ui/ConfirmationModal";
-import { Button, SmallButton } from "../ui/elements/buttons";
+import { SmallButton } from "../ui/elements/buttons";
 
 export default function ShoppingListItems() {
 

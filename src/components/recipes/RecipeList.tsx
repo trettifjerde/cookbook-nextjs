@@ -1,4 +1,5 @@
 'use client';
+
 import { useEffect, useMemo } from 'react';
 import { usePathname } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -7,26 +8,8 @@ import { recipesActions } from '@/store/recipes';
 import { InitPreviewsBatch } from '@/helpers/types';
 import RecipeItem from "./RecipeItem";
 
-export const itemVariants = (n: number) => ({
-    hidden: {
-        opacity: 0,
-        scale: 0.8,
-        transition: {
-            duration: 0.2,
-            delay: 0.13 * n
-        }
-    },
-    visible: {
-        opacity: 1,
-        scale: 1,
-        transition: {
-            duration: 0.2,
-            delay: 0.13 * n
-        }
-    }
-})
-
-export default function RecipeList ({initPreviews}: { initPreviews: InitPreviewsBatch}) {
+export default function RecipeList({initPreviews}: { initPreviews: InitPreviewsBatch}) {
+    
     const initialised = useStoreSelector(state => state.recipes.initialised);
     const previews = useStoreSelector(state => state.recipes.previews);
     const filterStr = useStoreSelector(state => state.recipes.filterStr);
@@ -36,27 +19,23 @@ export default function RecipeList ({initPreviews}: { initPreviews: InitPreviews
 
     const filteredRecipes = useMemo(() => {
         console.log('filtering recipes', initialised, previews, filterStr);
-        if (!initialised)
-            return initPreviews.previews;
+        if (initialised)
+            return previews.filter(p => p.title.toLowerCase().includes(filterStr));
+        
+        return initPreviews.previews;
 
-        return previews.filter(p => p.title.includes(filterStr))
     }, [initialised, previews, filterStr]);
 
     useEffect(() => {
-        if (!initialised)
-            dispatch(recipesActions.initialise())
-    }, []);
-
-    useEffect(() => {
         console.log('init previews updated, dispatching in useeffect. current id', initPreviews.id);
-        dispatch(recipesActions.syncPreviews(initPreviews))
+        dispatch(recipesActions.syncPreviews(initPreviews));
     }, [initPreviews]);
 
     return <AnimatePresence mode='wait'>
 
         {
             filteredRecipes.length === 0 && <motion.div key="recipes-empty" 
-                className='h-recipe-item-sm md:h-recipe-item-md flex items-center justify-center' 
+                className='h-recipe-item-sm md:max-lg:h-recipe-item-md flex items-center justify-center' 
                 variants={itemVariants(0)} initial="hidden" animate="visible" exit="hidden">
                     No recipes found
             </motion.div>
@@ -77,3 +56,22 @@ export default function RecipeList ({initPreviews}: { initPreviews: InitPreviews
         }
     </AnimatePresence>
 }
+
+export const itemVariants = (n: number) => ({
+    hidden: {
+        opacity: 0,
+        scale: 0.8,
+        transition: {
+            duration: 0.2,
+            delay: 0.13 * n
+        }
+    },
+    visible: {
+        opacity: 1,
+        scale: 1,
+        transition: {
+            duration: 0.2,
+            delay: 0.13 * n
+        }
+    }
+})

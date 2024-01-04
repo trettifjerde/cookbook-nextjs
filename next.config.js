@@ -25,6 +25,19 @@ const nextConfig = {
           permanent: true
         }
       ]
+  },
+  async headers() {
+    return [
+      {
+        source: '/',
+        headers: [
+          {
+            key: 'x-clacks-overhead',
+            value: 'GNU Terry Pratchett'
+          }
+        ]
+      }
+    ]
   }
 }
 

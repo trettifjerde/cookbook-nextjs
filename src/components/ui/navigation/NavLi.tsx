@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 
 const baseBorder = 'border-x border-t border-solid rounded-t-md hover:border-gray-300';
 const selectors = 'last:ml-auto [&_a]:p-3';
-const baseClassname = `${baseBorder} mb-[-1px] transition-colors ${selectors}`;
+const baseClassname = `${baseBorder} mb-[-2px] transition-colors ${selectors}`;
 const activeClassname = 'bg-white border-gray-300 border-b-white';
 
 function getClassName(active: boolean) {

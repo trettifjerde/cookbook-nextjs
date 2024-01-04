@@ -1,10 +1,10 @@
 'use server'
 
 import { AnyBulkWriteOperation, ObjectId } from "mongodb";
-import { cookies } from "next/headers";
-import { queryDB, verifyToken } from "./server-helpers";
-import { Ingredient, MongoIngredient, MongoList, RecipeIngredient, ServerActionResponse, ServerActionResponseWithData } from "./types";
-import { findDuplicate, fromMongoToIngredient } from "./casters";
+import { Ingredient, MongoIngredient, MongoList, RecipeIngredient, ServerActionResponse, ServerActionResponseWithData } from "../types";
+import { findDuplicate, fromMongoToIngredient } from "../casters";
+import getUserId from "../cachers/token";
+import { queryDB } from "../db-controller";
 
 type Instruction<T> = {command: 'add', ing: T} |
     {command: 'update', ing: T} | 
@@ -14,7 +14,7 @@ type Instruction<T> = {command: 'add', ing: T} |
 
 export async function sendIngredient(ing: RecipeIngredient, initialId: string) : 
     Promise<ServerActionResponseWithData<Instruction<Ingredient>>> {
-    const userId = verifyToken(cookies(), 'sendIngredient server action');
+    const userId = getUserId();
 
     if (!userId)
         return {status: 401};
@@ -112,7 +112,7 @@ export async function sendIngredient(ing: RecipeIngredient, initialId: string) :
 }
 
 export async function deleteIngredient(id: string) : Promise<ServerActionResponse> {
-    const userId = verifyToken(cookies(), 'deleteIngredient server action');
+    const userId = getUserId();
     
     if (!userId)
         return {status: 401};

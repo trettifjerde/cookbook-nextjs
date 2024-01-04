@@ -1,4 +1,5 @@
-import { FetchResponse, FetchSuccess, Ingredient, Recipe, RecipeIngredient, RecipePreview } from "./types";
+import { INIT_RECIPES_TAG } from "./config";
+import { FetchResponse, FetchSuccess, Ingredient, InitPreviewsBatch, Recipe, RecipePreview } from "./types";
 
 export async function fetchData<T>(
     url: string, 
@@ -57,14 +58,25 @@ export async function fetchData<T>(
         }))
 }
 
+export async function fetchInitPreviews() {
+    console.log('fetching init previews');
+
+    return fetchData<InitPreviewsBatch>('/api/recipes', 'recipes', {next: {tags: [INIT_RECIPES_TAG]}})
+        .then(res => {
+            switch(res.type) {
+                case 'error':
+                    console.log(res.message);
+                    return {previews: [], id: 0}
+                    
+                case 'success':
+                    return res.data;
+            }
+        })
+}
+
 export async function fetchRecipe(id: string, caller: string) {
     console.log('fetching recipe', id, 'for', caller);
     return fetchData<Recipe>(`/api/recipes/${id}`, 'recipe', {next: {tags: [id]}});
-}
-
-export async function deleteRecipe(id: string) {
-    console.log('client: deleting recipe', id);
-    return fetchData<null>(`/api/recipes/${id}`, 'recipe', {method: 'DELETE'});
 }
 
 export async function fetchMorePreviews(lastId: string) {
@@ -79,13 +91,4 @@ export async function fetchMorePreviews(lastId: string) {
 export async function fetchList(signal: AbortSignal) {
     console.log('fetching list');
     return fetchData<Ingredient[]>('/api/list', 'shopping list', {method: 'GET', signal});
-}
-
-export async function addRecipeToShoppingList(ingredients: RecipeIngredient[]) {
-    console.log('adding', ingredients.length, 'ingreds to shopping list');
-    return fetchData<Ingredient[]>('/api/list', 'shopping list', {
-        method: 'POST',
-        body: JSON.stringify(ingredients),
-        headers: new Headers({'Content-Type': 'application/json'})
-    })
 }

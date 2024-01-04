@@ -1,4 +1,12 @@
-@use '/src/styles/animations' as *;
+@keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg);}
+}
 
 .c {
   display: flex;
@@ -12,7 +20,8 @@
   left: 0;
   background-color: rgba(255, 255, 255, 0.5);
   z-index: 3;
-  animation: fadeIn .5s ease-in-out 1.5s forwards ;
+  opacity: 0;
+  animation: fadeIn .5s ease-in-out 1s forwards ;
 }
 
 .r {
@@ -116,14 +125,4 @@
 .sp div:nth-child(8):after {
   top: 56px;
   left: 12px;
-}
-
-@keyframes sp {
-  0% {
-    transform: rotate(0deg);
-  }
-
-  100% {
-    transform: rotate(360deg);
-  }
 }

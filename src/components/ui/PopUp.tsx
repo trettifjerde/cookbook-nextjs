@@ -6,7 +6,7 @@ import { Alert } from '@/helpers/types';
 const classes = {
     base: 'container m-auto px-4 py-3 rounded-md shadow-alert',
     color(isError: boolean) {
-        return `${this.base} ${!isError ? 'bg-red-light text-red-active' : 'bg-green-light text-green-active'}`
+        return `${this.base} ${isError ? 'bg-red-light text-red-active' : 'bg-green-light text-green-active'}`
     }
 }
 

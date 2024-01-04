@@ -1,10 +1,11 @@
 'use server'
 
-import { AuthFormData, MongoUser } from "@/helpers/types";
 import { Collection, ObjectId } from "mongodb";
 import { cookies } from "next/headers";
-import { makeHash, makeToken, queryDB } from "./server-helpers";
 import { redirect } from "next/navigation";
+import { AuthFormData, MongoUser } from "@/helpers/types";
+import { makeHash, makeToken } from "../server-helpers";
+import { queryDB } from "../db-controller";
 
 type SubmitResponse = {status: 200, id: string} | {status: 400, error: string} | {status: 500};
 type AuthResponse = {ok: true, userId: string} | {ok: false, error: string};

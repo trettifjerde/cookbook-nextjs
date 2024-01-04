@@ -1,6 +1,7 @@
-import '@/styles/globals.css';
 import Navigation from '@/components/ui/navigation/Navigation';
 import StoreProvider from '@/store/provider';
+
+import '@/styles/globals.css';
 
 export default function RootLayout({
   children,
@@ -10,20 +11,20 @@ export default function RootLayout({
 
   return (
     <html lang="en">
-      <body>
+      <body className='h-screen container mx-auto py-4 flex flex-col overflow-hidden"'>
+
         <StoreProvider>
 
-          <div className="h-screen px-4 md:px-8 xl:px-20 2xl:px-40 flex flex-col gap-6 py-4 overflow-hidden">
             <Navigation />
 
-            <main className="container mx-auto flex-grow overflow-hidden">
-                {children}
+            <main className="flex-grow overflow-hidden">
+              {children}
             </main>
-          </div>
 
-          <div id="confirmation"></div>
+            <div id="modal" />
           
         </StoreProvider>
+
       </body>
     </html>
   )

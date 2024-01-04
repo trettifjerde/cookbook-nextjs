@@ -1,16 +1,16 @@
-import { verifyToken } from "@/helpers/server-helpers";
 import { Recipe } from "@/helpers/types";
-import { cookies } from "next/headers";
-import ShoppingListButton from "./ShoppingListButton";
-import AuthorDropdown from "./AuthorDropdown";
+import getUserId from "@/helpers/cachers/token";
+import ShoppingListButton from "./manage/ShoppingListButton";
+import AuthorDropdown from "./manage/AuthorDropdown";
 
 export default function RecipeManageButton({recipe}: {recipe: Recipe}) {
-    const userId = verifyToken(cookies(), 'RecipeManageButton');
+    console.log('about to get userId: recipe manage btn');
+    const userId = getUserId();
 
-    if (userId) {
-        return userId === recipe.authorId ? <AuthorDropdown recipe={recipe} /> : 
-            <ShoppingListButton ingredients={recipe.ingredients} />
-    }
+    if (userId) 
+        return <div className="relative inline-block">
+            {userId === recipe.authorId ? <AuthorDropdown recipe={recipe} /> : <ShoppingListButton recipe={recipe} />} 
+        </div>
 
     return <></>
 }
