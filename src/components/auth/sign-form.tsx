@@ -53,7 +53,7 @@ export default function SignForm({isSignUpMode}: {isSignUpMode: boolean}) {
     }
 
     return <motion.div initial={{opacity: 0, y: '50%'}} animate={{opacity: 1, y: 0}}
-        className='py-8 w-full max-w-lg m-auto'>
+        className='py-8 px-2 w-full max-w-lg m-auto'>
             <h3 className='text-2xl font-medium mb-4'>Sign {isSignUpMode? 'up' : 'in'}</h3>
             <form action={validateThenAction} onFocus={clearErrors} autoComplete='off'>
 

@@ -26,8 +26,6 @@ export async function sendRecipe(state: RecipeFormState, formData: FormData) : P
 
     const {data: preUploadRecipe, errors: recipeErrors} = validateRecipe(formData);
 
-    console.log('preupload', preUploadRecipe);
-
     if (recipeErrors)
         return {id, status: 400};
 

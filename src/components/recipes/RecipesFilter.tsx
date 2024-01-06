@@ -6,7 +6,7 @@ import { useStoreDispatch } from "@/store/store";
 import { Input } from "../ui/elements/forms";
 import { Button } from "../ui/elements/buttons";
 
-const RecipesFilter = memo(() => {
+function RecipesFilter() {
 
     const [isTypingTimer, setIsTypingTimer] = useState<any>(null);
     const filterRef = useRef<HTMLInputElement>(null);
@@ -35,6 +35,6 @@ const RecipesFilter = memo(() => {
             className="invisible opacity-0 absolute right-1 top-1 group-hover:visible group-hover:opacity-100 transition-hidden-btn duration-300" 
             onClick={clearFilter}>X</Button>
     </div>
-});
+};
 
-export default RecipesFilter;
+export default memo(RecipesFilter);

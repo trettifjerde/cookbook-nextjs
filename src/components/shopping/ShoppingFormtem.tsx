@@ -1,4 +1,4 @@
-import { memo, useCallback } from "react";
+import { useCallback } from "react";
 import { Input } from "../ui/elements/forms";
 
 type Props = {
@@ -11,7 +11,7 @@ type Props = {
     registerTouch: (name: string) => void
 }
 
-const ShoppingListFormItem = memo(({className, hasError, registerTouch, name, defaultValue, label, type}: Props) => {
+const ShoppingListFormItem = ({className, hasError, registerTouch, name, defaultValue, label, type}: Props) => {
 
     const touchField = useCallback(() => registerTouch(name), [name, registerTouch]);
     
@@ -19,6 +19,6 @@ const ShoppingListFormItem = memo(({className, hasError, registerTouch, name, de
         <label className="block font-medium" htmlFor={name}>{label}</label>
         <Input type={type} invalid={hasError} name={name} id={name} defaultValue={defaultValue} onFocus={touchField} />
     </div>
-})
+}
 
 export default ShoppingListFormItem;

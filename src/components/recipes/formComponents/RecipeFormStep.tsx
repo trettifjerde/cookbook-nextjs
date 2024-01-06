@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { listVariants } from '../RecipeForm';
-import { forwardRef, memo } from 'react';
+import { forwardRef } from 'react';
 import { Textarea } from '@/components/ui/elements/forms';
 import { Button } from '@/components/ui/elements/buttons';
 
@@ -31,4 +31,5 @@ const RecipeFormStep = forwardRef<HTMLLIElement, Props>(({step, errors, removeSt
     </motion.li>
 })
 
-export default memo(RecipeFormStep);
+// export default memo(RecipeFormStep);
+export default RecipeFormStep;

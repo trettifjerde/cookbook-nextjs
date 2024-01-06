@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useStoreDispatch, useStoreSelector } from "@/store/store";
 import { listActions } from "@/store/list";
-import { ING_NAME, ING_AMOUNT, ING_UNIT } from "@/helpers/types";
+import { ING_NAME, ING_AMOUNT, ING_UNIT, ListUpdaterCommand } from "@/helpers/types";
 import { getIngredientErrorLog, ingredientErrorsInit, ingredientNotChanged, validateIngredient } from "@/helpers/forms";
 import { sendIngredient } from "@/helpers/server-actions/list-actions";
 import useErrors from "@/helpers/hooks/useErrors";
@@ -12,6 +12,7 @@ import SubmitButton from "../ui/elements/SubmitButton";
 import ShoppingListFormItem from "./ShoppingFormtem";
 import { ErrorMessage } from "../ui/elements/misc";
 import { Button } from "../ui/elements/buttons";
+import { generalActions } from "@/store/general";
 
 export default function ShoppingListForm() {
 
@@ -50,24 +51,24 @@ export default function ShoppingListForm() {
                     const {data} = response;
 
                     switch (data.command) {
-                        case 'add':
+                        case ListUpdaterCommand.Add:
                             dispatch(listActions.add(data.ing));
                             break;
-                        case 'update':
+                        case ListUpdaterCommand.Update:
                             dispatch(listActions.update(data.ing));
                             break;
-                        case 'merge': 
+                        case ListUpdaterCommand.Merge: 
                             dispatch(listActions.merge({ing: data.ing, id: selectedItem.id}));
                             break;
-                        case 'delete':
-                            dispatch(listActions.delete({id: selectedItem.id, dupName: cleanIngredient.name}));
+                        case ListUpdaterCommand.RemoveDupe:
+                            dispatch(listActions.removeDupe({id: selectedItem.id, dupName: cleanIngredient.name}));
                             break;
                         default:
-                            dispatch(listActions.setAlert({message: `Item ${cleanIngredient.name} is already on the list`, isError: true}));
+                            dispatch(generalActions.setAlert({message: `Item ${cleanIngredient.name} is already on the list`, isError: true}));
                     }
                     break;
                 default:
-                    dispatch(listActions.setAlert({message: statusCodeToMessage(response.status), isError: true}));
+                    dispatch(generalActions.setAlert({message: statusCodeToMessage(response.status), isError: true}));
             }
         }
     };

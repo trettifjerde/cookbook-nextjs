@@ -1,4 +1,4 @@
-import { ForwardedRef, forwardRef, memo } from "react";
+import { forwardRef } from "react";
 import {motion} from 'framer-motion';
 import { FormIngredient, ING_AMOUNT, ING_NAME, ING_UNIT } from "@/helpers/types";
 import { Input } from "@/components/ui/elements/forms";
@@ -55,4 +55,5 @@ const RecipeFormIngredient = forwardRef<HTMLDivElement, Props>(({errors, ing, re
     </motion.div>
 })
 
-export default memo(RecipeFormIngredient);
+// export default memo(RecipeFormIngredient);
+export default RecipeFormIngredient;

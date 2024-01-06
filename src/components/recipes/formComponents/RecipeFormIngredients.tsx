@@ -14,6 +14,7 @@ type Props = {
 };
 
 export default function RecipeFormIngredients({errors, ingredients, touchField}: Props) {
+
     const {list, addItem, removeItem} = useListManager(ingredients, makeNewIng);
     const registerTouch = useCallback((v: string) => touchField('ingredients', v), [touchField]);
     

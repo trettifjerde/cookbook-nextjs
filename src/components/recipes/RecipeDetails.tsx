@@ -9,7 +9,7 @@ export default function RecipeDetails({recipe}: {recipe: Recipe}) {
 
     return (<>
         <div className="relative h-[60vh] mb-6">
-            <div className="w-full h-full bg-dark-green-shadow flex justify-center items-center">
+            <div className="w-full h-full bg-dark-green-shadow flex justify-center items-center relative">
                 {recipe.imagePath && <Image className='max-w-full object-cover' alt={recipe.title} src={recipe.imagePath} fill sizes={sizes}/>}
             </div>
             <div className="absolute bottom-0 left-0 right-0 px-8 py-6 text-white bg-dark-green-shadow min-h-details-info rounded-t-lg">
@@ -20,7 +20,7 @@ export default function RecipeDetails({recipe}: {recipe: Recipe}) {
                             <RecipeManageButton recipe={recipe} /> 
                         </Suspense>
                     </div>
-                    <div>{recipe.description}</div>
+                    <div className='max-h-[250px] overflow-auto'>{recipe.description}</div>
                 </div>
             </div>
         </div>

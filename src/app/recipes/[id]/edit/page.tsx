@@ -9,7 +9,6 @@ export default async function RecipeFormPage({params}: {params: {id: string}}) {
 
     switch (response.type) {
         case 'error':
-            console.log(response.message);
             notFound();
 
         case 'success':

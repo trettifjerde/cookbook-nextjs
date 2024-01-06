@@ -1,5 +1,5 @@
 import { Input, Textarea } from "@/components/ui/elements/forms";
-import { memo, useCallback } from "react";
+import { useCallback } from "react";
 
 type Props = {
     name: string,
@@ -13,7 +13,7 @@ type Props = {
 
 export const recipeLabelClass = "font-bold text-md";
 
-const RecipeFormInput = memo(({type, name, hasError, defaultValue, placeholder, touchField, disabled}: Props) => {
+const RecipeFormInput = ({type, name, hasError, defaultValue, placeholder, touchField, disabled}: Props) => {
 
     const registerTouch = useCallback(() => touchField('general', name), [touchField]);
 
@@ -24,6 +24,7 @@ const RecipeFormInput = memo(({type, name, hasError, defaultValue, placeholder, 
         <Input type={type} name={name} id={name} placeholder={placeholder}
             disabled={disabled} invalid={hasError}
             defaultValue={defaultValue} onFocus={registerTouch}/>
-});
+};
 
+// export default memo(RecipeFormInput);
 export default RecipeFormInput;

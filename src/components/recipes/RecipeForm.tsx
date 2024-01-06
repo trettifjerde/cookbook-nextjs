@@ -1,26 +1,27 @@
 'use client';
 
 import { useEffect, useRef } from "react";
+import { useFormState } from "react-dom";
 import { redirect, useRouter } from "next/navigation";
 import { useStoreDispatch } from "@/store/store";
 import { recipesActions } from "@/store/recipes";
 import { statusCodeToMessage } from "@/helpers/client-helpers";
 import { recipeErrorsInit, validateRecipe } from "@/helpers/forms";
+import { sendRecipe } from "@/helpers/server-actions/recipe-actions";
+import useErrors from "@/helpers/hooks/useErrors";
 import { FormRecipe, RECIPE_DESC, RECIPE_IMAGE_FILE, RECIPE_NAME } from "@/helpers/types";
 import RecipeFormInput from "./formComponents/RecipeFormInput";
 import RecipeFormSteps from "./formComponents/RecipeFormSteps";
 import RecipeFormIngredients from "./formComponents/RecipeFormIngredients";
 import SubmitButton from "../ui/elements/SubmitButton";
 import RecipeFormImage from "./formComponents/RecipeFormImage";
-import { useFormState } from "react-dom";
 import { ErrorMessage } from "../ui/elements/misc";
 import { Button } from "../ui/elements/buttons";
 import RecipeFormGroup from "./formComponents/RecipeFormGroup";
-import { sendRecipe } from "@/helpers/server-actions/recipe-actions";
-import useErrors from "@/helpers/hooks/useErrors";
+import { generalActions } from "@/store/general";
 
 export default function RecipeForm({recipe, id}: {recipe: FormRecipe, id?: string}) {
-    console.log('Recipe form');
+
     const dispatch = useStoreDispatch();
     const router = useRouter();
 
@@ -38,6 +39,7 @@ export default function RecipeForm({recipe, id}: {recipe: FormRecipe, id?: strin
                 return;
             }
 
+            dispatch(generalActions.setAlert({message: '', isError: false}));
             formAction(formData);
         }
     };

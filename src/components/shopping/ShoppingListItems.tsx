@@ -1,6 +1,6 @@
 'use client'
 
-import { forwardRef, memo, useState } from "react";
+import { forwardRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
 import { useStoreDispatch, useStoreSelector } from "@/store/store";
@@ -12,6 +12,7 @@ import { deleteIngredient } from "@/helpers/server-actions/list-actions";
 
 import ConfirmationModal from "../ui/ConfirmationModal";
 import { SmallButton } from "../ui/elements/buttons";
+import { generalActions } from "@/store/general";
 
 export default function ShoppingListItems() {
 
@@ -33,11 +34,11 @@ export default function ShoppingListItems() {
 
             switch (response.status) {
                 case 200:
-                    dispatch(listActions.delete({id}));
+                    dispatch(listActions.delete({id, name}));
                     break;
 
                 default:
-                    dispatch(listActions.setAlert({message: statusCodeToMessage(response.status), isError: true}));
+                    dispatch(generalActions.setAlert({message: statusCodeToMessage(response.status), isError: true}));
             }
 
             setPendingId('');
@@ -103,7 +104,7 @@ const shLiClass = {
     }
 };
 
-const ShoppingListItem = memo(forwardRef<HTMLDivElement, SHLIProps>(({item, selected, pending, onDelete}, ref) => {
+const ShoppingListItem = forwardRef<HTMLDivElement, SHLIProps>(({item, selected, pending, onDelete}, ref) => {
     const dispatch = useStoreDispatch();
 
     return <motion.div layout="preserve-aspect" ref={ref} variants={variants} 
@@ -115,7 +116,7 @@ const ShoppingListItem = memo(forwardRef<HTMLDivElement, SHLIProps>(({item, sele
                 <SmallButton color="red" onClick={() => onDelete(item)}>Delete</SmallButton>
             </div>
     </motion.div>
-}));
+});
 
 function getItemInfo(item: Ingredient) {
     return `${item.name}${item.amount ? ` (${item.amount}${item.unit ? ` ${item.unit}` : ''})` : ''}`;

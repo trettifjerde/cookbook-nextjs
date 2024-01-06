@@ -50,6 +50,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(({
     onChange=() => {},
     onFocus=() => {}
 }, ref) => {
+    //console.log('input', name);
     return <input type={type} ref={ref} name={name} id={id} placeholder={placeholder} disabled={disabled}
         className={classes.input({className, invalid})} autoComplete="off"
         defaultValue={defaultValue} onChange={onChange} onFocus={onFocus}/>
@@ -63,6 +64,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(({
     onChange=() => {},
     onFocus=() => {}
 }, ref) => {
+
     return <textarea ref={ref} name={name} id={id} disabled={disabled}
         className={classes.textarea({className, invalid})} autoComplete="off"
         defaultValue={defaultValue} onChange={onChange} onFocus={onFocus}/>

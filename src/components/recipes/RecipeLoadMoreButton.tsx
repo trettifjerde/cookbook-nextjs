@@ -6,8 +6,9 @@ import { recipesActions } from "@/store/recipes";
 import { RECIPE_PREVIEW_BATCH_SIZE } from "@/helpers/config";
 import { fetchMorePreviews } from "@/helpers/fetchers";
 import { SpinnerButton } from "../ui/elements/buttons";
+import { generalActions } from "@/store/general";
 
-const RecipesLoadMoreButton = memo(() => {
+function RecipesLoadMoreButton() {
     const lastId = useStoreSelector(state => state.recipes.lastId);
     const dispatch = useStoreDispatch();
 
@@ -23,8 +24,9 @@ const RecipesLoadMoreButton = memo(() => {
         switch (res.type) {
             case 'success':
                 const areRecipesLeft = res.data.length === RECIPE_PREVIEW_BATCH_SIZE;
+                
                 if (!areRecipesLeft)
-                setTimeout(() => setHasMoreRecipes(true), 30 * 1000);
+                    setTimeout(() => setHasMoreRecipes(true), 30 * 1000);
                 
                 setHasMoreRecipes(areRecipesLeft);
                 
@@ -34,7 +36,7 @@ const RecipesLoadMoreButton = memo(() => {
                 break;
                 
             default: 
-                console.log('load more error message', res.message);
+                dispatch(generalActions.setAlert({message: 'Could not fetch more recipes', isError: true}));
         }
         setFetching(false);
     }
@@ -42,6 +44,6 @@ const RecipesLoadMoreButton = memo(() => {
     return <SpinnerButton type="button" className="w-full overflow-hidden shadow-alert rounded-md" color="green" disabled={fetching || !hasMoreRecipes} pending={fetching} onClick={loadMoreRecipes}>
         {loadBtnText}
     </SpinnerButton>
-});
+};
 
-export default RecipesLoadMoreButton;
+export default memo(RecipesLoadMoreButton);

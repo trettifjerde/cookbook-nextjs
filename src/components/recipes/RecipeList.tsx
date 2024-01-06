@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo } from 'react';
 import { usePathname } from 'next/navigation';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, Transition, Variants, motion } from 'framer-motion';
 import { useStoreDispatch, useStoreSelector } from '@/store/store';
 import { recipesActions } from '@/store/recipes';
 import { InitPreviewsBatch } from '@/helpers/types';
@@ -18,7 +18,7 @@ export default function RecipeList({initPreviews}: { initPreviews: InitPreviewsB
     const dispatch = useStoreDispatch();
 
     const filteredRecipes = useMemo(() => {
-        console.log('filtering recipes', initialised, previews, filterStr);
+
         if (initialised)
             return previews.filter(p => p.title.toLowerCase().includes(filterStr));
         
@@ -27,7 +27,7 @@ export default function RecipeList({initPreviews}: { initPreviews: InitPreviewsB
     }, [initialised, previews, filterStr]);
 
     useEffect(() => {
-        console.log('init previews updated, dispatching in useeffect. current id', initPreviews.id);
+        console.log('current init previews id:', initPreviews.id);
         dispatch(recipesActions.syncPreviews(initPreviews));
     }, [initPreviews]);
 
@@ -36,42 +36,57 @@ export default function RecipeList({initPreviews}: { initPreviews: InitPreviewsB
         {
             filteredRecipes.length === 0 && <motion.div key="recipes-empty" 
                 className='h-recipe-item-sm md:max-lg:h-recipe-item-md flex items-center justify-center' 
-                variants={itemVariants(0)} initial="hidden" animate="visible" exit="hidden">
+                variants={container} initial="hidden" animate="visible" exit="hidden" transition={containerTransition}>
                     No recipes found
             </motion.div>
         }
 
         {
-            filteredRecipes.length > 0 && <motion.div key='recipes' className='h-full flex flex-col-reverse justify-end gap-2'>
-            { 
-                filteredRecipes.map((r, i) => <motion.div key={r.id} 
-                    variants={itemVariants(filteredRecipes.length - 1 - i)}
-                    initial="hidden" animate="visible" exit="hidden">
+            filteredRecipes.length > 0 && <motion.div key="recipes" className='h-full flex flex-col-reverse justify-end gap-2'
+                variants={container} initial="hidden" animate="visible" exit="hidden" transition={containerTransition}>
 
-                        <RecipeItem recipe={r} isActive={pathname.includes(r.id)}/>
+                <AnimatePresence>
+                    { 
+                        filteredRecipes.map((r, i) => <motion.div layout key={r.id} 
+                            custom={i}
+                            variants={item} initial="hidden" animate="visible" exit="hidden"
+                        >
 
-                    </motion.div>) 
-            }
+                            <RecipeItem recipe={r} isActive={pathname.includes(r.id)}/>
+
+                        </motion.div>) 
+                    }
+                </AnimatePresence>
             </motion.div>
         }
     </AnimatePresence>
 }
 
-export const itemVariants = (n: number) => ({
+const container : Variants = {
     hidden: {
         opacity: 0,
-        scale: 0.8,
-        transition: {
-            duration: 0.2,
-            delay: 0.13 * n
-        }
     },
     visible: {
         opacity: 1,
-        scale: 1,
         transition: {
-            duration: 0.2,
-            delay: 0.13 * n
+            when: 'beforeChildren'
         }
     }
-})
+};
+const containerTransition: Transition = {type: 'tween', duration: 0.2}
+
+const item : Variants = {
+    hidden: {
+        opacity: 0,
+        scale: 0.8,
+    },
+    visible: (i) => ({
+        opacity: 1,
+        scale: 1,
+        transition: {
+            type: 'tween',
+            duration: 0.2,
+            delay: 0.1 * i
+        }
+    })
+};

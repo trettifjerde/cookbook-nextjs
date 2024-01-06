@@ -16,7 +16,7 @@ const initialState : RecipesSlice = {
     lastId: ''
 };
 
-export const recipeSlice = createSlice({
+const recipeSlice = createSlice({
     name: 'recipes',
     initialState,
     reducers: {
@@ -33,8 +33,8 @@ export const recipeSlice = createSlice({
                 state.previews[index] = preview;
             }
         },
-        deleteRecipe(state, {payload: id}: PayloadAction<string>) {
-            const index = state.previews.findIndex(r => r.id === id);
+        deleteRecipe(state, {payload}: PayloadAction<{id: string, title: string}>) {
+            const index = state.previews.findIndex(r => r.id === payload.id);
             if (index > -1) {
                 state.previews.splice(index, 1);
             }

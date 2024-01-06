@@ -2,46 +2,8 @@
 
 import { ReactNode, useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { Button } from './elements/buttons';
-
-const shadowVariants = {
-    hidden: {
-        opacity: 0, 
-        transition: {
-            duration: .3
-        }
-    },
-    visible: {
-        opacity: 1,
-        transition: {
-            duration: .3
-        }
-    }
-};
-
-const dialogVariants = {
-    hidden: {
-        opacity: 0, 
-        y: '-40%',
-        transition: {
-            type: 'spring',
-            stiffness: 300,
-            mass: 0.3,
-            duration: .2
-        }
-    },
-    visible: {
-        opacity: 1, 
-        y: '0%',
-        transition: {
-            type: 'spring',
-            stiffness: 300,
-            mass: 0.3,
-            duration: .2
-        }
-    }
-}
 
 export default function ConfirmationModal ({visible, children, onConfirm, closeModal}: {
     visible: boolean,
@@ -75,5 +37,43 @@ export default function ConfirmationModal ({visible, children, onConfirm, closeM
                 </motion.div>
             </div>}
         </AnimatePresence>,
-        document.getElementById('modal')!) : <></>
+        document.body) : <></>
+}
+
+const shadowVariants : Variants = {
+    hidden: {
+        opacity: 0, 
+        transition: {
+            duration: .3
+        }
+    },
+    visible: {
+        opacity: 1,
+        transition: {
+            duration: .3
+        }
+    }
+};
+
+const dialogVariants : Variants = {
+    hidden: {
+        opacity: 0, 
+        y: '-40%',
+        transition: {
+            type: 'spring',
+            stiffness: 300,
+            mass: 0.3,
+            duration: .2
+        }
+    },
+    visible: {
+        opacity: 1, 
+        y: '0%',
+        transition: {
+            type: 'spring',
+            stiffness: 300,
+            mass: 0.3,
+            duration: .2
+        }
+    }
 }

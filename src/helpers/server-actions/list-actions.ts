@@ -1,16 +1,16 @@
 'use server'
 
 import { AnyBulkWriteOperation, ObjectId } from "mongodb";
-import { Ingredient, MongoIngredient, MongoList, RecipeIngredient, ServerActionResponse, ServerActionResponseWithData } from "../types";
+import { Ingredient, ListUpdaterCommand, MongoIngredient, MongoList, RecipeIngredient, ServerActionResponse, ServerActionResponseWithData } from "../types";
 import { findDuplicate, fromMongoToIngredient } from "../casters";
 import getUserId from "../cachers/token";
 import { queryDB } from "../db-controller";
 
-type Instruction<T> = {command: 'add', ing: T} |
-    {command: 'update', ing: T} | 
-    {command: 'merge', ing: T} |
-    {command: 'delete'} |
-    {command: 'skip'};
+type Instruction<T> = {command: ListUpdaterCommand.Add, ing: T} |
+    {command: ListUpdaterCommand.Update, ing: T} | 
+    {command: ListUpdaterCommand.Merge, ing: T} |
+    {command: ListUpdaterCommand.RemoveDupe} |
+    {command: ListUpdaterCommand.Skip};
 
 export async function sendIngredient(ing: RecipeIngredient, initialId: string) : 
     Promise<ServerActionResponseWithData<Instruction<Ingredient>>> {
@@ -30,7 +30,7 @@ export async function sendIngredient(ing: RecipeIngredient, initialId: string) :
             if (!res.acknowledged) 
                 throw new Error(`Inserting list with the first item not acknowledged\n${res}`);
 
-            return {command: 'add', ing: listItem};
+            return {command: ListUpdaterCommand.Add, ing: listItem};
         }
 
         const idExists = !!initialId && list.list.some(i => i._id.equals(listItem._id));
@@ -69,15 +69,15 @@ export async function sendIngredient(ing: RecipeIngredient, initialId: string) :
                         throw new Error(`Bulk error\n${res}`)
         
                     if (operations.length === 2) 
-                        return {command: 'merge', ing: duplicate};
+                        return {command: ListUpdaterCommand.Merge, ing: duplicate};
                     
                     if (deleteInitial) 
-                        return {command: 'delete'}
+                        return {command: ListUpdaterCommand.RemoveDupe}
                     
-                    return {command: 'update', ing: duplicate}
+                    return {command: ListUpdaterCommand.Update, ing: duplicate}
 
                 default: 
-                    return {command: 'skip'};
+                    return {command: ListUpdaterCommand.Skip};
             }
         }
 
@@ -91,7 +91,7 @@ export async function sendIngredient(ing: RecipeIngredient, initialId: string) :
                 if (res.modifiedCount !== 1)
                     throw new Error(`Tried to update item ${initialId}, but db returned ${res}`);
 
-                return {command: 'update', ing: listItem}
+                return {command: ListUpdaterCommand.Update, ing: listItem}
             }
             
             else {
@@ -100,7 +100,7 @@ export async function sendIngredient(ing: RecipeIngredient, initialId: string) :
                 if (res.modifiedCount !== 1)
                     throw new Error(`Tried to add item ${initialId}, but db returned ${res}`);
 
-                return {command: 'add', ing: listItem}
+                return {command: ListUpdaterCommand.Add, ing: listItem}
             }
         }
     });
@@ -140,9 +140,9 @@ function transformInstruction(res: Instruction<MongoIngredient>) {
     let data : Instruction<Ingredient>;
     
     switch(res.command) {
-        case 'add':
-        case 'merge':
-        case 'update':
+        case ListUpdaterCommand.Add:
+        case ListUpdaterCommand.Merge:
+        case ListUpdaterCommand.Update:
             data = {command: res.command, ing: fromMongoToIngredient(res.ing)};
             break;
 

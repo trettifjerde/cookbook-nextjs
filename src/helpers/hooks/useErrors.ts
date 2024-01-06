@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useReducer } from "react";
 
-type ErrorsState = {[key: string]: Set<string>};
+export type ErrorsState = {[key: string]: Set<string>};
 
 type TouchAction = {
     type: 'TOUCH',
@@ -22,16 +22,24 @@ export default function useErrors(initializer: () => ErrorsState){
     const [errors, dispatch] = useReducer((state: ErrorsState, action: Action<ErrorsState>) => {
         switch (action.type) {
             case 'TOUCH':
-                const upd = {...state};
-                upd[action.key].delete(action.value);
-                upd[action.key].delete('');
-                return upd;
+                if (state[action.key].has(action.value)) {
+                    const upd = {...state};
+                    upd[action.key].delete(action.value);
+                    upd[action.key].delete('');
+                    return upd;
+                }
+                else 
+                    return state;
+
             case 'CLEAR_ERRORS':
                 return initializer();
+
             case 'SET_ERRORS':
                 return {...action.payload};
+
             default:
                 return state;
+                
         }}, null, initializer);
 
     const hasErrors = useMemo(() => Object.values(errors).some(s => s.size > 0), [errors]);

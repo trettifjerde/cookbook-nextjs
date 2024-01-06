@@ -7,14 +7,14 @@ import { useRouter } from "next/navigation";
 import { useStoreDispatch } from "@/store/store";
 import { recipesActions } from "@/store/recipes";
 import { listActions } from "@/store/list";
+import { generalActions } from "@/store/general";
 
-import { Alert, Recipe } from "@/helpers/types";
+import { Recipe } from "@/helpers/types";
 import { deleteRecipeAction, toShoppingListAction } from "@/helpers/server-actions/recipe-actions";
 import { statusCodeToMessage } from "@/helpers/client-helpers";
 
 import Dropdown, { dropdownItemClass } from "../../ui/Dropdown";
 import ConfirmationModal from "../../ui/ConfirmationModal";
-import PopUp from "../../ui/PopUp";
 import { SpinnerButton } from "../../ui/elements/buttons";
 
 export default function AuthorDropdown({recipe}: {recipe: Recipe}) {
@@ -22,7 +22,6 @@ export default function AuthorDropdown({recipe}: {recipe: Recipe}) {
     const dispatch = useStoreDispatch();
     const router = useRouter();
     
-    const [alert, setAlert] = useState<Alert|null>(null);
     const [isDropdownVisible, setDropdownVisible] = useState(false);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [pending, setPending] = useState(false);
@@ -33,12 +32,14 @@ export default function AuthorDropdown({recipe}: {recipe: Recipe}) {
 
         switch(response.status) {
             case 200:
-                dispatch(listActions.initialise(response.data));
-                setAlert({message: `"${recipe.title}" ingredients added to your shopping list`, isError: false})
+                dispatch(listActions.initialise({ings: response.data, recipeTitle: recipe.title}));
                 break;
             
             default:
-                setAlert({message: statusCodeToMessage(response.status), isError: true});
+                dispatch(generalActions.setAlert({
+                    message: statusCodeToMessage(response.status), 
+                    isError: true
+                }));
                 break;
         }
         setPending(false);
@@ -52,12 +53,12 @@ export default function AuthorDropdown({recipe}: {recipe: Recipe}) {
 
         switch (res.status) {
             case 200:
-                dispatch(recipesActions.deleteRecipe(recipe.id));
+                dispatch(recipesActions.deleteRecipe({id: recipe.id, title: recipe.title}));
                 router.replace('/recipes');
                 return;
 
             default:
-                setAlert({isError: true, message: statusCodeToMessage(res.status)})
+                dispatch(generalActions.setAlert({isError: true, message: statusCodeToMessage(res.status)}));
                 break;
         }
         setPending(false);
@@ -83,7 +84,5 @@ export default function AuthorDropdown({recipe}: {recipe: Recipe}) {
             closeModal={() => setIsModalVisible(false)}>
                 Delete recipe <span className="font-bold">{recipe.title}</span>?
         </ConfirmationModal>
-
-        <PopUp alert={alert} setPopUp={setAlert}></PopUp>
     </>
 }

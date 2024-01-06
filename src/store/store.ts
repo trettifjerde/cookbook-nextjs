@@ -2,11 +2,14 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import { recipesReducer } from "./recipes";
 import { listReducer } from "./list";
+import { generalReducer } from "./general";
+
 
 export const store = configureStore({
     reducer: {
         recipes: recipesReducer,
-        list: listReducer
+        list: listReducer,
+        general: generalReducer 
     }
 });
 

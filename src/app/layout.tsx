@@ -1,13 +1,9 @@
-import Navigation from '@/components/ui/navigation/Navigation';
 import StoreProvider from '@/store/provider';
-
+import Navigation from '@/components/ui/navigation/Navigation';
+import PopUp from '@/components/ui/PopUp';
 import '@/styles/globals.css';
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function RootLayout({children}: {children: React.ReactNode}) {
 
   return (
     <html lang="en">
@@ -21,7 +17,7 @@ export default function RootLayout({
               {children}
             </main>
 
-            <div id="modal" />
+            <PopUp />
           
         </StoreProvider>
 

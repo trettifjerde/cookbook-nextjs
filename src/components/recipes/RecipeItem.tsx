@@ -1,4 +1,3 @@
-import { memo } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { RecipePreview } from '@/helpers/types';
@@ -30,4 +29,4 @@ function RecipeItem({recipe, isActive} : {recipe: RecipePreview, isActive: boole
     </Link>
 }
 
-export default memo(RecipeItem);
+export default RecipeItem;
