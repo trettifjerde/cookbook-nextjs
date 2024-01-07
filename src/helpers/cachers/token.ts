@@ -16,7 +16,7 @@ function verifyToken() {
         }
     }
 
-    console.log('verifying token', 'Authed:', !!token);
+    //console.log('verifying token', 'Authed:', !!token);
 
     return id;
 }

@@ -64,11 +64,11 @@ export default function ShoppingListForm() {
                             dispatch(listActions.removeDupe({id: selectedItem.id, dupName: cleanIngredient.name}));
                             break;
                         default:
-                            dispatch(generalActions.setAlert({message: `Item ${cleanIngredient.name} is already on the list`, isError: true}));
+                            dispatch(generalActions.setError(`Item ${cleanIngredient.name} is already on the list`));
                     }
                     break;
                 default:
-                    dispatch(generalActions.setAlert({message: statusCodeToMessage(response.status), isError: true}));
+                    dispatch(generalActions.setError(statusCodeToMessage(response.status)));
             }
         }
     };

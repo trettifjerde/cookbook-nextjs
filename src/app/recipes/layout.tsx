@@ -3,6 +3,7 @@ import RecipesFrame from '@/components/recipes/RecipesFrame';
 import RecipesLoadMoreButton from '@/components/recipes/RecipeLoadMoreButton';
 import RecipeList from '@/components/recipes/RecipeList';
 import { fetchInitPreviews } from '@/helpers/fetchers';
+import RecipeListSpinner from '@/components/recipes/RecipeListSpinner';
 
 export default async function RecipesLayout({children}:{children: ReactNode}) {
     const initPreviews = await fetchInitPreviews();
@@ -16,6 +17,7 @@ export default async function RecipesLayout({children}:{children: ReactNode}) {
                 <div className="relative grow z-0">
                     <RecipeList initPreviews={initPreviews}/>
                 </div>
+                <RecipeListSpinner />
             </aside>
             <article className='md:pr-3 overflow-auto'>
                 {children}

@@ -2,7 +2,7 @@
 
 import { Collection, ObjectId } from "mongodb";
 import { revalidateTag } from "next/cache";
-import { ErrorCodes, Ingredient, MongoRecipe, RecipeIngredient, RecipePreview, ServerActionResponse, ServerActionResponseWithData } from "../types";
+import { ErrorCodes, Ingredient, MongoRecipe, RecipeIngredient, RecipePreview, RecipeUpdaterCommand, ServerActionResponse, ServerActionResponseWithData } from "../types";
 import { INIT_RECIPES_TAG, RECIPE_PREVIEW_BATCH_SIZE } from "../config";
 import { validateRecipe } from "../forms";
 import { fromMongoToRecipePreview } from "../casters";
@@ -11,8 +11,12 @@ import { addItemsToUserMongoList, queryDB } from "../db-controller";
 import { uploadImageAndUpdateRecipe } from "../server-helpers";
 import { fetchInitPreviews } from "../fetchers";
 
-type Command = 'add'|'update'|'skip';
-type Instruction = {command: 'add', preview: RecipePreview} | {command: 'update', preview: RecipePreview} | {command: 'skip', id: string};
+type Instruction = {
+    command: RecipeUpdaterCommand.UpdateClient, preview: RecipePreview
+} | {
+    command: RecipeUpdaterCommand.Skip, id: string, title: string
+};
+
 export type RecipeFormState = {id: string, status: ErrorCodes} | 
     {id: string, status: 200, instruction: Instruction} |
     {id: string, status: 0};
@@ -29,17 +33,8 @@ export async function sendRecipe(state: RecipeFormState, formData: FormData) : P
     if (recipeErrors)
         return {id, status: 400};
 
-    let command : Command;
-    let recipeFn : (recipe: MongoRecipe, col: Collection<MongoRecipe>) => Promise<boolean>;
 
-    if (id) {
-        recipeFn = updateRecipe;
-        command = 'update';
-    }
-    else {
-        recipeFn = addRecipe;
-        command = 'add';
-    }
+    const recipeFn = id ? updateRecipe : addRecipe;
 
     const {mongoRecipe, uploadError} = await uploadImageAndUpdateRecipe({recipe: preUploadRecipe, authorId, id});
 
@@ -61,11 +56,12 @@ export async function sendRecipe(state: RecipeFormState, formData: FormData) : P
 
     if (initPreviews.previews.length < RECIPE_PREVIEW_BATCH_SIZE || initPreviews.previews.some(p => p.id === recipeId)) {
         console.log(`revalidating tag ${INIT_RECIPES_TAG}`);
+        
         revalidateTag(INIT_RECIPES_TAG);
-        instruction = {command: 'skip', id: recipeId};
+        instruction = {command: RecipeUpdaterCommand.Skip, id: recipeId, title: preUploadRecipe.title};
     }
     else 
-        instruction = {command, preview: fromMongoToRecipePreview(mongoRecipe)};
+        instruction = {command: RecipeUpdaterCommand.UpdateClient, preview: fromMongoToRecipePreview(mongoRecipe)};
 
     revalidateTag(recipeId);
     console.log('revalidating tag', recipeId);

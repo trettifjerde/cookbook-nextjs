@@ -9,7 +9,7 @@ import { recipesActions } from "@/store/recipes";
 import { listActions } from "@/store/list";
 import { generalActions } from "@/store/general";
 
-import { Recipe } from "@/helpers/types";
+import { Alert, Recipe } from "@/helpers/types";
 import { deleteRecipeAction, toShoppingListAction } from "@/helpers/server-actions/recipe-actions";
 import { statusCodeToMessage } from "@/helpers/client-helpers";
 
@@ -36,10 +36,7 @@ export default function AuthorDropdown({recipe}: {recipe: Recipe}) {
                 break;
             
             default:
-                dispatch(generalActions.setAlert({
-                    message: statusCodeToMessage(response.status), 
-                    isError: true
-                }));
+                dispatch(generalActions.setError(statusCodeToMessage(response.status)));
                 break;
         }
         setPending(false);
@@ -58,7 +55,7 @@ export default function AuthorDropdown({recipe}: {recipe: Recipe}) {
                 return;
 
             default:
-                dispatch(generalActions.setAlert({isError: true, message: statusCodeToMessage(res.status)}));
+                dispatch(generalActions.setError(statusCodeToMessage(res.status)));
                 break;
         }
         setPending(false);

@@ -27,7 +27,7 @@ export default function RecipeList({initPreviews}: { initPreviews: InitPreviewsB
     }, [initialised, previews, filterStr]);
 
     useEffect(() => {
-        console.log('current init previews id:', initPreviews.id);
+        //console.log('current init previews id:', initPreviews.id);
         dispatch(recipesActions.syncPreviews(initPreviews));
     }, [initPreviews]);
 

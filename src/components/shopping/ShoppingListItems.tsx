@@ -38,7 +38,7 @@ export default function ShoppingListItems() {
                     break;
 
                 default:
-                    dispatch(generalActions.setAlert({message: statusCodeToMessage(response.status), isError: true}));
+                    dispatch(generalActions.setError(statusCodeToMessage(response.status)));
             }
 
             setPendingId('');

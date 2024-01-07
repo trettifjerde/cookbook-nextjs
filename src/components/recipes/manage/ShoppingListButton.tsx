@@ -10,7 +10,6 @@ import SubmitButton from "../../ui/elements/SubmitButton";
 
 export default function ShoppingListButton({recipe}: {recipe: Recipe}) {
 
-    console.log('shopping list button');
     const dispatch = useStoreDispatch();
     
     const handleSubmit = async (f: FormData) => {
@@ -22,7 +21,7 @@ export default function ShoppingListButton({recipe}: {recipe: Recipe}) {
                 break;
 
             default:
-                dispatch(generalActions.setAlert({isError: true, message: statusCodeToMessage(res.status)}));
+                dispatch(generalActions.setError(statusCodeToMessage(res.status)));
         }
     }
 

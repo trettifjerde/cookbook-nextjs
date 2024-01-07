@@ -73,6 +73,8 @@ export type ServerActionError = {status: ErrorCodes};
 export type ServerActionResponse = {status: 200} | ServerActionError;
 export type ServerActionResponseWithData<T> = {status: 200, data: T} | ServerActionError;
 
-export type Alert = {message: string, isError: boolean};
 
 export enum ListUpdaterCommand {Add, Update, Merge, RemoveDupe, Skip};
+export enum RecipeUpdaterCommand {UpdateClient, Skip};
+
+export type Alert = {id: number, isError: boolean, message: string};

@@ -1,24 +1,31 @@
 'use client'
 
-import { memo, useEffect, useState } from 'react';
+import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useStoreSelector } from '@/store/store';
+import { useStoreDispatch, useStoreSelector } from '@/store/store';
+import { generalActions } from '@/store/general';
 import { Alert } from '@/helpers/types';
+import { ALERT_TIMEOUT } from '@/helpers/config';
 
 function PopUp() {
-
+    const dispatch = useStoreDispatch();
     const alert = useStoreSelector(state => state.general.alert);
-    const [popUp, setPopUp] = useState<Alert|null>(null);
-
-    useEffect(() => {
+    const timer = useRef<any>(null);
+    const popUp = useMemo(() => {
+        clearTimeout(timer.current);
+        
         if (alert) {
-            setPopUp(alert);
-            const timer = setTimeout(() => setPopUp(null), 4000);
-            return () => clearTimeout(timer);
+            timer.current = setTimeout(() => dispatch(generalActions.setAlert(null)), ALERT_TIMEOUT);
+            return alert;
+        }
+        else {
+            timer.current = null;
+            return null;
         }
     }, [alert]);
+    
 
-    return <AnimatePresence>
+    return <AnimatePresence initial={false}>
         { 
             popUp && <motion.div className="absolute bottom-8 left-4 right-4" 
                 initial={{opacity: 0, y: -10}} 

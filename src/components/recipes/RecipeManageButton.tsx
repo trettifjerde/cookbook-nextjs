@@ -4,7 +4,6 @@ import ShoppingListButton from "./manage/ShoppingListButton";
 import AuthorDropdown from "./manage/AuthorDropdown";
 
 export default function RecipeManageButton({recipe}: {recipe: Recipe}) {
-    console.log('about to get userId: recipe manage btn');
     const userId = getUserId();
 
     if (userId) 

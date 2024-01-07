@@ -40,15 +40,21 @@ export default function SignForm({isSignUpMode}: {isSignUpMode: boolean}) {
 
         const {email, password} = validation;
 
-        const res = await authenticate({email, password}, isSignUpMode);
+        try {
 
-        switch(res.status) {           
-            case 400:
-                setSubmitError(res.error);
-                break;
+            const res = await authenticate({email, password}, isSignUpMode);
 
-            default: 
-                setSubmitError('Database error');
+            switch(res.status) {           
+                case 400:
+                    setSubmitError(res.error);
+                    break;
+
+                default: 
+                    setSubmitError('Database error');
+            }
+        }
+        catch (error) {
+            setSubmitError('Network error');
         }
     }
 

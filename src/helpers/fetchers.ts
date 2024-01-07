@@ -89,6 +89,6 @@ export async function fetchMorePreviews(lastId: string) {
 }
 
 export async function fetchList(signal: AbortSignal) {
-    console.log('fetching list');
+    //console.log('fetching list');
     return fetchData<Ingredient[]>('/api/list', 'shopping list', {method: 'GET', signal});
 }

@@ -10,7 +10,7 @@ import { statusCodeToMessage } from "@/helpers/client-helpers";
 import { recipeErrorsInit, validateRecipe } from "@/helpers/forms";
 import { sendRecipe } from "@/helpers/server-actions/recipe-actions";
 import useErrors from "@/helpers/hooks/useErrors";
-import { FormRecipe, RECIPE_DESC, RECIPE_IMAGE_FILE, RECIPE_NAME } from "@/helpers/types";
+import { Alert, FormRecipe, RECIPE_DESC, RECIPE_IMAGE_FILE, RECIPE_NAME, RecipeUpdaterCommand } from "@/helpers/types";
 import RecipeFormInput from "./formComponents/RecipeFormInput";
 import RecipeFormSteps from "./formComponents/RecipeFormSteps";
 import RecipeFormIngredients from "./formComponents/RecipeFormIngredients";
@@ -31,15 +31,15 @@ export default function RecipeForm({recipe, id}: {recipe: FormRecipe, id?: strin
 
     const handleSubmit = (formData: FormData) => {
         if (contTop.current) {
-            const {errors: validationErrors} = validateRecipe(formData);
+            const {data, errors: validationErrors} = validateRecipe(formData);
 
             if (validationErrors) {
                 setErrors(validationErrors);
                 contTop.current.scrollIntoView({behavior: 'smooth'});
                 return;
             }
-
-            dispatch(generalActions.setAlert({message: 'Recipes with images might take some time to upload', isError: false}));
+            if (data.imageFile)
+                dispatch(generalActions.setAlert('Recipes with images might take some time to upload'));
             formAction(formData);
         }
     };
@@ -51,15 +51,15 @@ export default function RecipeForm({recipe, id}: {recipe: FormRecipe, id?: strin
                 let redirectId: string;
 
                 switch (instruction.command) {
-                    case 'add':
-                    case 'update':
+                    case RecipeUpdaterCommand.UpdateClient:
                         redirectId = instruction.preview.id;
-                        const preview = instruction.preview;
-                        const updPreviews = id ? recipesActions.editRecipe : recipesActions.addRecipe;
-                        dispatch(updPreviews(preview));
+                        dispatch((id ? recipesActions.editRecipe : recipesActions.addRecipe)(instruction.preview));
                         break;
-                    default:
+
+                    case RecipeUpdaterCommand.Skip:
                         redirectId = instruction.id;
+                        dispatch((id ? generalActions.editRecipe : generalActions.addRecipe)(instruction.title));
+                        break;
                 }
 
                 redirect(`/recipes/${redirectId}`);

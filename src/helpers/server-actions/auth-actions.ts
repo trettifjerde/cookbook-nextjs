@@ -6,9 +6,21 @@ import { redirect } from "next/navigation";
 import { AuthFormData, MongoUser } from "@/helpers/types";
 import { makeHash, makeToken } from "../server-helpers";
 import { queryDB } from "../db-controller";
+import { ResponseCookie } from "next/dist/compiled/@edge-runtime/cookies";
 
 type SubmitResponse = {status: 200, id: string} | {status: 400, error: string} | {status: 500};
 type AuthResponse = {ok: true, userId: string} | {ok: false, error: string};
+
+const COOKIE_CONFIG : Partial<ResponseCookie> = /*process.env.NODE_ENV === 'production' ?  {
+    maxAge: 60 * 60, 
+    httpOnly: true, 
+    secure: true, 
+    sameSite: 'strict'
+} :*/ {
+    maxAge: 60 * 60, 
+    httpOnly: true, 
+    sameSite: 'strict'
+};
 
 export async function authenticate(form: AuthFormData, isSignUpMode: boolean): Promise<SubmitResponse> {
 
@@ -22,12 +34,7 @@ export async function authenticate(form: AuthFormData, isSignUpMode: boolean): P
     if (!result.ok) 
         return {status: 400, error: result.error };
 
-    cookies().set('token', makeToken(result.userId), {
-        maxAge: 60 * 60, 
-        httpOnly: true, 
-        secure: true, 
-        sameSite: 'strict'
-    });
+    cookies().set('token', makeToken(result.userId), COOKIE_CONFIG);
     
     redirect('/recipes');
 }

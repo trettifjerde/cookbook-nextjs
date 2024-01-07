@@ -42,7 +42,7 @@ export async function readImage(file: Blob|File) {
         reader.readAsDataURL(file);
     })
     .catch(error => {
-        console.log(error);
+        //console.log(error);
         return null;
     })
 }

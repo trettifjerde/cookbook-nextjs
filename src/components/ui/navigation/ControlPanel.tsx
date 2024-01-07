@@ -6,7 +6,6 @@ import NavLi from "./NavLi";
 import SubmitButton from "../elements/SubmitButton";
 
 export default async function ControlPanel() {
-    console.log('about to get userId: control panel');
     const userId = getUserId();
 
     if (userId) 

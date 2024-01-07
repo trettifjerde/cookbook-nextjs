@@ -7,6 +7,7 @@ import { RECIPE_PREVIEW_BATCH_SIZE } from "@/helpers/config";
 import { fetchMorePreviews } from "@/helpers/fetchers";
 import { SpinnerButton } from "../ui/elements/buttons";
 import { generalActions } from "@/store/general";
+import { Alert } from "@/helpers/types";
 
 function RecipesLoadMoreButton() {
     const lastId = useStoreSelector(state => state.recipes.lastId);
@@ -36,7 +37,7 @@ function RecipesLoadMoreButton() {
                 break;
                 
             default: 
-                dispatch(generalActions.setAlert({message: 'Could not fetch more recipes', isError: true}));
+                dispatch(generalActions.setError('Could not fetch more recipes'));
         }
         setFetching(false);
     }
