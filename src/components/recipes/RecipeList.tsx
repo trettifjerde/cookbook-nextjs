@@ -35,7 +35,7 @@ export default function RecipeList({initPreviews}: { initPreviews: InitPreviewsB
 
         {
             filteredRecipes.length === 0 && <motion.div key="recipes-empty" 
-                className='h-recipe-item-sm md:max-lg:h-recipe-item-md flex items-center justify-center' 
+                className='min-h-recipe-item-sm md:max-lg:min-h-recipe-item-md flex items-center justify-center' 
                 variants={container} initial="hidden" animate="visible" exit="hidden" transition={containerTransition}>
                     No recipes found
             </motion.div>

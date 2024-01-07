@@ -5,6 +5,7 @@ import { useFormState } from "react-dom";
 import { redirect, useRouter } from "next/navigation";
 import { useStoreDispatch } from "@/store/store";
 import { recipesActions } from "@/store/recipes";
+import { generalActions } from "@/store/general";
 import { statusCodeToMessage } from "@/helpers/client-helpers";
 import { recipeErrorsInit, validateRecipe } from "@/helpers/forms";
 import { sendRecipe } from "@/helpers/server-actions/recipe-actions";
@@ -18,7 +19,6 @@ import RecipeFormImage from "./formComponents/RecipeFormImage";
 import { ErrorMessage } from "../ui/elements/misc";
 import { Button } from "../ui/elements/buttons";
 import RecipeFormGroup from "./formComponents/RecipeFormGroup";
-import { generalActions } from "@/store/general";
 
 export default function RecipeForm({recipe, id}: {recipe: FormRecipe, id?: string}) {
 
@@ -39,7 +39,7 @@ export default function RecipeForm({recipe, id}: {recipe: FormRecipe, id?: strin
                 return;
             }
 
-            dispatch(generalActions.setAlert({message: '', isError: false}));
+            dispatch(generalActions.setAlert({message: 'Recipes with images might take some time to upload', isError: false}));
             formAction(formData);
         }
     };

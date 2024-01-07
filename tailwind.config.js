@@ -14,7 +14,6 @@ module.exports = {
     extend: {
       gridTemplateRows: {
         'auto-full': 'auto 1fr',
-        '1-3': '1fr 3fr',
       },
       gridTemplateColumns: {
         '3-5': '3fr 5fr',
@@ -28,10 +27,8 @@ module.exports = {
         'textarea': '140px',
         'error-msg': '1rem',
         'btn-square': '42px',
-      },
-      height: {
-        'recipe-item-sm': '250px',
-        'recipe-item-md': '500px'
+        'recipe-item-sm': '15rem',
+        'recipe-item-md': '28rem'
       },
       spacing: {
         'input-square-offset': '54px'
@@ -61,6 +58,9 @@ module.exports = {
       },
       aspectRatio: {
         '2/3': '2/3'
+      },
+      lineClamp: {
+        12: '12'
       },
       animation: {
         'fadeUp': 'fadeUp .3s ease-in-out;',

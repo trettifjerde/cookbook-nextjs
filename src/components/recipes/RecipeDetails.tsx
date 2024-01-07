@@ -8,11 +8,11 @@ const sizes = "(max-width: 576px) 100vw, 60vw";
 export default function RecipeDetails({recipe}: {recipe: Recipe}) {
 
     return (<>
-        <div className="relative h-[60vh] mb-6">
-            <div className="w-full h-full bg-dark-green-shadow flex justify-center items-center relative">
-                {recipe.imagePath && <Image className='max-w-full object-cover' alt={recipe.title} src={recipe.imagePath} fill sizes={sizes}/>}
+        <div className="relative min-h-[60vh] mb-6 flex items-end">
+            <div className="absolute inset-0 bg-dark-green-shadow flex justify-center items-center">
+                {recipe.imagePath && <Image className='object-cover' alt={recipe.title} src={recipe.imagePath} fill sizes={sizes}/>}
             </div>
-            <div className="absolute bottom-0 left-0 right-0 px-8 py-6 text-white bg-dark-green-shadow min-h-details-info rounded-t-lg">
+            <div className="relative mt-12 py-6 px-4 md:px-8 xl:py-12 xl:px-10 text-white bg-dark-green-shadow min-h-details-info rounded-t-lg">
                 <div className='animate-fadeUp'>  
                     <div className="lg:flex flex-row gap-8 justify-between mb-4">
                         <h1 className="text-4xl font-medium max-lg:mb-4">{ recipe.title }</h1>
@@ -20,7 +20,7 @@ export default function RecipeDetails({recipe}: {recipe: Recipe}) {
                             <RecipeManageButton recipe={recipe} /> 
                         </Suspense>
                     </div>
-                    <div className='max-h-[250px] overflow-auto'>{recipe.description}</div>
+                    <div>{recipe.description}</div>
                 </div>
             </div>
         </div>

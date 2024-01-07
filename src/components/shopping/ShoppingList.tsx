@@ -25,7 +25,7 @@ export default function ShoppingList () {
         switch(res.type) {
             case 'success':
                 setFetchError('');
-                dispatch(listActions.initialise(res.data));
+                dispatch(listActions.initialise({ings: res.data}));
                 return;
 
             default: 
