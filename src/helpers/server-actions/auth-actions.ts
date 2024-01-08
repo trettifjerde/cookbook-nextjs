@@ -7,20 +7,12 @@ import { AuthFormData, MongoUser } from "@/helpers/types";
 import { makeHash, makeToken } from "../server-helpers";
 import { queryDB } from "../db-controller";
 import { ResponseCookie } from "next/dist/compiled/@edge-runtime/cookies";
+import { COOKIE_CONFIG_DEV, COOKIE_CONFIG_PROD } from "../cookie-config";
 
 type SubmitResponse = {status: 200, id: string} | {status: 400, error: string} | {status: 500};
 type AuthResponse = {ok: true, userId: string} | {ok: false, error: string};
 
-const COOKIE_CONFIG : Partial<ResponseCookie> = /*process.env.NODE_ENV === 'production' ?  {
-    maxAge: 60 * 60, 
-    httpOnly: true, 
-    secure: true, 
-    sameSite: 'strict'
-} :*/ {
-    maxAge: 60 * 60, 
-    httpOnly: true, 
-    sameSite: 'strict'
-};
+const COOKIE_CONFIG : Partial<ResponseCookie> = process.env.NODE_ENV === 'production' ? COOKIE_CONFIG_PROD : COOKIE_CONFIG_DEV;
 
 export async function authenticate(form: AuthFormData, isSignUpMode: boolean): Promise<SubmitResponse> {
 

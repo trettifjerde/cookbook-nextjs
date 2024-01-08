@@ -9,4 +9,3 @@ export default function AuthPage({params}: {params: {mode: string }}) {
 export function generateStaticParams() {
     return [{mode: 'login'}, {mode: 'signup'}]
 }
-export const dynamicParams = false;
