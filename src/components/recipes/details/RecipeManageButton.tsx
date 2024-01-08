@@ -1,7 +1,7 @@
 import { Recipe } from "@/helpers/types";
 import getUserId from "@/helpers/cachers/token";
-import ShoppingListButton from "./manage/ShoppingListButton";
-import AuthorDropdown from "./manage/AuthorDropdown";
+import AuthorDropdown from "./manage-btn/AuthorDropdown";
+import ShoppingListButton from "./manage-btn/ShoppingListButton";
 
 export default function RecipeManageButton({recipe}: {recipe: Recipe}) {
     const userId = getUserId();

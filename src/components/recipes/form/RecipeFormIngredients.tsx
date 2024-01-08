@@ -26,7 +26,8 @@ export default function RecipeFormIngredients({errors, ingredients, touchField}:
 
                 <motion.div key="add-btn" layout className="mt-4">
                     <Button type="button" color="greenOutline" onClick={addItem}>
-                        Add new ingredient
+                        <i className="icon-plus" />
+                        <span>Add ingredient</span>
                     </Button>
                 </motion.div>
             </AnimatePresence>  

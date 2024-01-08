@@ -19,10 +19,13 @@ const generalSlice = createSlice({
     initialState,
     reducers: {
         setAlert(state, action: PayloadAction<string|null>) {
-            state.alert = action.payload ? mkAlert(action.payload, false) : null;
+            state.alert = action.payload ? mkAlert(action.payload) : null;
+        },
+        setWarning(state, action: PayloadAction<string>) {
+            state.alert = mkAlert(action.payload, 'info');
         },
         setError(state, action: PayloadAction<string>) {
-            state.alert = mkAlert(action.payload, true);
+            state.alert = mkAlert(action.payload, 'error');
         },
         addRecipe(state, action: PayloadAction<string>) {
             state.alert = mkAlert(recipeAdded(action.payload));
@@ -47,7 +50,7 @@ const generalSlice = createSlice({
                 state.alert = mkAlert(`Item updated: ${action.payload.ing.name}`);
             })
             .addCase(listActions.removeDupe, (state, action) => {
-                state.alert = mkAlert(`Item ${action.payload.dupName} was already on the list, so the duplicate was removed`);
+                state.alert = mkAlert(`Item ${action.payload.dupName} was already on the list, so the duplicate was removed`, 'info');
             })
             .addCase(listActions.delete, (state, action) => {
                 state.alert = mkAlert(`Item removed: ${action.payload.name}`);

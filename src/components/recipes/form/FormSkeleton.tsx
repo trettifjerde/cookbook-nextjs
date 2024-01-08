@@ -1,5 +1,5 @@
-import { formSkeletonInput, formSkeletonTextarea } from "../ui/elements/forms"
-import { HR } from "../ui/elements/misc"
+import { formSkeletonInput, formSkeletonTextarea } from "../../ui/elements/forms"
+import { HR } from "../../ui/elements/misc"
 
 export default function FormSkeleton({title}: {title: string}) {
 

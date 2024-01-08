@@ -1,11 +1,11 @@
 'use client'
 
-import { memo, useEffect, useMemo, useRef, useState } from 'react';
+import { memo, useMemo, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useStoreDispatch, useStoreSelector } from '@/store/store';
 import { generalActions } from '@/store/general';
-import { Alert } from '@/helpers/types';
 import { ALERT_TIMEOUT } from '@/helpers/config';
+import { AlertType } from '@/helpers/types';
 
 function PopUp() {
     const dispatch = useStoreDispatch();
@@ -27,12 +27,13 @@ function PopUp() {
 
     return <AnimatePresence initial={false}>
         { 
-            popUp && <motion.div className="absolute bottom-8 left-4 right-4" 
+            popUp && <motion.div className="absolute container mx-auto bottom-10 left-0 right-0 z-10" 
                 initial={{opacity: 0, y: -10}} 
                 animate={{opacity: 1, y: 0}} 
                 exit={{opacity: 0, y: 10}}>
-                    <div className={classes.color(popUp.isError)}>
-                        {popUp.message}
+                    <div className={classes.color(popUp.type)}>
+                        <i className={classes.icon(popUp.type)} />
+                        <span>{popUp.message}</span>
                     </div>
             </motion.div>
         }
@@ -42,8 +43,21 @@ function PopUp() {
 export default memo(PopUp);
 
 const classes = {
-    base: 'container m-auto px-4 py-3 rounded-md shadow-alert',
-    color(isError: boolean) {
-        return `${this.base} ${isError ? 'bg-red-light text-red-active' : 'bg-green-light text-green-active'}`
+    base: 'max-w-screen-md mx-auto px-4 py-3 rounded-md shadow-alert',
+    success: 'bg-green-light text-green-active',
+    info: 'bg-cyan-50 text-cyan-900',
+    error: 'bg-red-light text-red-active',
+    icon(type: AlertType) {
+        switch(type) {
+            case 'error':
+                return 'icon-cross';
+            case 'success':
+                return 'icon-checkmark';
+            case 'info':
+                return 'icon-info';
+        }
+    },
+    color(type: AlertType) {
+        return `${this.base} ${this[type]}`
     }
 }

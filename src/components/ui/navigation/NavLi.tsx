@@ -1,15 +1,17 @@
 import { ReactNode } from "react";
 
-const baseBorder = 'border-x border-t border-solid rounded-t-md hover:border-gray-300';
-const selectors = 'last:ml-auto [&_a]:p-3';
-const baseClassname = `${baseBorder} mb-[-2px] transition-colors ${selectors}`;
-const activeClassname = 'bg-white border-gray-300 border-b-white';
-
-function getClassName(active: boolean) {
-    return `${baseClassname} ${active ? activeClassname : 'border-transparent'}`
+const classes = {
+    base: 'mb-[-1px] transition-colors min-w-16 text-center',
+    border: 'border-x border-t border-solid rounded-t-md hover:border-gray-300',
+    selectors: 'last:ml-auto *:py-3 *:px-4',
+    active: 'bg-white border-gray-300 border-b-white',
+    inactive: 'border-transparent',
+    getClass(isActive: boolean, animate: boolean) {
+        return `${this.base} ${this.border} ${this.selectors} ${isActive ? this.active : this.inactive} ${animate ? 'animate-fadeIn' : ''}`
+    }
 }
 
-export default function NavLi({active=false, children}: {active?: boolean, children: ReactNode}) {
+export default function NavLi({active=false, animate=false, children}: {active?: boolean, animate?: boolean, children: ReactNode}) {
 
-    return <li className={getClassName(active)}>{children}</li>
+    return <li className={classes.getClass(active, animate)}>{children}</li>
 }

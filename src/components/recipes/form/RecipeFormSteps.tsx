@@ -28,7 +28,8 @@ export default function RecipeFormSteps({steps, errors, touchField}: Props) {
         </ol>
         <div>
             <Button type="button" color="greenOutline" onClick={addItem}>
-                Add new step
+                <i className="icon-plus" />
+                <span>Add step</span>
             </Button>
         </div>
     </RecipeFormGroup>

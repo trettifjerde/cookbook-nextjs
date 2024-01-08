@@ -33,7 +33,7 @@ function RecipeItem({recipe, isActive} : {recipe: RecipePreview, isActive: boole
                 <div className={description.currentClass(recipe.imagePath)}>{ recipe.description }</div>
             </div>
             {recipe.imagePath && <div className='relative'>
-                <Image className='object-cover' src={recipe.imagePath} fill alt={`${recipe.title} photo`} sizes={sizes}/>
+                <Image className='object-cover' src={recipe.imagePath} fill alt={`Photo of ${recipe.title}`} sizes={sizes}/>
             </div>}
         </div>
     </Link>

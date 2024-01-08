@@ -3,7 +3,7 @@
 import { ReactNode, useEffect, useState} from "react";
 import { usePathname } from "next/navigation";
 import { Button, LinkButton } from "../ui/elements/buttons";
-import RecipesFilter from "./RecipesFilter";
+import RecipesFilter from "./frame/RecipesFilter";
 
 const classes = {
     base: 'h-full flex flex-col gap-1 md:grid md:grid-rows-auto-full md:gap-4',
@@ -14,7 +14,12 @@ const classes = {
 };
 
 function getButtonText(isListVisible: boolean) {
-    return isListVisible ? 'Hide recipes' : 'Show recipes';   
+    const [iconClass, text] = isListVisible ? ['icon-hide', 'Hide recipes'] : ['icon-show', 'Show recipes'];
+    
+    return <>
+        <i className={iconClass}/>
+        <span>{text}</span>
+    </>  
 }
 
 export default function RecipesFrame({children}: {children: ReactNode}) {
@@ -30,11 +35,16 @@ export default function RecipesFrame({children}: {children: ReactNode}) {
 
         <div className="py-1 md:hidden">
             <Button type="button" color={classes.btnColor(isMobileVisible)} className="w-full" 
-                onClick={() => setMobileVisible(prev => !prev)}>{getButtonText(isMobileVisible)}</Button>
+                onClick={() => setMobileVisible(prev => !prev)}>
+                    {getButtonText(isMobileVisible)}
+            </Button>
         </div>
 
-        <div className={`${isMobileVisible ? 'max-md:flex' : 'max-md:hidden'} flex flex-row max-md:flex-wrap items-center gap-2 md:gap-3`}>
-            <LinkButton className="max-md:flex-grow" color="green" url="/recipes/new">New recipe</LinkButton>
+        <div className={`${isMobileVisible ? 'max-md:flex' : 'max-md:hidden'} flex flex-row items-center gap-2 md:gap-3`}>
+            <LinkButton color="green" url="/recipes/new">
+                <i className="icon-plus"/>
+                <span className="max-md:hidden">New recipe</span>
+            </LinkButton>
             <RecipesFilter/>
         </div>
 

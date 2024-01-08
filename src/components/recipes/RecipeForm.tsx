@@ -10,15 +10,15 @@ import { statusCodeToMessage } from "@/helpers/client-helpers";
 import { recipeErrorsInit, validateRecipe } from "@/helpers/forms";
 import { sendRecipe } from "@/helpers/server-actions/recipe-actions";
 import useErrors from "@/helpers/hooks/useErrors";
-import { Alert, FormRecipe, RECIPE_DESC, RECIPE_IMAGE_FILE, RECIPE_NAME, RecipeUpdaterCommand } from "@/helpers/types";
-import RecipeFormInput from "./formComponents/RecipeFormInput";
-import RecipeFormSteps from "./formComponents/RecipeFormSteps";
-import RecipeFormIngredients from "./formComponents/RecipeFormIngredients";
+import { FormRecipe, RECIPE_DESC, RECIPE_IMAGE_FILE, RECIPE_NAME, RecipeUpdaterCommand } from "@/helpers/types";
+import RecipeFormInput from "./form/RecipeFormInput";
+import RecipeFormSteps from "./form/RecipeFormSteps";
+import RecipeFormIngredients from "./form/RecipeFormIngredients";
 import SubmitButton from "../ui/elements/SubmitButton";
-import RecipeFormImage from "./formComponents/RecipeFormImage";
+import RecipeFormImage from "./form/RecipeFormImage";
 import { ErrorMessage } from "../ui/elements/misc";
 import { Button } from "../ui/elements/buttons";
-import RecipeFormGroup from "./formComponents/RecipeFormGroup";
+import RecipeFormGroup from "./form/RecipeFormGroup";
 
 export default function RecipeForm({recipe, id}: {recipe: FormRecipe, id?: string}) {
 
@@ -39,7 +39,7 @@ export default function RecipeForm({recipe, id}: {recipe: FormRecipe, id?: strin
                 return;
             }
             if (data.imageFile)
-                dispatch(generalActions.setAlert('Recipes with images might take some time to upload'));
+                dispatch(generalActions.setWarning('Recipes with images might take some time to upload'));
             formAction(formData);
         }
     };

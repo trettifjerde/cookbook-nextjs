@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { Input } from "../ui/elements/forms";
+import { Input } from "../../ui/elements/forms";
 
 type Props = {
     defaultValue: string,

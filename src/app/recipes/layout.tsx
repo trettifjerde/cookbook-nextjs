@@ -1,8 +1,8 @@
 import { ReactNode } from 'react';
+import { fetchInitPreviews } from '@/helpers/fetchers';
 import RecipesFrame from '@/components/recipes/RecipesFrame';
 import RecipesLoadMoreButton from '@/components/recipes/RecipeLoadMoreButton';
 import RecipeList from '@/components/recipes/RecipeList';
-import { fetchInitPreviews } from '@/helpers/fetchers';
 import RecipeListSpinner from '@/components/recipes/RecipeListSpinner';
 
 export default async function RecipesLayout({children}:{children: ReactNode}) {

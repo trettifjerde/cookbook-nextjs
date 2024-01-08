@@ -1,4 +1,4 @@
-import { Alert, FormIngredient, Ingredient } from "@/helpers/types";
+import { FormIngredient, Ingredient } from "@/helpers/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 type ListState = {

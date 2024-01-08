@@ -77,4 +77,5 @@ export type ServerActionResponseWithData<T> = {status: 200, data: T} | ServerAct
 export enum ListUpdaterCommand {Add, Update, Merge, RemoveDupe, Skip};
 export enum RecipeUpdaterCommand {UpdateClient, Skip};
 
-export type Alert = {id: number, isError: boolean, message: string};
+export type AlertType = 'error' | 'info' | 'success';
+export type Alert = {id: number, type: AlertType, message: string};

@@ -9,13 +9,14 @@ import { recipesActions } from "@/store/recipes";
 import { listActions } from "@/store/list";
 import { generalActions } from "@/store/general";
 
-import { Alert, Recipe } from "@/helpers/types";
+import { Recipe } from "@/helpers/types";
 import { deleteRecipeAction, toShoppingListAction } from "@/helpers/server-actions/recipe-actions";
 import { statusCodeToMessage } from "@/helpers/client-helpers";
 
-import Dropdown, { dropdownItemClass } from "../../ui/Dropdown";
-import ConfirmationModal from "../../ui/ConfirmationModal";
-import { SpinnerButton } from "../../ui/elements/buttons";
+import { SpinnerButton } from "@/components/ui/elements/buttons";
+import Dropdown, { dropdownItemClass } from "@/components/ui/Dropdown";
+import ConfirmationModal from "@/components/ui/ConfirmationModal";
+
 
 export default function AuthorDropdown({recipe}: {recipe: Recipe}) {
     const ddBtnRef = useRef<HTMLDivElement>(null);
@@ -65,14 +66,26 @@ export default function AuthorDropdown({recipe}: {recipe: Recipe}) {
         <SpinnerButton ref={ddBtnRef} color="whiteOutline"
             disabled={pending} pending={pending}
             onClick={() => setDropdownVisible(prev => !prev)}
-            >Manage</SpinnerButton>
+            >
+            <span className="mr-2">Manage</span>
+            <i className="icon-cog" />
+        </SpinnerButton>
 
         <Dropdown visible={isDropdownVisible} btn={ddBtnRef} closeDropdown={() => setDropdownVisible(false)}>
-            <div className={dropdownItemClass} onClick={toShoppingList}>To Shopping List</div>
-            <div className={dropdownItemClass}>
-                <Link className="w-full block" href={`/recipes/${recipe.id}/edit`}>Edit Recipe</Link>
+            <div className={dropdownItemClass} onClick={toShoppingList}>
+                <i className="icon-cart" />
+                <span>To Shopping List</span>
             </div>
-            <div className={dropdownItemClass} onClick={() => setIsModalVisible(true)}>Delete Recipe</div>
+            <div className={dropdownItemClass}>
+                <Link className="w-full block" href={`/recipes/${recipe.id}/edit`}>
+                    <i className="icon-pencil" />
+                    <span>Edit Recipe</span>
+                </Link>
+            </div>
+            <div className={dropdownItemClass} onClick={() => setIsModalVisible(true)}>
+                <i className="icon-bin" />
+                <span>Delete Recipe</span>
+            </div>
         </Dropdown>
 
         <ConfirmationModal 

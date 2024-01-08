@@ -8,6 +8,7 @@ import { AuthFormError, CONFIRMATION, EMAIL, PASSWORD, validateAuthForm } from '
 import { Input } from '../ui/elements/forms';
 import { ErrorMessage } from '../ui/elements/misc';
 import { authenticate } from '@/helpers/server-actions/auth-actions';
+import { redirect } from 'next/navigation';
 
 export default function SignForm({isSignUpMode}: {isSignUpMode: boolean}) {
 
@@ -40,21 +41,23 @@ export default function SignForm({isSignUpMode}: {isSignUpMode: boolean}) {
 
         const {email, password} = validation;
 
-        try {
+        const res = await authenticate({email, password}, isSignUpMode);
 
-            const res = await authenticate({email, password}, isSignUpMode);
+        switch(res.status) {
+            
+            case 200: 
+                redirect('/recipes');
+                
+            case 400:
+                setSubmitError(res.error);
+                break;
 
-            switch(res.status) {           
-                case 400:
-                    setSubmitError(res.error);
-                    break;
+            case 500:
+                setSubmitError('Database error');
+                break;
 
-                default: 
-                    setSubmitError('Database error');
-            }
-        }
-        catch (error) {
-            setSubmitError('Network error');
+            default: 
+                setSubmitError('Network error');
         }
     }
 
@@ -76,7 +79,7 @@ export default function SignForm({isSignUpMode}: {isSignUpMode: boolean}) {
                         />
                 </div>) }
 
-                <div className="flex flex-row justify-between flex-wrap gap-4 *:min-w-32">
+                <div className="flex flex-row justify-evenly flex-wrap gap-4 *:min-w-32">
                     <SubmitButton>Sign {isSignUpMode ? 'up' : 'in'}</SubmitButton>
                     <LinkButton color='greenOutline' url={isSignUpMode ? '/auth/login' : '/auth/signup'}>
                         Go to sign {isSignUpMode ? 'in' : 'up'}

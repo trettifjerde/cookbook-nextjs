@@ -1,3 +1,4 @@
+import localFont from 'next/font/local';
 import StoreProvider from '@/store/provider';
 import Navigation from '@/components/ui/navigation/Navigation';
 import PopUp from '@/components/ui/PopUp';
@@ -7,7 +8,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
 
   return (
     <html lang="en">
-      <body className='h-screen container mx-auto py-4 flex flex-col overflow-hidden"'>
+      <body className={`h-100svh container mx-auto py-4 flex flex-col overflow-hidden ${iconsFont.variable}`}>
 
         <StoreProvider>
 
@@ -25,3 +26,10 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
     </html>
   )
 }
+
+const iconsFont = localFont({
+  src: '../fonts/icomoon.ttf',
+  style: 'normal',
+  weight: 'normal',
+  variable: '--font-icons'
+})

@@ -1,4 +1,4 @@
-import DetailsSkeleton from "@/components/recipes/DetailsSkeleton";
+import DetailsSkeleton from "@/components/recipes/details/DetailsSkeleton";
 
 export default function RecipeLoading() {
     return <DetailsSkeleton />

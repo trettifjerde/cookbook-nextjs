@@ -3,8 +3,8 @@
 import { memo, useRef, useState } from "react";
 import { recipesActions } from "@/store/recipes";
 import { useStoreDispatch } from "@/store/store";
-import { Input } from "../ui/elements/forms";
-import { Button } from "../ui/elements/buttons";
+import { Input } from "../../ui/elements/forms";
+import { Button } from "../../ui/elements/buttons";
 
 function RecipesFilter() {
 
@@ -29,11 +29,13 @@ function RecipesFilter() {
     };
 
     return <div className="group relative flex-grow p-1">
-        <Input type="text" name="filter" id="filterStr" className="pr-input-square-offset [&:focus+button]:opacity-100" placeholder="Type for a recipe..." 
+        <Input type="text" name="filter" id="filterStr" className="pr-input-square-offset [&:focus+button]:opacity-100" placeholder="Filter recipes..." 
             ref={filterRef} onChange={handleFilterChange} />
-        <Button type="button" color="red" isSquare 
+        <Button type="button" color="red" shape="square" 
             className="invisible opacity-0 absolute right-1 top-1 group-hover:visible group-hover:opacity-100 transition-hidden-btn duration-300" 
-            onClick={clearFilter}>X</Button>
+            onClick={clearFilter}>
+                <i className="icon-cross"/>
+        </Button>
     </div>
 };
 

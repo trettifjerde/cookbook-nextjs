@@ -6,7 +6,7 @@ import { AnimatePresence, Transition, Variants, motion } from 'framer-motion';
 import { useStoreDispatch, useStoreSelector } from '@/store/store';
 import { recipesActions } from '@/store/recipes';
 import { InitPreviewsBatch } from '@/helpers/types';
-import RecipeItem from "./RecipeItem";
+import RecipeItem from "./list/RecipeItem";
 
 export default function RecipeList({initPreviews}: { initPreviews: InitPreviewsBatch}) {
     

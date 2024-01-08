@@ -4,9 +4,10 @@ import { useEffect, useState } from "react";
 import { useStoreDispatch, useStoreSelector } from "@/store/store";
 import { listActions } from "@/store/list";
 
-import ShoppingListSkeleton from "./ShoppingListSkeleton";
-import ShoppingListItems from "./ShoppingListItems";
 import { fetchList } from "@/helpers/fetchers";
+
+import ShoppingListSkeleton from "./list/ShoppingListSkeleton";
+import ShoppingListItems from "./list/ShoppingListItems";
 import { Button } from "../ui/elements/buttons";
 
 const controller = new AbortController();

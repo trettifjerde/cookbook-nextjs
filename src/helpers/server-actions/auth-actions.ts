@@ -9,7 +9,7 @@ import { queryDB } from "../db-controller";
 import { ResponseCookie } from "next/dist/compiled/@edge-runtime/cookies";
 import { COOKIE_CONFIG_DEV, COOKIE_CONFIG_PROD } from "../cookie-config";
 
-type SubmitResponse = {status: 200, id: string} | {status: 400, error: string} | {status: 500};
+type SubmitResponse = {status: 200} | {status: 400, error: string} | {status: 500};
 type AuthResponse = {ok: true, userId: string} | {ok: false, error: string};
 
 const COOKIE_CONFIG : Partial<ResponseCookie> = process.env.NODE_ENV === 'production' ? COOKIE_CONFIG_PROD : COOKIE_CONFIG_DEV;
@@ -28,7 +28,7 @@ export async function authenticate(form: AuthFormData, isSignUpMode: boolean): P
 
     cookies().set('token', makeToken(result.userId), COOKIE_CONFIG);
     
-    redirect('/recipes');
+    return {status: 200};
 }
 
 async function signUp(form: AuthFormData, col: Collection<MongoUser>) : Promise<AuthResponse> {

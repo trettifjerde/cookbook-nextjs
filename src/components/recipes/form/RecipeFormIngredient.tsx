@@ -49,7 +49,9 @@ const RecipeFormIngredient = forwardRef<HTMLDivElement, Props>(({errors, ing, re
                 defaultValue={ing.name} invalid={errors.has(getFieldName(ing, 'name'))} touchField={touchField} />
 
             <div>
-                <Button color="red" isSquare type="button" onClick={() => removeIng(ing.id)}>X</Button>
+                <Button color="red" shape="square" type="button" onClick={() => removeIng(ing.id)}>
+                    <i className="icon-cross" />
+                </Button>
             </div>  
 
     </motion.div>

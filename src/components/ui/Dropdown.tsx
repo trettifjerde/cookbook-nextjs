@@ -13,7 +13,7 @@ const variants = {
     }
 }
 
-export const dropdownItemClass = 'py-2 px-4 whitespace-nowrap hover:text-green transition-colors cursor-pointer';
+export const dropdownItemClass = 'py-2 px-4 whitespace-nowrap hover:text-green transition-colors cursor-pointer [&_span]:ml-3';
 
 export default function Dropdown ({visible, closeDropdown, btn, children}: {
     visible: boolean,
