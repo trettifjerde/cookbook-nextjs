@@ -67,7 +67,8 @@ module.exports = {
         'fadeIn': 'fadeIn .3s ease-in-out',
         'slideUp': 'slideUp .3s ease-in-out',
         'flicker': 'flicker .7s ease-in-out infinite alternate',
-        'flicker-reverse': 'flicker 0.7s ease-in-out infinite alternate-reverse'
+        'flicker-reverse': 'flicker 0.7s ease-in-out infinite alternate-reverse',
+        'recipe-details-bg': 'green-bg .5s ease-in-out forwards'
       },
       keyframes: {
         'fadeIn': {
@@ -89,6 +90,10 @@ module.exports = {
         'spin': {
           '0%': { transform: 'rotate(0deg)' },
           '100%': { transform: 'rotate(360deg)' }
+        },
+        'green-bg': {
+          '0%': { backgroundColor: 'rgba(7, 71, 27, 0.7)'},
+          '100%': { backgroundColor: '#fff'}
         }
       }
     }
