@@ -36,6 +36,22 @@
         margin-left: .5rem;
     }
 
+    @media (pointer:fine) {
+        .shlist-btn-group {
+            position: absolute;
+            right: theme('spacing.3');
+            top: theme('spacing.2');
+            bottom: theme('spacing.2');
+            opacity: 0;
+            visibility: hidden;
+            margin-top: 0;
+        }
+
+        .group:hover .shlist-btn-group {
+            opacity: 1;
+            visibility: visible;
+        }
+    }
 
     .skeleton {
         background-color: theme('backgroundColor.skeleton-gray');

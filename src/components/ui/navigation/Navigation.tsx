@@ -15,7 +15,7 @@ export default function Navigation() {
                 <span className='max-md:hidden text-green font-medium text-2xl align-top'>34</span>
             </Link>
         </div>
-        <ul className="w-full border-b border-solid border-gray-300 flex flex-row gap-1 items-center">
+        <ul className="grow border-b border-solid border-gray-300 flex flex-row gap-1 items-center">
             <NavLink url='/recipes' icon='icon-recipe' name="Recipes" />
 
             <Suspense fallback={<NavLi><MiniSpinner/></NavLi>}>

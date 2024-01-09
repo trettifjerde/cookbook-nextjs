@@ -1,7 +1,5 @@
 /** @type {import('tailwindcss').Config} */
 
-const plugin = require('tailwindcss/plugin');
-
 module.exports = {
   content: [
     './src/**/*.{tsx,ts}'
@@ -108,10 +106,6 @@ module.exports = {
       })
     }
   },
-    plugins: [
-      plugin(function({addVariant}) {
-        addVariant('pointer-fine', '@media (pointer: fine)')
-      })
-    ],
+    plugins: [],
   }
 

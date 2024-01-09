@@ -14,15 +14,7 @@ export const shLiClasses = {
     }
 };
 
-export const manageItemClasses = {
-    base: `absolute right-3 top-0 bottom-0 flex flex-row items-center gap-2 self-end`,
-    transitions: 'transition-hidden-btn',
-    start: 'pointer-fine:opacity-0 pointer-fine:invisible',
-    onhover: 'pointer-fine:group-hover:visible pointer-fine:group-hover:opacity-100',
-    get() {
-        return `${this.base} ${this.transitions} ${this.start} ${this.onhover}`
-    }
-}
+export const manageItemClasses = 'mt-1 flex flex-row items-center gap-2 transition-hidden-btn shlist-btn-group';
 
 export const shLiVariants : Variants = {
     hidden: {

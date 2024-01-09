@@ -1,8 +1,8 @@
 import { ReactNode } from "react";
 
 const classes = {
-    base: 'mb-[-1px] transition-colors min-w-16 text-center',
-    border: 'border-x border-t border-solid rounded-t-md hover:border-gray-300',
+    base: 'transition-colors min-w-16 text-center',
+    border: 'mb-[-1px] border-x border-t border-solid rounded-t-md hover:border-gray-300',
     selectors: 'last:ml-auto *:py-3 *:px-4',
     active: 'bg-white border-gray-300 border-b-white',
     inactive: 'border-transparent',

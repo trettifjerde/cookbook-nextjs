@@ -11,7 +11,7 @@ export default function ShoppingListItem({item, onDelete}: { item: Ingredient, o
 
     return <>
         <span className="align-text-top">{getItemInfo(item)}</span>
-        <div className={manageItemClasses.get()}>
+        <div className={manageItemClasses}>
             <SmallButton color="yellowOutline" onClick={() => dispatch(listActions.selectItem(item))}>Edit</SmallButton>
             <SmallButton color="redOutline" onClick={() => onDelete(item)}>Delete</SmallButton>
         </div>
