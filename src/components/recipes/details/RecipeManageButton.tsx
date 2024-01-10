@@ -8,7 +8,7 @@ export default function RecipeManageButton({recipe}: {recipe: Recipe}) {
     const userId = getUserId();
 
     if (userId) 
-        return <div className="relative inline-block animate-fadeUp">
+        return <div className="relative inline-block animate-fadeInFast">
             {userId === recipe.authorId ? <AuthorDropdown recipe={recipe} /> : <ShoppingListButton recipe={recipe} />} 
         </div>
 

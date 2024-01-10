@@ -73,6 +73,7 @@ module.exports = {
       animation: {
         'fadeUp': 'fadeUp .3s ease-in-out;',
         'fadeIn': 'fadeIn .5s ease-in-out',
+        'fadeInFast': 'fadeIn .2s ease-in-out',
         'slideUp': 'slideUp .3s ease-in-out',
         'flicker': 'flicker .7s ease-in-out infinite alternate',
         'flicker-reverse': 'flicker 0.7s ease-in-out infinite alternate-reverse',
