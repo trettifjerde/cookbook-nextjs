@@ -3,7 +3,7 @@ import { detailsClasses as classes } from "./classes";
 export default function DetailsSkeleton() {
     return <>
         <div className={classes.container}>
-            <div className={classes.imageContainer.currentClass('')}></div>
+            <div className={classes.imageContainer.currentClass(false)}></div>
             <div className={classes.header}></div>
         </div>
 
