@@ -1,8 +1,13 @@
+import { Metadata } from 'next';
 import localFont from 'next/font/local';
 import StoreProvider from '@/store/provider';
 import Navigation from '@/components/ui/navigation/Navigation';
 import PopUp from '@/components/ui/PopUp';
 import '@/styles/globals.css';
+
+export const metadata : Metadata = {
+  title: 'Next.js Cookbook'
+}
 
 export default function RootLayout({children}: {children: React.ReactNode}) {
 
