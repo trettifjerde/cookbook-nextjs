@@ -5,16 +5,15 @@ import { Recipe } from '@/helpers/types';
 
 import RecipeManageButton from './details/RecipeManageButton';
 import { detailsClasses as classes } from './details/classes';
-
-const sizes = "(max-width: 576px) 100vw, 60vw";
+import RecipeDetailsImage from './details/RecipeDetailsImage';
 
 export default function RecipeDetails({recipe}: {recipe: Recipe}) {
 
     return (<>
         <div className={classes.container}>
-            <div className={classes.imageContainer.currentClass(recipe.imagePath)}>
-                {recipe.imagePath && <Image className='object-cover 2xl:object-contain' alt={recipe.title} src={recipe.imagePath} fill sizes={sizes}/>}
-            </div>
+            
+            <RecipeDetailsImage title={recipe.title} imagePath={recipe.imagePath} />
+
             <div className={classes.header}>
                 <div className='animate-fadeUp'>  
                     <div className="lg:flex flex-row gap-8 justify-between mb-4">

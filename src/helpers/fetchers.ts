@@ -59,7 +59,7 @@ export async function fetchData<T>(
 }
 
 export async function fetchInitPreviews() {
-    console.log('fetching init previews');
+    //console.log('fetching init previews');
 
     return fetchData<InitPreviewsBatch>('/api/recipes', 'recipes', {next: {tags: [INIT_RECIPES_TAG]}})
         .then(res => {
@@ -75,12 +75,12 @@ export async function fetchInitPreviews() {
 }
 
 export async function fetchRecipe(id: string, caller: string) {
-    console.log('fetching recipe', id, 'for', caller);
+    //console.log('fetching recipe', id, 'for', caller);
     return fetchData<Recipe>(`/api/recipes/${id}`, 'recipe', {next: {tags: [id]}});
 }
 
 export async function fetchMorePreviews(lastId: string) {
-    console.log('fetching more previews starting from', lastId);
+    //console.log('fetching more previews starting from', lastId);
     return fetchData<RecipePreview[]>(`/api/more`, 'more recipes', {
         method: 'POST', 
         body: JSON.stringify({lastId}),

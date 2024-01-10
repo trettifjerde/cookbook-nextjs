@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import { AnimatePresence, Transition, Variants, motion } from 'framer-motion';
 import { useStoreDispatch, useStoreSelector } from '@/store/store';
@@ -16,6 +16,7 @@ export default function RecipeList({initPreviews}: { initPreviews: InitPreviewsB
 
     const pathname = usePathname();
     const dispatch = useStoreDispatch();
+    const ref = useRef<HTMLDivElement>(null);
 
     const filteredRecipes = useMemo(() => {
 
@@ -31,6 +32,12 @@ export default function RecipeList({initPreviews}: { initPreviews: InitPreviewsB
         dispatch(recipesActions.syncPreviews(initPreviews));
     }, [initPreviews]);
 
+    useEffect(() => {
+        if (ref.current) {
+            ref.current.closest('.overflow-auto')?.scrollTo({top: 0, behavior: 'smooth'});
+        }
+    }, [ref, previews]);
+
     return <AnimatePresence mode='wait'>
 
         {
@@ -42,7 +49,7 @@ export default function RecipeList({initPreviews}: { initPreviews: InitPreviewsB
         }
 
         {
-            filteredRecipes.length > 0 && <motion.div key="recipes" className='h-full flex flex-col-reverse justify-end gap-2'
+            filteredRecipes.length > 0 && <motion.div ref={ref} key="recipes" className='h-full flex flex-col-reverse justify-end gap-2'
                 variants={container} initial="hidden" animate="visible" exit="hidden" transition={containerTransition}>
 
                 <AnimatePresence>
