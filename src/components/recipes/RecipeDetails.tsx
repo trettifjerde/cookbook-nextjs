@@ -6,6 +6,7 @@ import { Recipe } from '@/helpers/types';
 import RecipeManageButton from './details/RecipeManageButton';
 import { detailsClasses as classes } from './details/classes';
 import RecipeDetailsImage from './details/RecipeDetailsImage';
+import { Button } from '../ui/elements/buttons';
 
 export default function RecipeDetails({recipe}: {recipe: Recipe}) {
 
@@ -18,7 +19,7 @@ export default function RecipeDetails({recipe}: {recipe: Recipe}) {
                 <div className='animate-fadeUp'>  
                     <div className="lg:flex flex-row gap-8 justify-between mb-4">
                         <h1 className="text-4xl font-medium max-lg:mb-4">{ recipe.title }</h1>
-                        <Suspense fallback={<></>}>
+                        <Suspense fallback={<Button type='button' color='transparent'> </Button>}>
                             <RecipeManageButton recipe={recipe} /> 
                         </Suspense>
                     </div>
