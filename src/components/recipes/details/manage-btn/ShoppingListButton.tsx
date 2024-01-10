@@ -28,9 +28,8 @@ export default function ShoppingListButton({recipe}: {recipe: Recipe}) {
     }
 
     return <form action={handleSubmit}>
-        <SubmitButton color="whiteOutline" className="btn btn-outline-light">
-            <i className="icon-cart" />
-            <span>To Shopping List</span>
+        <SubmitButton color="whiteOutline" shape="square" className="btn btn-outline-light" title="Add to Shopping List">
+            <i className="icon-cart"/>
         </SubmitButton>
     </form>
 }

@@ -14,7 +14,7 @@ export default async function ControlPanel() {
             <NavLink animate name="Shopping List" icon="icon-cart" url="/list" />
             <NavLi animate>
                 <form action={logOut}>
-                    <SubmitButton color="transparent" shape="none">
+                    <SubmitButton color="borderless" shape="none">
                         <NavLinkText text="Log out" icon="icon-exit"/>
                     </SubmitButton>
                 </form>

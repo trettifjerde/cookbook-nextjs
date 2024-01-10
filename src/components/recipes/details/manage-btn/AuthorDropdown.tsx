@@ -63,11 +63,10 @@ export default function AuthorDropdown({recipe}: {recipe: Recipe}) {
     };
 
     return <>
-        <SpinnerButton ref={ddBtnRef} color="whiteOutline"
+        <SpinnerButton ref={ddBtnRef} color="whiteOutline" shape="square" title="Manage Recipe"
             disabled={pending} pending={pending}
             onClick={() => setDropdownVisible(prev => !prev)}
             >
-            <span className="mr-2">Manage</span>
             <i className="icon-cog" />
         </SpinnerButton>
 

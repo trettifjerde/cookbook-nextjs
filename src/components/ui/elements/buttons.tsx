@@ -6,6 +6,7 @@ const shapes = {
     square: 'min-w-btn-square p-2 aspect-square',
     normal: 'px-3 py-2',
     small: 'text-sm px-2 py-1',
+    filler: 'min-h-btn-square min-w-btn-square',
     none: '',
 };
 
@@ -16,7 +17,8 @@ const colors = {
     greenOutline: 'bg-white text-green border-green hover:bg-green hover:text-white active:bg-green-hover',
     redOutline: 'bg-white text-red border-red hover:bg-red hover:text-white active:bg-red-hover',
     whiteOutline: 'text-white border-white hover:bg-white-shadow active:bg-white-overlay hover:text-white',
-    transparent: 'text-green border-none',
+    transparent: 'text-transparent border-none',
+    borderless: 'text-green border-none'
 };
 
 export type BtnColor = keyof typeof colors;
@@ -29,7 +31,8 @@ type BtnProps = {
     onClick?: MouseEventHandler,
     className?: string, 
     type?: 'submit'|'button',
-    disabled?: boolean
+    disabled?: boolean,
+    title?: string
 }
 
 type SpinnerBtnProps = BtnProps & {pending: boolean};
@@ -44,14 +47,17 @@ const classes = {
 };
 
 export const Button = forwardRef<HTMLButtonElement, BtnProps>((
-    {onClick=() => {}, children, color, type='submit', className='', shape='normal', disabled=false}, 
+    {onClick=() => {}, children, color, type='submit', className='', shape='normal', disabled=false, title=""}, 
     ref) => {
     return <button ref={ref} type={type} onClick={onClick} disabled={disabled}
-        className={classes.get(color, shape, className)}>
+        className={classes.get(color, shape, className)} title={title}>
             {children}
     </button>
 })
 
+export const FillerButton = () => {
+    return <div className={classes.get('transparent', 'filler')}></div>
+}
 export const SmallButton = ({onClick, color, children}: {onClick: MouseEventHandler, color: BtnColor, children: ReactNode}) => {
     return <Button type="button" onClick={onClick} color={color} shape="small">{children}</Button>
 }
@@ -61,11 +67,11 @@ export function LinkButton({url, color, children, className=''}: {url: string, c
 }
 
 export const SpinnerButton = forwardRef<HTMLDivElement, SpinnerBtnProps>(({
-    onClick, children, color, shape, type, disabled, pending, className=''}, ref) => {
+    onClick, children, color, shape, type, disabled, pending, className='', title}, ref) => {
 
     return <div ref={ref} className={`relative ${className}`}>
         <Button type={type} onClick={onClick} disabled={disabled}
-            color={color} shape={shape} className="w-full">
+            color={color} shape={shape} className="w-full" title={title}>
                 {children}
         </Button>
         {pending && <MiniSpinner white={color === 'whiteOutline'} absolute />}
