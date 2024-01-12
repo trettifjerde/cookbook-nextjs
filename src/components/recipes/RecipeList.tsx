@@ -38,7 +38,7 @@ export default function RecipeList({initPreviews}: { initPreviews: InitPreviewsB
         }
     }, [ref, previews]);
 
-    return <AnimatePresence mode='wait'>
+    return <AnimatePresence mode='wait' initial={false}>
 
         {
             filteredRecipes.length === 0 && <motion.div key="recipes-empty" 
@@ -52,7 +52,7 @@ export default function RecipeList({initPreviews}: { initPreviews: InitPreviewsB
             filteredRecipes.length > 0 && <motion.div ref={ref} key="recipes" className='h-full flex flex-col-reverse justify-end gap-2'
                 variants={container} initial="hidden" animate="visible" exit="hidden" transition={containerTransition}>
 
-                <AnimatePresence>
+                <AnimatePresence initial={false}>
                     { 
                         filteredRecipes.map((r, i) => <motion.div layout key={r.id} 
                             custom={i}

@@ -17,7 +17,7 @@ export default async function RecipesLayout({children}:{children: ReactNode}) {
                 <div className="relative grow z-0">
                     <RecipeList initPreviews={initPreviews}/>
                 </div>
-                <RecipeListSpinner />
+                {/* <RecipeListSpinner /> */}
             </aside>
             <article className='md:pr-3 overflow-auto'>
                 {children}

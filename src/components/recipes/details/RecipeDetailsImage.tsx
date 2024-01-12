@@ -10,7 +10,7 @@ export default function RecipeDetailsImage({title, imagePath}: {title: string, i
     const [animate, setAnimate] = useState(false);
 
     return <div className={classes.imageContainer.currentClass(animate)}>
-        {imagePath && <Image className='object-cover 2xl:object-contain animate-fadeIn' 
+        {imagePath && <Image className='object-cover lg:object-contain'
             alt={title} src={imagePath} fill sizes={sizes}
             onLoad={() => setAnimate(true)} />}
     </div>

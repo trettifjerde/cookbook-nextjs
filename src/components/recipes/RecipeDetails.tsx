@@ -1,12 +1,10 @@
 import { Suspense } from 'react';
-import Image from 'next/image';
 
 import { Recipe } from '@/helpers/types';
 
 import RecipeManageButton from './details/RecipeManageButton';
 import { detailsClasses as classes } from './details/classes';
 import RecipeDetailsImage from './details/RecipeDetailsImage';
-import { Button } from '../ui/elements/buttons';
 import BtnFallback from './details/manage-btn/BtnFallback';
 
 export default function RecipeDetails({recipe}: {recipe: Recipe}) {

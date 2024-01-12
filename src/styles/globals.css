@@ -231,12 +231,12 @@
 
     .icon-show:before {
         content: "\e9ce";
-        vertical-align: bottom;
+        vertical-align: text-bottom;
     }
 
     .icon-hide:before {
         content: "\e9d1";
-        vertical-align: bottom;
+        vertical-align: text-bottom;
     }
 
     .icon-plus:before {
