@@ -1,13 +1,12 @@
 import { ReactNode } from "react";
 
 const classes = {
-    base: 'transition-colors min-w-16 text-center',
-    border: 'mb-[-1px] border-x border-t border-solid rounded-t-md hover:border-gray-300',
-    selectors: 'last:ml-auto *:py-3 *:px-4',
-    active: 'bg-white border-gray-300 border-b-white',
-    inactive: 'border-transparent',
+    base: 'nav-li transition-colors min-w-16 text-center',
+    border: 'mb-[-1px] rounded-t-md nav-border',
+    selectors: 'last:ml-auto',
+    active: 'nav-li-active',
     getClass(isActive: boolean, animate: boolean) {
-        return `${this.base} ${this.border} ${this.selectors} ${isActive ? this.active : this.inactive} ${animate ? 'animate-fadeIn' : ''}`
+        return `${this.base} ${this.border} ${this.selectors} ${isActive ? this.active : ''} ${animate ? 'animate-fadeIn' : ''}`
     }
 }
 

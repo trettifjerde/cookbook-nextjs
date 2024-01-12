@@ -9,7 +9,7 @@ export default function NavLink({name, url, icon, animate}: {name: string, url: 
     const pathname = usePathname();
     
     return <NavLi active={pathname.includes(url)} animate={animate}>
-        <Link className="block text-green whitespace-nowrap" href={url}>
+        <Link href={url}>
             <NavLinkText icon={icon} text={name}/>
         </Link>
     </NavLi>

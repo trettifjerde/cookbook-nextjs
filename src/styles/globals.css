@@ -25,6 +25,7 @@
         font-weight: normal;
         font-variant: normal;
         text-transform: none;
+        line-height: 1;
 
         /* Better Font Rendering =========== */
         -webkit-font-smoothing: antialiased;
@@ -56,6 +57,19 @@
     .skeleton {
         background-color: theme('backgroundColor.skeleton-gray');
         animation: theme('animation.flicker');
+    }
+
+    .nav-li {
+        border: 1px solid transparent;
+    }
+
+    .nav-li:hover {
+        border-color: theme('colors.gray.300');
+    }
+
+    .nav-li-active {
+        border-color: theme('colors.gray.300');
+        border-bottom-color: white !important;
     }
 
     .s-cont {
@@ -185,7 +199,7 @@
     .icon-list:before {
         content: "\e9bb";
         vertical-align: baseline;
-        font-size: .9rem;
+        font-size: .875rem;
     }
 
     .icon-cart:before {
@@ -209,7 +223,7 @@
     }
 
     .icon-download:before {
-        font-size: 1.2em;
+        font-size: 1.25rem;
         margin-right: 0.15rem;
         vertical-align: top;
         content: "\e9c2";
@@ -226,25 +240,25 @@
     }
 
     .icon-plus:before {
-        font-size: .8rem;
+        font-size: .875rem;
         content: "\ea0a";
         margin-inline: .1rem;
     }
 
     .icon-cross:before {
-        font-size: .75em;
+        font-size: .75rem;
         vertical-align: text-top;
         content: "\ea0f";
     }
 
     .icon-enter:before {
         content: "\ea13";
-        vertical-align: bottom;
+        vertical-align: text-bottom;
     }
 
     .icon-exit:before {
         content: "\ea14";
-        vertical-align: bottom;
+        vertical-align: text-bottom;
     }
 
     .icon-arrow-up:before {
