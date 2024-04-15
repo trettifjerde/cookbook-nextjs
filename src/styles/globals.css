@@ -198,7 +198,6 @@
 
     .icon-list:before {
         content: "\e9bb";
-        vertical-align: baseline;
         font-size: .875rem;
     }
 
@@ -225,18 +224,15 @@
     .icon-download:before {
         font-size: 1.25rem;
         margin-right: 0.15rem;
-        vertical-align: top;
         content: "\e9c2";
     }
 
     .icon-show:before {
         content: "\e9ce";
-        vertical-align: text-bottom;
     }
 
     .icon-hide:before {
         content: "\e9d1";
-        vertical-align: text-bottom;
     }
 
     .icon-plus:before {
@@ -247,18 +243,15 @@
 
     .icon-cross:before {
         font-size: .75rem;
-        vertical-align: text-top;
         content: "\ea0f";
     }
 
     .icon-enter:before {
         content: "\ea13";
-        vertical-align: text-bottom;
     }
 
     .icon-exit:before {
         content: "\ea14";
-        vertical-align: text-bottom;
     }
 
     .icon-arrow-up:before {
@@ -271,7 +264,6 @@
 
     .icon-cog:before {
         content: "\e994";
-        vertical-align: bottom;
     }
 
     .icon-blocked:before {

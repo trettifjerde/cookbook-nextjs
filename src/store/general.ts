@@ -1,25 +1,28 @@
-import { Alert } from "@/helpers/types"
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { Alert, AlertType } from "@/helpers/types"
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { listActions } from "./list";
 import { recipesActions } from "./recipes";
-import { mkAlert } from "@/helpers/casters";
 
 export type GeneralSlice = {
-    alert: Alert|null
+    alert: Alert
 };
-export const initialState : GeneralSlice = {
-    alert: null
-}
 
 const recipeAdded = (title: string) => `New recipe added: ${title}`;
 const recipeUpdated = (title: string) => `Recipe updated: ${title}`;
+const mkAlert = (message: string|null, type?: AlertType) => (
+    message ? {
+        message,
+        type: type || 'success'
+    } : null
+);
+const getInitState = () => ({alert: mkAlert(null)});
 
 const generalSlice = createSlice({
     name: 'general',
-    initialState,
+    initialState: getInitState(),
     reducers: {
         setAlert(state, action: PayloadAction<string|null>) {
-            state.alert = action.payload ? mkAlert(action.payload) : null;
+            state.alert = mkAlert(action.payload);
         },
         setWarning(state, action: PayloadAction<string>) {
             state.alert = mkAlert(action.payload, 'info');

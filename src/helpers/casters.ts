@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb";
 import { RECIPE_PREVIEW_LENGTH } from "./config";
-import { Alert, AlertType, FormRecipe, Ingredient, MongoIngredient, MongoRecipe, Recipe, RecipeIngredient, RecipePreview } from "./types";
+import { FormRecipe, Ingredient, MongoIngredient, MongoRecipe, Recipe, RecipeIngredient, RecipePreview } from "./types";
 
 export function fromMongoToRecipe(r: MongoRecipe) {
     const {_id, authorId, ...info} = r;
@@ -42,12 +42,4 @@ export function findDuplicate(list: MongoIngredient[], item: RecipeIngredient, i
         (typeof i.amount === typeof item.amount)
     ));
     return {duplicate, countable: (!!duplicate && duplicate.amount !== undefined)};
-}
-
-export function mkAlert(message: string, type?: AlertType) : Alert {
-    return {
-        message,
-        type: type || 'success',
-        id: new Date().getTime()
-    };
 }

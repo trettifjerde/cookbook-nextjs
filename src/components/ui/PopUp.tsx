@@ -1,6 +1,6 @@
 'use client'
 
-import { memo, useMemo, useRef } from 'react';
+import { memo, useEffect, useMemo, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useStoreDispatch, useStoreSelector } from '@/store/store';
 import { generalActions } from '@/store/general';
@@ -10,30 +10,23 @@ import { AlertType } from '@/helpers/types';
 function PopUp() {
     const dispatch = useStoreDispatch();
     const alert = useStoreSelector(state => state.general.alert);
-    const timer = useRef<any>(null);
-    const popUp = useMemo(() => {
-        clearTimeout(timer.current);
-        
+
+    useEffect(() => {       
         if (alert) {
-            timer.current = setTimeout(() => dispatch(generalActions.setAlert(null)), ALERT_TIMEOUT);
-            return alert;
-        }
-        else {
-            timer.current = null;
-            return null;
+            const timer = setTimeout(() => dispatch(generalActions.setAlert(null)), ALERT_TIMEOUT);
+            return () => clearTimeout(timer);
         }
     }, [alert]);
-    
 
     return <AnimatePresence initial={false}>
         { 
-            popUp && <motion.div className="absolute container mx-auto bottom-10 left-0 right-0 z-10" 
+            alert && <motion.div className="absolute container mx-auto bottom-10 left-0 right-0 z-10" 
                 initial={{opacity: 0, y: -10}} 
                 animate={{opacity: 1, y: 0}} 
                 exit={{opacity: 0, y: 10}}>
-                    <div className={classes.color(popUp.type)}>
-                        <i className={classes.icon(popUp.type)} />
-                        <span>{popUp.message}</span>
+                    <div className={classes.color(alert.type)}>
+                        <i className={classes.icon(alert.type)} />
+                        <span>{alert.message}</span>
                     </div>
             </motion.div>
         }

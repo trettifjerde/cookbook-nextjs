@@ -5,4 +5,4 @@ export const RECIPE_PREVIEW_LENGTH = 500;
 export const RECIPE_IMAGE_FILE_FORMATS = ['image/jpeg', 'image/png', 'image/webp'];
 export const RECIPE_IMAGE_FILE_MIME = RECIPE_IMAGE_FILE_FORMATS.join(', ');
 
-export const ALERT_TIMEOUT = 4000;
+export const ALERT_TIMEOUT = 3000;

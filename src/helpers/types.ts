@@ -78,4 +78,4 @@ export enum ListUpdaterCommand {Add, Update, Merge, RemoveDupe, Skip};
 export enum RecipeUpdaterCommand {UpdateClient, Skip};
 
 export type AlertType = 'error' | 'info' | 'success';
-export type Alert = {id: number, type: AlertType, message: string};
+export type Alert = {type: AlertType, message: string} | null;

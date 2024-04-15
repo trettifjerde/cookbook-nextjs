@@ -47,7 +47,7 @@ const classes = {
 };
 
 export const Button = forwardRef<HTMLButtonElement, BtnProps>((
-    {onClick=() => {}, children, color, type='submit', className='', shape='normal', disabled=false, title=""}, 
+    {children, color, type='submit', className='', shape='normal', disabled=false, title="", onClick=() => {}}, 
     ref) => {
     return <button ref={ref} type={type} onClick={onClick} disabled={disabled}
         className={classes.get(color, shape, className)} title={title}>
