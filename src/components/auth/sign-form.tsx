@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import SubmitButton from '../ui/elements/SubmitButton';
 import { LinkButton } from '../ui/elements/buttons';
 import { AuthFormError, CONFIRMATION, EMAIL, PASSWORD, validateAuthForm } from '@/helpers/form-validators';
@@ -61,13 +61,14 @@ export default function SignForm({isSignUpMode}: {isSignUpMode: boolean}) {
         }
     }
 
-    return <motion.div initial={{opacity: 0, y: '25%'}} animate={{opacity: 1, y: 0}}
-        transition={{
-            type: 'spring', 
-            bounce: 0.5, 
-            duration: 0.75
-        }}
-        className='py-16 px-2 w-full h-full overflow-auto max-w-lg m-auto'>
+    return <AnimatePresence>
+        <motion.div initial={{opacity: 0, y: '30%'}} animate={{opacity: 1, y: 0}}
+            transition={{
+                type: 'spring', 
+                duration: 0.4 
+            }}
+            className='py-16 px-2 w-full h-full overflow-auto max-w-lg m-auto'>
+
             <h3 className='text-2xl font-medium mb-4'>Sign {isSignUpMode? 'up' : 'in'}</h3>
             <form action={validateThenAction} onFocus={clearErrors} autoComplete='off'>
 
@@ -93,4 +94,5 @@ export default function SignForm({isSignUpMode}: {isSignUpMode: boolean}) {
 
             </form>      
         </motion.div>
+    </AnimatePresence>
 }
