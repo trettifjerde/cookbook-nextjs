@@ -9,7 +9,8 @@ export default function RecipeSyncer({preview}: {preview: RecipePreview}) {
     const dispatch = useStoreDispatch();
 
     useEffect(() => {
-        dispatch(recipesActions.syncRecipe(preview));
+        if (preview)
+            dispatch(recipesActions.syncRecipe(preview));
     }, [preview]);
     return <></>
 }

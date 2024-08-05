@@ -80,12 +80,12 @@
         inset: 0;
         background-color: rgba(255, 255, 255, 0.5);
         z-index: 10;
+        opacity: 0;
+        animation: fadeIn .5s ease-in-out .5s forwards;
     }
 
     .s-cont.s-root {
         position: fixed;
-        opacity: 0;
-        animation: fadeIn .5s ease-in-out .5s forwards;
         z-index: 100;
     }
 

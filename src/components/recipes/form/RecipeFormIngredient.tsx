@@ -3,7 +3,7 @@ import {motion} from 'framer-motion';
 import { FormIngredient, ING_AMOUNT, ING_NAME, ING_UNIT } from "@/helpers/types";
 import { Input } from "@/components/ui/elements/forms";
 import { Button } from "@/components/ui/elements/buttons";
-import { listVariants } from "../RecipeForm";
+import { listVariants } from "./RecipeFormClient";
 
 type Props = {
     errors: Set<string>, 

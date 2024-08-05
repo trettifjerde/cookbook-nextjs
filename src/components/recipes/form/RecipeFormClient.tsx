@@ -11,16 +11,16 @@ import { statusCodeToMessage } from "@/helpers/client/client-helpers";
 import { recipeErrorsInit, validateRecipe } from "@/helpers/client/validators/forms";
 import { ErrorCodes, FormRecipe, RECIPE_DESC, RECIPE_IMAGE_FILE, RECIPE_NAME } from "@/helpers/types";
 
-import RecipeFormInput from "./form/RecipeFormInput";
-import RecipeFormSteps from "./form/RecipeFormSteps";
-import RecipeFormIngredients from "./form/RecipeFormIngredients";
-import SubmitButton from "../ui/elements/SubmitButton";
-import RecipeFormImage from "./form/RecipeFormImage";
-import { ErrorMessage } from "../ui/elements/misc";
-import { Button } from "../ui/elements/buttons";
-import RecipeFormGroup from "./form/RecipeFormGroup";
+import RecipeFormInput from "./RecipeFormInput";
+import RecipeFormSteps from "./RecipeFormSteps";
+import RecipeFormIngredients from "./RecipeFormIngredients";
+import SubmitButton from "../../ui/elements/SubmitButton";
+import RecipeFormImage from "./RecipeFormImage";
+import { ErrorMessage } from "../../ui/elements/misc";
+import { Button } from "../../ui/elements/buttons";
+import RecipeFormGroup from "./RecipeFormGroup";
 
-export default function RecipeForm({recipe, id}: {recipe: FormRecipe, id?: string}) {
+export default function RecipeFormClient({recipe, id}: {recipe: FormRecipe, id?: string}) {
 
     const dispatch = useStoreDispatch();
     const router = useRouter();

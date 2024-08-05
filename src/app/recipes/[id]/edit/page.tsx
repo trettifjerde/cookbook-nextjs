@@ -1,24 +1,17 @@
-import RecipeForm from "@/components/recipes/RecipeForm";
-import { fetchRecipe } from "@/helpers/fetchers";
-import getUserId from "@/helpers/server/cachers/token";
-import { fromRecipeToForm } from "@/helpers/server/casters";
-import { notFound, redirect } from "next/navigation";
+import FormSkeleton from "@/components/recipes/form/FormSkeleton";
+import RecipeEditFormPage from "@/components/recipes/RecipeEditFormPage";
 
-export default async function RecipeFormPage({params}: {params: {id: string}}) {
+import getUserId from "@/helpers/server/cachers/token";
+import { redirect } from "next/navigation";
+import { Suspense } from "react";
+
+export default async function EditRecipePage({params}: {params: {id: string}}) {
 
     const userId = getUserId();
     if (!userId)
         redirect('/auth/login');
-
-    const response = await fetchRecipe(params.id, 'FormPage');
-    if (!response.ok)
-        notFound();
-
-    const recipe = response.data;
-    if (recipe.authorId !== userId)
-        redirect(`/recipes/${recipe.id}`);
-
-    const {form, id} = fromRecipeToForm(recipe);
     
-    return <RecipeForm recipe={form} id={id} />
+    return <Suspense fallback={<FormSkeleton />}>
+        <RecipeEditFormPage id={params.id} />
+    </Suspense>
 };

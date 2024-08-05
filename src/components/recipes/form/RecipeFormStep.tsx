@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { listVariants } from '../RecipeForm';
+import { listVariants } from './RecipeFormClient';
 import { forwardRef } from 'react';
 import { Textarea } from '@/components/ui/elements/forms';
 import { Button } from '@/components/ui/elements/buttons';
