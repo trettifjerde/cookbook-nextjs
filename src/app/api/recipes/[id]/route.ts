@@ -1,30 +1,33 @@
-import { ObjectId } from "mongodb";
+import { Collection, ObjectId } from "mongodb";
 import { NextRequest } from "next/server";
 
-import { fromMongoToRecipe } from "@/helpers/casters";
-import { MongoRecipe, Recipe } from "@/helpers/types";
-import { queryDB } from "@/helpers/db-controller";
-
+import { fromMongoToRecipe } from "@/helpers/server/casters";
+import { MongoRecipe } from "@/helpers/types";
+import { dbCol } from "@/helpers/server/db/controller";
+import { RECIPES_COLLECTION } from "@/helpers/config";
 
 export async function GET(req: NextRequest, {params}: {params: {id: string}}) {
     const {id} = params;
 
-    console.log('querying db: recipe', id);
+    console.log(`API/recipes/${id}`);
 
     if (!id)
         return new Response(null, {status: 404});
 
-    const result = await queryDB<MongoRecipe, Recipe|false>('recipes', async (col) => {
-        const response = await col.findOne({_id: ObjectId.createFromHexString(id)});
-        if (response) {
-            return fromMongoToRecipe(response);
+    const { ok, result } = await dbCol(
+        RECIPES_COLLECTION, 
+        (col: Collection<MongoRecipe>) => {
+            const _id = ObjectId.createFromHexString(id);
+            const lastUpdated = new Date().getTime();
+            return col
+                .findOne({_id})
+                .then((recipe) => recipe ? fromMongoToRecipe(recipe, lastUpdated) : null)
         }
-        return false;
-    });
+    );
 
-    if (result === null)
+    if (!ok)
         return new Response(null, {status: 500});
-    
+
     if (!result)
         return new Response(null, {status: 404});
 

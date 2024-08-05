@@ -20,18 +20,9 @@ const recipeSlice = createSlice({
     name: 'recipes',
     initialState,
     reducers: {
-        addRecipe(state, action: PayloadAction<RecipePreview>) {
-            state.previews.push(action.payload);
-        },
         addMoreRecipes(state, {payload: previews}: PayloadAction<RecipePreview[]>) {
             state.previews = filterFetchedPreviews(previews, state.previews);
             state.lastId = previews[previews.length - 1].id;
-        },
-        editRecipe (state, {payload: preview}: PayloadAction<RecipePreview>) {
-            const index = state.previews.findIndex(r => r.id === preview.id);
-            if (index > -1) {
-                state.previews[index] = preview;
-            }
         },
         deleteRecipe(state, {payload}: PayloadAction<{id: string, title: string}>) {
             const index = state.previews.findIndex(r => r.id === payload.id);
@@ -39,12 +30,21 @@ const recipeSlice = createSlice({
                 state.previews.splice(index, 1);
             }
         },
-        syncPreviews(state, {payload: batch}: PayloadAction<InitPreviewsBatch>) {
+        syncInitPreviews(state, {payload: batch}: PayloadAction<InitPreviewsBatch>) {
             if (state.initBatchId !== batch.id) {
-                state.previews = filterPreviews(batch, state.previews);
+                state.previews = filterInitPreviews(batch, state.previews);
                 state.initBatchId = batch.id;
                 state.initialised = true;
             }
+        },
+        syncRecipe(state, {payload: preview}: PayloadAction<RecipePreview>) {
+            const index = state.previews.findIndex(r => r.id === preview.id);
+            if (index > -1) {
+                if (state.previews[index].lastUpdated != preview.lastUpdated)
+                    state.previews[index] = preview;
+            }
+            else 
+                state.previews.push(preview);
         },
         setFilter(state, {payload: filterStr}: PayloadAction<string>) {
             state.filterStr = filterStr.toLowerCase();
@@ -52,12 +52,9 @@ const recipeSlice = createSlice({
     }
 });
 
-export const recipesReducer = recipeSlice.reducer;
-export const recipesActions = recipeSlice.actions;
-
-function filterPreviews(batch: InitPreviewsBatch, clientP: RecipePreview[]) {
+function filterInitPreviews(batch: InitPreviewsBatch, clientP: RecipePreview[]) {
     const batchPreviewsIds = batch.previews.map(p => p.id);
-    const filteredClient = clientP.filter(p => !batchPreviewsIds.some(id => id === p.id));
+    const filteredClient = clientP.filter(p => !batchPreviewsIds.includes(p.id));
     return batch.previews.concat(filteredClient);
 }
 
@@ -66,3 +63,6 @@ function filterFetchedPreviews(fetched: RecipePreview[], clientPreviews: RecipeP
     const filteredClient = clientPreviews.filter(p => !fetchedIds.some(id => id === p.id));
     return filteredClient.concat(fetched)
 }
+
+export const recipesReducer = recipeSlice.reducer;
+export const recipesActions = recipeSlice.actions;

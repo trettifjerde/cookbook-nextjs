@@ -11,8 +11,8 @@ function verifyToken() {
             const decoded = jwt.verify(token, process.env.JWT_PRIVATE!) as {id: string};
             id = decoded.id;
         }
-        catch(error) {
-            console.log('Token verification error', error);
+        catch (error) {
+            console.log('Token verification error');
         }
     }
 

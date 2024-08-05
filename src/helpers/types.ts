@@ -19,6 +19,7 @@ export type RecipePreview = {
     id: string,
     description: string,
     imagePath: string,
+    lastUpdated: number
 }
 
 export type InitPreviewsBatch = {previews: RecipePreview[], id: number};
@@ -35,21 +36,28 @@ export type FormRecipe = {
 
 export type PreUploadFormRecipe = FormRecipe & {imageFile: File | null};
 
-export type Recipe = FormRecipe & {id: string, authorId: string };
+export type Recipe = FormRecipe & {id: string, authorId: string, lastUpdated: number };
 
-export type MongoRecipe = WithId<{
+export type MongoRecipe = {
     authorId: ObjectId,
     title: string,
     description: string,
     imagePath?: string,
     steps: string[],
     ingredients: RecipeIngredient[]
-}>
+};
+
+export type MongoRecipePreviewProjection = {
+    title: string,
+    _id: ObjectId,
+    description: string,
+    imagePath: string,
+}
 
 export type RecipeIngredient = {name: string, amount?: number, unit?: string};
 export type Ingredient = RecipeIngredient & {id: string};
 export type MongoIngredient = WithId<RecipeIngredient>;
-export type MongoList = WithId<{list: MongoIngredient[]}>;
+export type MongoList = {list: MongoIngredient[]};
 
 export type FormIngredient = {
     name: string,
@@ -58,15 +66,16 @@ export type FormIngredient = {
     id: string
 }
 
-export type MongoUser = WithId<{
+export type MongoUser = {
     email: string,
     hash: string
-}>
+};
+
 export type AuthFormData = {email: string, password: string};
 
-export type FetchSuccess<T> = {type: 'success', data: T};
-export type FetchError<T> = {type: 'error', message: string};
-export type FetchResponse<T> = FetchSuccess<T> | FetchError<T>;
+export type FetchSuccess<T> = {ok: true, data: T};
+export type FetchError = {ok: false, message: string};
+export type FetchResponse<T> = FetchSuccess<T> | FetchError;
 
 export type ErrorCodes = 400 | 401 | 404 | 500 | 503;
 export type ServerActionError = {status: ErrorCodes};
@@ -75,7 +84,11 @@ export type ServerActionResponseWithData<T> = {status: 200, data: T} | ServerAct
 
 
 export enum ListUpdaterCommand {Add, Update, Merge, RemoveDupe, Skip};
-export enum RecipeUpdaterCommand {UpdateClient, Skip};
+export type ListUpdaterInstruction<T> = {command: ListUpdaterCommand.Add, ing: T} |
+    {command: ListUpdaterCommand.Update, ing: T} | 
+    {command: ListUpdaterCommand.Merge, ing: T} |
+    {command: ListUpdaterCommand.RemoveDupe} |
+    {command: ListUpdaterCommand.Skip};
 
 export type AlertType = 'error' | 'info' | 'success';
 export type Alert = {type: AlertType, message: string} | null;

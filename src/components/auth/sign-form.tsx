@@ -4,11 +4,10 @@ import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import SubmitButton from '../ui/elements/SubmitButton';
 import { LinkButton } from '../ui/elements/buttons';
-import { AuthFormError, CONFIRMATION, EMAIL, PASSWORD, validateAuthForm } from '@/helpers/form-validators';
+import { AuthFormError, CONFIRMATION, EMAIL, PASSWORD, validateAuthForm } from '@/helpers/client/validators/form-validators';
 import { Input } from '../ui/elements/forms';
 import { ErrorMessage } from '../ui/elements/misc';
-import { authenticate } from '@/helpers/server-actions/auth-actions';
-import { redirect } from 'next/navigation';
+import { authenticate } from '@/helpers/server/server-actions/auth-actions';
 
 export default function SignForm({isSignUpMode}: {isSignUpMode: boolean}) {
 
@@ -44,9 +43,6 @@ export default function SignForm({isSignUpMode}: {isSignUpMode: boolean}) {
         const res = await authenticate({email, password}, isSignUpMode);
 
         switch(res.status) {
-            
-            case 200: 
-                redirect('/recipes');
                 
             case 400:
                 setSubmitError(res.error);
@@ -62,10 +58,10 @@ export default function SignForm({isSignUpMode}: {isSignUpMode: boolean}) {
     }
 
     return <AnimatePresence>
-        <motion.div initial={{opacity: 0, y: '30%'}} animate={{opacity: 1, y: 0}}
+        <motion.div initial={{opacity: 0, x: isSignUpMode ? '10%' : '-10%'}} animate={{opacity: 1, x: 0}}
             transition={{
-                type: 'spring', 
-                duration: 0.4 
+                type: 'tween', 
+                duration: 0.3 
             }}
             className='py-16 px-2 w-full h-full overflow-auto max-w-lg m-auto'>
 

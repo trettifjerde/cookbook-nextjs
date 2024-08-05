@@ -7,7 +7,7 @@ export default function useListManager<T, N extends {id: string}>(init: T[], new
     const addItem = useCallback(() => {
         setList(prev => ([...prev, newItemGen(nextI)]));
         setNextI(prev => prev + 1)
-    }, [setList, setNextI, nextI]);
+    }, [setList, setNextI, newItemGen, nextI]);
 
     const removeItem = useCallback((id: string) => setList(prev => prev.filter(item => item.id !== id)), [setList]);
 

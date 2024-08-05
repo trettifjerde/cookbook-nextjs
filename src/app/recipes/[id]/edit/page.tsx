@@ -1,18 +1,24 @@
 import RecipeForm from "@/components/recipes/RecipeForm";
-import { fromRecipeToForm } from "@/helpers/casters";
 import { fetchRecipe } from "@/helpers/fetchers";
-import { notFound } from "next/navigation";
+import getUserId from "@/helpers/server/cachers/token";
+import { fromRecipeToForm } from "@/helpers/server/casters";
+import { notFound, redirect } from "next/navigation";
 
 export default async function RecipeFormPage({params}: {params: {id: string}}) {
 
-    const response = await fetchRecipe(params.id, 'RecipeFormPage');
+    const userId = getUserId();
+    if (!userId)
+        redirect('/auth/login');
 
-    switch (response.type) {
-        case 'error':
-            notFound();
+    const response = await fetchRecipe(params.id, 'FormPage');
+    if (!response.ok)
+        notFound();
 
-        case 'success':
-            const {form, id} = fromRecipeToForm(response.data);
-            return <RecipeForm recipe={form} id={id} />
-    }
+    const recipe = response.data;
+    if (recipe.authorId !== userId)
+        redirect(`/recipes/${recipe.id}`);
+
+    const {form, id} = fromRecipeToForm(recipe);
+    
+    return <RecipeForm recipe={form} id={id} />
 };

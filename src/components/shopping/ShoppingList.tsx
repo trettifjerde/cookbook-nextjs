@@ -23,14 +23,12 @@ export default function ShoppingList () {
         setFetchError('');
         const res = await fetchList(controller.signal);
 
-        switch(res.type) {
-            case 'success':
-                setFetchError('');
-                dispatch(listActions.initialise({ings: res.data}));
-                return;
+        if (!res.ok)
+            setFetchError(res.message);
 
-            default: 
-                setFetchError(res.message);
+        else {
+            setFetchError('');
+            dispatch(listActions.initialise({ings: res.data}));
         }
     }
 

@@ -24,23 +24,21 @@ function RecipesLoadMoreButton() {
         setFetching(true);
 
         const res = await fetchMorePreviews(lastId);
-        
-        switch (res.type) {
-            case 'success':
-                const areRecipesLeft = res.data.length === RECIPE_PREVIEW_BATCH_SIZE;
-                
-                if (!areRecipesLeft)
-                    setTimeout(() => setHasMoreRecipes(true), 30 * 1000);
-                
-                setHasMoreRecipes(areRecipesLeft);
-                
-                if (res.data.length > 0) 
-                    dispatch(recipesActions.addMoreRecipes(res.data));
-                    
-                break;
-                
-            default: 
-                dispatch(generalActions.setError('Could not fetch more recipes'));
+
+        if (!res.ok)
+            dispatch(generalActions.setError('Could not fetch more recipes'));
+
+        else {
+            const fetchedBatch = res.data;
+            const areRecipesLeft = fetchedBatch.length === RECIPE_PREVIEW_BATCH_SIZE;
+            
+            if (!areRecipesLeft)
+                setTimeout(() => setHasMoreRecipes(true), 30 * 1000);
+            
+            setHasMoreRecipes(areRecipesLeft);
+            
+            if (fetchedBatch.length > 0) 
+                dispatch(recipesActions.addMoreRecipes(fetchedBatch));                
         }
         setFetching(false);
     }

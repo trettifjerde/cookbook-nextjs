@@ -1,5 +1,5 @@
-import { Alert, AlertType } from "@/helpers/types"
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { Alert, AlertType, RecipePreview } from "@/helpers/types"
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { listActions } from "./list";
 import { recipesActions } from "./recipes";
 
@@ -30,11 +30,11 @@ const generalSlice = createSlice({
         setError(state, action: PayloadAction<string>) {
             state.alert = mkAlert(action.payload, 'error');
         },
-        addRecipe(state, action: PayloadAction<string>) {
-            state.alert = mkAlert(recipeAdded(action.payload));
+        addRecipe(state, action: PayloadAction<RecipePreview>) {
+            state.alert = mkAlert(recipeAdded(action.payload.title));
         },
-        editRecipe(state, action: PayloadAction<string>) {
-            state.alert = mkAlert(recipeUpdated(action.payload));
+        editRecipe(state, action: PayloadAction<RecipePreview>) {
+            state.alert = mkAlert(recipeUpdated(action.payload.title));
         }
     },
     extraReducers: (builder) => {
@@ -57,12 +57,6 @@ const generalSlice = createSlice({
             })
             .addCase(listActions.delete, (state, action) => {
                 state.alert = mkAlert(`Item removed: ${action.payload.name}`);
-            })
-            .addCase(recipesActions.addRecipe, (state, action) => {
-                state.alert = mkAlert(recipeAdded(action.payload.title));
-            })
-            .addCase(recipesActions.editRecipe, (state, action) => {
-                state.alert = mkAlert(recipeUpdated(action.payload.title));
             })
             .addCase(recipesActions.deleteRecipe, (state, action) => {
                 state.alert = mkAlert(`Recipe deleted: ${action.payload.title}`);

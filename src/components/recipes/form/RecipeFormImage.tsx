@@ -2,10 +2,10 @@ import { ChangeEventHandler, useRef, useState } from "react";
 import { AnimatePresence, Variants, motion } from "framer-motion";
 import { RECIPE_IMAGE_FILE, RECIPE_IMAGE_PATH } from "@/helpers/types";
 import { RECIPE_IMAGE_FILE_FORMATS, RECIPE_IMAGE_FILE_MIME } from "@/helpers/config";
-import { readImage } from "@/helpers/client-helpers";
 import { Note } from "@/components/ui/elements/misc";
 import { Button } from "@/components/ui/elements/buttons";
 import RecipeFormGroup from "./RecipeFormGroup";
+import { readImage } from "@/helpers/client/client-helpers";
 
 function getInitialPreview(src: string) {
     const name = 'Your current recipe image';

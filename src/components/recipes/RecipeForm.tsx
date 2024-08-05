@@ -1,16 +1,16 @@
 'use client';
 
-import { useEffect, useRef } from "react";
-import { useFormState } from "react-dom";
-import { redirect, useRouter } from "next/navigation";
+import { useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useStoreDispatch } from "@/store/store";
-import { recipesActions } from "@/store/recipes";
 import { generalActions } from "@/store/general";
-import { statusCodeToMessage } from "@/helpers/client-helpers";
-import { recipeErrorsInit, validateRecipe } from "@/helpers/forms";
-import { sendRecipe } from "@/helpers/server-actions/recipe-actions";
-import useErrors from "@/helpers/hooks/useErrors";
-import { FormRecipe, RECIPE_DESC, RECIPE_IMAGE_FILE, RECIPE_NAME, RecipeUpdaterCommand } from "@/helpers/types";
+
+import { sendRecipe } from "@/helpers/server/server-actions/recipe-actions";
+import useErrors from "@/helpers/client/hooks/useErrors";
+import { statusCodeToMessage } from "@/helpers/client/client-helpers";
+import { recipeErrorsInit, validateRecipe } from "@/helpers/client/validators/forms";
+import { ErrorCodes, FormRecipe, RECIPE_DESC, RECIPE_IMAGE_FILE, RECIPE_NAME } from "@/helpers/types";
+
 import RecipeFormInput from "./form/RecipeFormInput";
 import RecipeFormSteps from "./form/RecipeFormSteps";
 import RecipeFormIngredients from "./form/RecipeFormIngredients";
@@ -24,57 +24,32 @@ export default function RecipeForm({recipe, id}: {recipe: FormRecipe, id?: strin
 
     const dispatch = useStoreDispatch();
     const router = useRouter();
-
     const contTop = useRef<HTMLDivElement>(null);
-    const [formState, formAction] = useFormState(sendRecipe, {id: id || '', status: 0});
     const {errors, hasErrors, setErrors, touchField} = useErrors(recipeErrorsInit);
+    const [errorCode, setErrorCode] = useState<ErrorCodes | 0>(0);
 
-    const handleSubmit = (formData: FormData) => {
-        if (contTop.current) {
-            const {data, errors: validationErrors} = validateRecipe(formData);
-
-            if (validationErrors) {
-                setErrors(validationErrors);
-                contTop.current.scrollIntoView({behavior: 'smooth'});
-                return;
-            }
-            if (data.imageFile)
-                dispatch(generalActions.setWarning('Recipes with images might take some time to upload'));
-            formAction(formData);
+    const handleSubmit = async(formData: FormData) => {
+        const {data, errors: validationErrors} = validateRecipe(formData);
+        
+        if (validationErrors) {
+            setErrors(validationErrors);
+            contTop.current?.scrollIntoView({behavior: "smooth"});
+            return;
         }
-    };
+        
+        if (data.imageFile)
+            dispatch(generalActions.setWarning('Recipes with images might take some time to upload'));
+        
+        const code = await sendRecipe({formData, id});
 
-    useEffect(() => {
-        switch(formState.status) {
-            case 200:
-                const instruction = formState.instruction;
-                let redirectId: string;
-
-                switch (instruction.command) {
-                    case RecipeUpdaterCommand.UpdateClient:
-                        redirectId = instruction.preview.id;
-                        dispatch((id ? recipesActions.editRecipe : recipesActions.addRecipe)(instruction.preview));
-                        break;
-
-                    case RecipeUpdaterCommand.Skip:
-                        redirectId = instruction.id;
-                        dispatch((id ? generalActions.editRecipe : generalActions.addRecipe)(instruction.title));
-                        break;
-                }
-
-                redirect(`/recipes/${redirectId}`);
-
-            default:
-                contTop.current?.scrollIntoView({behavior: 'smooth'});
-                break;
-        }
-    }, [formState, contTop])
+        setErrorCode(code);
+    }
 
     return <form className="animate-slideUp py-4 px-2" action={handleSubmit} autoComplete="off">
 
-        <div className="flex flex-row items-center justify-between gap-2" ref={contTop}>
-            <h3 className="text-3xl font-medium mb-8">{ id ? 'Edit recipe' : 'Add recipe'}</h3> 
-            <ErrorMessage text={(hasErrors && 'Form contains errors') || statusCodeToMessage(formState.status)} />
+        <div className="flex flex-row items-center justify-between gap-2 mb-8" ref={contTop}>
+            <h3 className="text-3xl font-medium">{ id ? 'Edit recipe' : 'Add recipe'}</h3> 
+            <ErrorMessage text={(hasErrors && 'Form contains errors') || statusCodeToMessage(errorCode)} />
         </div>     
 
         <RecipeFormGroup label="Title" htmlFor={RECIPE_NAME} hasError={errors.general.has(RECIPE_NAME)} errorMsg="Cannot be empty">

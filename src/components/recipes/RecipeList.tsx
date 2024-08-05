@@ -19,24 +19,16 @@ export default function RecipeList({initPreviews}: { initPreviews: InitPreviewsB
     const ref = useRef<HTMLDivElement>(null);
 
     const filteredRecipes = useMemo(() => {
-
         if (initialised)
             return previews.filter(p => p.title.toLowerCase().includes(filterStr));
         
         return initPreviews.previews;
 
-    }, [initialised, previews, filterStr]);
+    }, [initPreviews.previews, initialised, previews, filterStr]);
 
     useEffect(() => {
-        //console.log('current init previews id:', initPreviews.id);
-        dispatch(recipesActions.syncPreviews(initPreviews));
+        dispatch(recipesActions.syncInitPreviews(initPreviews));
     }, [initPreviews]);
-
-    useEffect(() => {
-        if (ref.current) {
-            ref.current.closest('.overflow-auto')?.scrollTo({top: 0, behavior: 'smooth'});
-        }
-    }, [ref, previews]);
 
     return <AnimatePresence mode='wait' initial={false}>
 

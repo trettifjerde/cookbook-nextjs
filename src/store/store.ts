@@ -3,6 +3,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import { recipesReducer } from "./recipes";
 import { listReducer } from "./list";
 import { generalReducer } from "./general";
+// import { listenerMiddleware } from "./listener";
 
 
 export const store = configureStore({
@@ -10,7 +11,8 @@ export const store = configureStore({
         recipes: recipesReducer,
         list: listReducer,
         general: generalReducer 
-    }
+    },
+    // middleware: (defMid) => defMid().prepend(listenerMiddleware.middleware)
 });
 
 export type StoreState = ReturnType<typeof store.getState>;

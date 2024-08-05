@@ -1,5 +1,5 @@
 export function ErrorMessage({text}: {text: string | false}) {
-    return <p className="text-red text-xs min-h-error-msg my-1">{text || ''}</p>
+    return <p className="text-red text-right text-xs min-h-error-msg my-1">{text || ''}</p>
 }
 
 export function Note({text, className}: {text: string|false, className?: string}) {

@@ -1,10 +1,10 @@
-import { logOut } from "@/helpers/server-actions/auth-actions";
-import getUserId from "@/helpers/cachers/token";
+import getUserId from "@/helpers/server/cachers/token";
 
 import NavLink from "./NavLink";
 import NavLi from "./NavLi";
 import SubmitButton from "../elements/SubmitButton";
 import NavLinkText from "./NavLinkText";
+import { logOut } from "@/helpers/server/server-actions/auth-actions";
 
 export default async function ControlPanel() {
     const userId = getUserId();

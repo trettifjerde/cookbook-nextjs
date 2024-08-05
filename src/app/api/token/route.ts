@@ -1,7 +1,7 @@
-import getUserId from "@/helpers/cachers/token";
-import { NextRequest } from "next/server";
+import getUserId from "@/helpers/server/cachers/token";
 
-export async function GET(req: NextRequest) {
+export async function GET() {
+    console.log('/API/token');
     const userId = getUserId();
 
     if (userId)

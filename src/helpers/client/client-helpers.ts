@@ -1,7 +1,7 @@
-import { RECIPE_PREVIEW_LENGTH } from "./config";
-import { FormRecipe, RecipePreview } from "./types";
+import { RECIPE_PREVIEW_LENGTH } from "../config";
+import { FormRecipe, Recipe, RecipePreview } from "../types";
 
-export function statusCodeToMessage(code: number) {
+export function statusCodeToMessage(code?: number) {
     switch (code) {
         case 400:
             return 'Some of your data is invalid.';
@@ -21,16 +21,6 @@ export function statusCodeToMessage(code: number) {
         default:
             return '';
     }
-}
-
-export function fromFormToRecipePreview(r: FormRecipe, id: string) {
-    const preview: RecipePreview = {
-        id,
-        title: r.title,
-        description: r.description.slice(0, RECIPE_PREVIEW_LENGTH),
-        imagePath: r.imagePath || ''
-    };
-    return preview;
 }
 
 export async function readImage(file: Blob|File) {

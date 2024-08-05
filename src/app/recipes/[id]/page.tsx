@@ -3,13 +3,10 @@ import RecipeDetails from "@/components/recipes/RecipeDetails";
 import { fetchRecipe } from "@/helpers/fetchers";
 
 export default async function RecipeDetailsPage({params}: {params: {id: string}}) {
-    const response = await fetchRecipe(params.id, 'RecipeDetailsPage');
+    const res = await fetchRecipe(params.id, 'DetailsPage');
 
-    switch (response.type) {
-        case 'error':
-            notFound();
+    if (!res.ok)
+        notFound();
 
-        case 'success':
-            return <RecipeDetails recipe={response.data} />
-    }
+    return <RecipeDetails recipe={res.data} />
 };

@@ -8,12 +8,12 @@ import { generalActions } from "@/store/general";
 import { listActions } from "@/store/list";
 
 import { Ingredient } from "@/helpers/types";
-import { statusCodeToMessage } from "@/helpers/client-helpers";
-import { deleteIngredient } from "@/helpers/server-actions/list-actions";
 
 import ConfirmationModal from "../../ui/ConfirmationModal";
 import ShoppingListItem from "./ShoppingListItem";
 import { shLiClasses, shLiVariants } from "./classes";
+import { deleteIngredient } from "@/helpers/server/server-actions/list-actions";
+import { statusCodeToMessage } from "@/helpers/client/client-helpers";
 
 export default function ShoppingListItems() {
 

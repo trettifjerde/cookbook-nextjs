@@ -15,7 +15,7 @@ export const recipeLabelClass = "font-bold text-md";
 
 const RecipeFormInput = ({type, name, hasError, defaultValue, placeholder, touchField, disabled}: Props) => {
 
-    const registerTouch = useCallback(() => touchField('general', name), [touchField]);
+    const registerTouch = useCallback(() => touchField('general', name), [touchField, name]);
 
     return type === 'textarea' ? <Textarea name={name} id={name} 
             disabled={disabled} invalid={hasError} 

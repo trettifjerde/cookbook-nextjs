@@ -7,15 +7,15 @@ import { generalActions } from "@/store/general";
 import { listActions } from "@/store/list";
 
 import { ING_NAME, ING_AMOUNT, ING_UNIT, ListUpdaterCommand } from "@/helpers/types";
-import { getIngredientErrorLog, ingredientErrorsInit, ingredientNotChanged, validateIngredient } from "@/helpers/forms";
-import { sendIngredient } from "@/helpers/server-actions/list-actions";
-import useErrors from "@/helpers/hooks/useErrors";
-import { statusCodeToMessage } from "@/helpers/client-helpers";
+import useErrors from "@/helpers/client/hooks/useErrors";
 
 import SubmitButton from "../ui/elements/SubmitButton";
 import ShoppingListFormItem from "./form/ShoppingFormtem";
 import { ErrorMessage } from "../ui/elements/misc";
 import { Button } from "../ui/elements/buttons";
+import { getIngredientErrorLog, ingredientErrorsInit, ingredientNotChanged, validateIngredient } from "@/helpers/client/validators/forms";
+import { sendIngredient } from "@/helpers/server/server-actions/list-actions";
+import { statusCodeToMessage } from "@/helpers/client/client-helpers";
 
 export default function ShoppingListForm() {
 

@@ -1,5 +1,5 @@
 import { Recipe } from "@/helpers/types";
-import getUserId from "@/helpers/cachers/token";
+import getUserId from "@/helpers/server/cachers/token";
 import AuthorDropdown from "./manage-btn/AuthorDropdown";
 import ShoppingListButton from "./manage-btn/ShoppingListButton";
 import { FillerButton } from "@/components/ui/elements/buttons";

@@ -5,10 +5,10 @@ import { listActions } from "@/store/list";
 import { generalActions } from "@/store/general";
 
 import { Recipe } from "@/helpers/types";
-import { statusCodeToMessage } from "@/helpers/client-helpers";
-import { toShoppingListAction } from "@/helpers/server-actions/recipe-actions";
 
 import SubmitButton from "@/components/ui/elements/SubmitButton";
+import { toShoppingListAction } from "@/helpers/server/server-actions/recipe-actions";
+import { statusCodeToMessage } from "@/helpers/client/client-helpers";
 
 export default function ShoppingListButton({recipe}: {recipe: Recipe}) {
 

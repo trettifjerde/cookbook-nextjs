@@ -31,7 +31,7 @@ export default function Dropdown ({visible, closeDropdown, btn, children}: {
                     closeDropdown();
             }, {capture: true, once: true});
         }
-    }, [visible]);
+    }, [visible, btn, closeDropdown]);
 
     return <div className="absolute right-0 overflow-hidden py-1">
         <AnimatePresence>

@@ -10,12 +10,12 @@ import { listActions } from "@/store/list";
 import { generalActions } from "@/store/general";
 
 import { Recipe } from "@/helpers/types";
-import { deleteRecipeAction, toShoppingListAction } from "@/helpers/server-actions/recipe-actions";
-import { statusCodeToMessage } from "@/helpers/client-helpers";
 
 import { SpinnerButton } from "@/components/ui/elements/buttons";
 import Dropdown, { dropdownItemClass } from "@/components/ui/Dropdown";
 import ConfirmationModal from "@/components/ui/ConfirmationModal";
+import { statusCodeToMessage } from "@/helpers/client/client-helpers";
+import { deleteRecipeAction, toShoppingListAction } from "@/helpers/server/server-actions/recipe-actions";
 
 
 export default function AuthorDropdown({recipe}: {recipe: Recipe}) {
@@ -47,16 +47,16 @@ export default function AuthorDropdown({recipe}: {recipe: Recipe}) {
         setIsModalVisible(false);
         setPending(true);
 
-        const res = await deleteRecipeAction(recipe.id);
+        const code = await deleteRecipeAction(recipe.id);
 
-        switch (res.status) {
+        switch (code) {
             case 200:
                 dispatch(recipesActions.deleteRecipe({id: recipe.id, title: recipe.title}));
                 router.replace('/recipes');
                 return;
 
             default:
-                dispatch(generalActions.setError(statusCodeToMessage(res.status)));
+                dispatch(generalActions.setError(statusCodeToMessage(code)));
                 break;
         }
         setPending(false);

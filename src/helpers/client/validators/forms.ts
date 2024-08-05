@@ -1,5 +1,5 @@
-import { RECIPE_IMAGE_FILE_FORMATS } from "./config";
-import { FormIngredient, FormRecipe, ING_AMOUNT, ING_NAME, ING_UNIT, PreUploadFormRecipe, RECIPE_DESC, RECIPE_IMAGE_PATH, RECIPE_ING, RECIPE_NAME, RECIPE_STEP, RecipeIngredient } from "./types";
+import { RECIPE_IMAGE_FILE_FORMATS } from "../../config";
+import { FormIngredient, FormRecipe, ING_AMOUNT, ING_NAME, ING_UNIT, PreUploadFormRecipe, RECIPE_DESC, RECIPE_IMAGE_PATH, RECIPE_ING, RECIPE_NAME, RECIPE_STEP, RecipeIngredient } from "../../types";
 
 export const RECIPE_STEP_ID = (i: number) => `${RECIPE_STEP}${i}-`;
 export const RECIPE_ING_ID = (i: number) => `${RECIPE_ING}${i}-`;

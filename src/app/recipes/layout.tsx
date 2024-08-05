@@ -1,11 +1,13 @@
 import { ReactNode } from 'react';
-import { fetchInitPreviews } from '@/helpers/fetchers';
 import RecipesFrame from '@/components/recipes/RecipesFrame';
 import RecipesLoadMoreButton from '@/components/recipes/RecipeLoadMoreButton';
 import RecipeList from '@/components/recipes/RecipeList';
+import { fetchInitPreviews } from '@/helpers/fetchers';
 
 export default async function RecipesLayout({children}:{children: ReactNode}) {
-    const initPreviews = await fetchInitPreviews();
+    const res = await fetchInitPreviews();
+
+    const initPreviews = res.ok ? res.data : {previews: [], id: 0};
     
     return <RecipesFrame>
         <div className="grow grid md:grid-cols-3-5 gap-2 overflow-hidden">
